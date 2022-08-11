@@ -16,7 +16,12 @@ import xanadu.enderdragon.events.*;
 import xanadu.enderdragon.listeners.InventoryClick;
 import xanadu.enderdragon.metrics.Metrics;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 public final class EnderDragon extends JavaPlugin {
 
@@ -71,6 +76,28 @@ public final class EnderDragon extends JavaPlugin {
         getCommand("enderdragon").setExecutor(new MainCommand());
         getCommand("enderdragon").setTabCompleter(new TabCompleter());
         Metrics metrics = new Metrics(this,14850);
+        Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 正在为您检查更新...");
+        try {
+            URLConnection conn = new URL("https://api.github.com/repos/iXanadu13/EnderDragon/releases/latest").openConnection();
+            conn.setConnectTimeout(20000);
+            conn.setReadTimeout(60000);
+            InputStream is = conn.getInputStream();
+            String line = new BufferedReader(new InputStreamReader(is)).readLine();
+            is.close();
+            String newVer = line.substring(line.indexOf("\"tag_name\"") + 13, line.indexOf("\"target_commitish\"") - 2);
+            String localVer = plugin.getDescription().getVersion();
+            if (!localVer.equals(newVer)) {
+                Bukkit.getConsoleSender().sendMessage("§e[EnderDragon] 您正在使用的插件版本: v"+localVer);
+                Bukkit.getConsoleSender().sendMessage("§e[EnderDragon] 检测到新版插件v"+newVer+"已发布，请尽快更新");
+                Bukkit.getConsoleSender().sendMessage("§e[EnderDragon] 下载地址：https://www.mcbbs.net/thread-1314199-1-1.html");
+            }
+            else{
+                Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 您正在使用最新版的插件(v"+localVer+")...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
