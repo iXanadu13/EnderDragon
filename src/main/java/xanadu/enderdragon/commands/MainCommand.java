@@ -33,7 +33,7 @@ public class MainCommand implements CommandExecutor {
                 sender.sendMessage(prefix + "§a配置文件已重载");
             }
         }
-        else if (args[0].equalsIgnoreCase("drop") ) {
+        else if (args.length > 1 && args[0].equalsIgnoreCase("drop") ) {
             if (!(sender instanceof Player || args[1].equalsIgnoreCase("clear"))) {
                     sender.sendMessage(prefix + "§c这个指令只能由玩家执行");
                     return false;
