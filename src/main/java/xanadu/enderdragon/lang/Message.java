@@ -1,0 +1,72 @@
+package xanadu.enderdragon.lang;
+
+import static xanadu.enderdragon.EnderDragon.lang;
+
+public class Message {
+    public static String configNotFound;
+    public static String dataNotFound;
+    public static String messageNotFound;
+    public static String configWrongVersion;
+    public static String dataWrongVersion;
+    public static String langWrongVersion;
+    public static String messageWrongVersion;
+    public static String loaded;
+    public static String checkingUpdate;
+    public static String OutOfDate1;
+    public static String OutOfDate2;
+    public static String OutOfDate3;
+    public static String UpToDate;
+    public static String onDisable;
+    public static String NoCommandPermission;
+    public static String configReloaded;
+    public static String PlayerCommand;
+    public static String DropItemAddFail;
+    public static String DropItemAddSucceed;
+    public static String MustNumber;
+    public static String Number;
+    public static String DropChance;
+    public static String ClearDropItemConfig;
+    public static String CommandTips1;
+    public static String CommandTips2;
+    public static String DamageDisplay;
+    public static String KillerMessage;
+    public static String DragonKillingBroadcast;
+    public static String NobodyKill;
+    public static String PlayerInvFull;
+    public static String DragonSpawnBroadcast;
+    public static String SpecialBroadcast;
+    public static void loadLanguage(){
+        configNotFound = lang.getString("configNotFound","§a[EnderDragon] config.yml不存在, 已自动创建.");
+        dataNotFound = lang.getString("dataNotFound","§a[EnderDragon] data.yml不存在, 已自动创建.");
+        messageNotFound = lang.getString("messageNotFound","§a[EnderDragon] message.yml不存在, 已自动创建.");
+        configWrongVersion = lang.getString("configWrongVersion","§c[EnderDragon] config.yml版本与插件不对应，请更新配置文件");
+        dataWrongVersion = lang.getString("dataWrongVersion","§c[EnderDragon] data.yml版本与插件不对应，请更新配置文件");
+        langWrongVersion = lang.getString("langWrongVersion","§c[EnderDragon] 语言文件版本与插件不对应，请更新语言文件");
+        messageWrongVersion = lang.getString("messageWrongVersion","§c[EnderDragon] message.yml版本与插件不对应，请更新配置文件");
+        loaded = lang.getString("loaded","§a[EnderDragon] 插件已加载");
+        checkingUpdate = lang.getString("checkingUpdate","§a[EnderDragon] 正在为您检查更新...");
+        OutOfDate1 = lang.getString("OutOfDate1","§e[EnderDragon] 您正在使用的插件版本: v{0}");
+        OutOfDate2 = lang.getString("OutOfDate2","§e[EnderDragon] 检测到新版插件v{1}已发布，请尽快更新");
+        OutOfDate3 = lang.getString("OutOfDate3","§e[EnderDragon] 下载地址：https://github.com/iXanadu13/EnderDragon/");
+        UpToDate = lang.getString("UpToDate","§a[EnderDragon] 您正在使用最新版的插件(v{1})...");
+        onDisable = lang.getString("onDisable","§e[EnderDragon] 插件已卸载");
+        NoCommandPermission = lang.getString("NoCommandPermission","§4你没有使用该命令的权限");
+        configReloaded = lang.getString("configReloaded","§a配置文件已重载");
+        PlayerCommand = lang.getString("PlayerCommand","§c这个指令只能由玩家执行");
+        DropItemAddFail = lang.getString("DropItemAddFail","§c添加掉落物失败，你手上没有拿物品...");
+        DropItemAddSucceed = lang.getString("DropItemAddSucceed","§a掉落物添加成功，概率为: §c{chance}%");
+        MustNumber = lang.getString("MustNumber","§c您应该输入数字而不是 ");
+        Number = lang.getString("Number","数字");
+        DropChance = lang.getString("DropChance","掉落概率");
+        ClearDropItemConfig = lang.getString("ClearDropItemConfig","§a掉落物配置已清空");
+        CommandTips1 = lang.getString("CommandTips1","§e/ed reload 重载配置文件");
+        CommandTips2 = lang.getString("CommandTips2","§e/ed drop 特殊龙掉落物设置");
+        DamageDisplay = lang.getString("damage-display","对末影龙的攻击伤害：%damage%");
+        KillerMessage = lang.getString("killer-message","§6恭喜你，这条龙掉落了龙蛋和大量经验！");
+        DragonKillingBroadcast = lang.getString("dragon-killing-broadcast","§b第 %times% 条末影龙已被 %player% 击杀");
+        NobodyKill = lang.getString("nobody-kill","玩家远程");
+        PlayerInvFull = lang.getString("player-inv-full","§c您的背包没有空余格子，特殊末影龙战利品可能已掉落在您脚下");
+        DragonSpawnBroadcast = lang.getString("dragon-spawn-broadcast","§a第 %times% 条末影龙已被复活");
+        SpecialBroadcast = lang.getString("special-broadcast","§6这条末影龙散发着神秘的气息...");
+    }
+}

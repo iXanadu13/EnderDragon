@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scoreboard.Team;
+import xanadu.enderdragon.lang.Message;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,10 +25,11 @@ public class DragonSpawn implements Listener {
         double health = plugin.getConfig().getDouble("special-dragon.max-health");
         double SpawnHealth = plugin.getConfig().getDouble("special-dragon.spawn-health");
         int circle = plugin.getConfig().getInt("special-dragon.respawn-circle");
+        if (circle == 0 ){circle = 999999999;}
         boolean chance = plugin.getConfig().getInt("special-dragon.chance") > ThreadLocalRandom.current().nextInt(0, 100);
         boolean SpecialMsg0 = plugin.getConfig().getBoolean("special-dragon.spawn-remind");
-        String SpawnMsg = language.getString("dragon-spawn-broadcast");
-        String SpecialMsg = language.getString("special-broadcast");
+        String SpawnMsg = Message.DragonSpawnBroadcast;
+        String SpecialMsg = Message.SpecialBroadcast;
         String Name = plugin.getConfig().getString("special-dragon.name");
         String NormalName = plugin.getConfig().getString("normal-dragon.name");
         String color = plugin.getConfig().getString("special-dragon.glow-color");

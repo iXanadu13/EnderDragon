@@ -1,0 +1,57 @@
+version: 1.8.3
+
+configNotFound: '§a[EnderDragon] File config.yml Not Found,Creating a new one...'
+dataNotFound: '§a[EnderDragon] File data.yml Not Found,Creating a new one...'
+messageNotFound: '§a[EnderDragon] File message.yml Not Found,Creating a new one...'
+configWrongVersion: '§c[EnderDragon] File config.yml out of date，please update it.'
+dataWrongVersion: '§c[EnderDragon] File data.yml out of date，please update it.'
+langWrongVersion: '§c[EnderDragon] language file out of date，please update it.'
+messageWrongVersion: '§c[EnderDragon] File message.yml out of date，please update it.'
+loaded: '§a[EnderDragon] Enabling the plugin...'
+checkingUpdate: '§a[EnderDragon] Checking update...'
+OutOfDate1: '§e[EnderDragon] Your version: v{0}'
+OutOfDate2: '§e[EnderDragon] New version: v{1}'
+OutOfDate3: '§e[EnderDragon] Download Link: https://www.spigotmc.org/resources/enderdragon-1-12-1-19.101583'
+UpToDate: '§a[EnderDragon] You are using the latest version (v{1})...'
+onDisable: '§e[EnderDragon] Disabling the plugin...'
+
+NoCommandPermission: '§4Sorry,but you do not have permission to do that.'
+configReloaded: '§aConfig reload complete.'
+PlayerCommand: '§cOnly player can do this.'
+DropItemAddFail: '§cYour hand is empty!!Please hold something.'
+DropItemAddSucceed: '§aAdd succeed,drop-chance is §c{chance}%'
+MustNumber: '§cYou should enter a figure instead of this: '
+Number: '<amount>'
+DropChance: 'chance'
+ClearDropItemConfig: '§aDrop-item config has been cleared.'
+CommandTips1: '§e/ed reload §a reload the config'
+CommandTips2: '§e/ed drop §a set the drop-item'
+
+prefix: '§7[§eEnderDragon§7]§r '
+
+#message been sent to everyone when every dragon is respawned
+#You can use %times% to stand for the order number of dragon.
+#If you enter "none",noting will be sent.
+dragon-spawn-broadcast: '§aDragon No.%times% has spawned.'
+
+#message been sent to everyone when a special dragon is respawned
+#You can shut it in config.yml.
+special-broadcast: '§6This dragon is emitting ancient mystery...'
+
+#message been sent to everyone when every dragon is killed
+#You can use %times% to stand for the order number of dragon, and use %player% to stand for killer's name.
+#Plugin will judge killer intelligently,if plugin can't find the killer,%player% will be replaced by what is in 'nobody-kill'.
+dragon-killing-broadcast: '§bDragon No.%times% has been killed by %player%'
+
+nobody-kill: 'mysterious man'
+
+#message been sent to the killer of special dragon
+killer-message: '§6Congratulations!This dragon dropped lots of exp and a dragon egg'
+
+#message been sent to the attacker if he or she is trying to hurt a dragon
+#You can use %damage% to stand for damage amount.
+damage-display: 'Damage amount to dragon : %damage%'
+
+#message been sent to the killer of special dragon
+#called when special-ender-dragon drop item , but the inventory of the killer doesn't have empty slot.
+player-inv-full: '§cYour inventory is full,special drop-item maybe fell at your feet.'

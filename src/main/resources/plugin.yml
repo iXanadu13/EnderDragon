@@ -1,6 +1,7 @@
 name: EnderDragon
-version: 1.8.2
+version: 1.8.3
 main: xanadu.enderdragon.EnderDragon
+author: Xanadu13
 api-version: 1.13
 #若要将插件装在低于1.13版本的服务器，请修改api-version的值为相应版本号
 #举例：如果我要装在1.12.2的服务器，那么设置如下：
@@ -15,7 +16,7 @@ permissions:
   ed.reload:
     description: '允许重载插件配置文件'
     default: op
-  ed.drop.change:
+  ed.drop.edit:
     description: '允许修改特殊龙掉落物'
     default: op
   ed.drop.gui:

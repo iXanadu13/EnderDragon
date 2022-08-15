@@ -13,60 +13,67 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xanadu.enderdragon.commands.MainCommand;
 import xanadu.enderdragon.commands.TabCompleter;
 import xanadu.enderdragon.events.*;
+import xanadu.enderdragon.lang.Message;
 import xanadu.enderdragon.listeners.InventoryClick;
 import xanadu.enderdragon.metrics.Metrics;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
 public final class EnderDragon extends JavaPlugin {
 
     public static String prefix = "";
+    public static String language = "";
+    public static String langPath = "";
     public static Plugin plugin;
     public static Server server;
     public static PluginManager pm;
-    public static File data0;
-    public static File language0;
+    public static File dataF;
+    public static File langF;
     public static FileConfiguration data;
-    public static FileConfiguration language;
+    public static FileConfiguration lang;
 
     @Override
     public void onEnable() {
         plugin = this;
         server = plugin.getServer();
         pm = Bukkit.getPluginManager();
+        boolean configNotFound = false;
+        boolean dataNotFound = false;
         if (!new File(getDataFolder(), "config.yml").exists()) {
             saveDefaultConfig();
-            Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 未检测到config.yml文件，正在生成新的配置文件");
+            configNotFound = true;
         }
         if (!new File(getDataFolder(), "data.yml").exists()) {
             this.saveResource("data.yml",false);
-            Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 未检测到data.yml文件，正在生成新的配置文件");
+            dataNotFound = true;
         }
-        if (!new File(getDataFolder(), "language.yml").exists()) {
-            this.saveResource("language.yml",false);
-            Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 未检测到language.yml文件，正在生成新的配置文件");
+        language = plugin.getConfig().getString("lang","English");
+        langPath = "lang/" + language + ".yml";
+        if (!new File(getDataFolder(), langPath).exists()) {
+            this.saveResource(langPath, false);
         }
-        data0 = new File(plugin.getDataFolder(),"data.yml");
-        language0 = new File(plugin.getDataFolder(),"language.yml");
-        data = YamlConfiguration.loadConfiguration(data0);
-        language = YamlConfiguration.loadConfiguration(language0);
-        prefix = language.getString("prefix");
-        if(!getConfig().getString("version").equals("1.8.2") ){
-            Bukkit.getConsoleSender().sendMessage("§c[EnderDragon] config.yml版本与插件不对应，请更新配置文件");
+        sendMessage("§a[EnderDragon] Language: §6" + language);
+        dataF = new File(plugin.getDataFolder(),"data.yml");
+        langF = new File(getDataFolder(), langPath);
+        lang = YamlConfiguration.loadConfiguration(langF);
+        data = YamlConfiguration.loadConfiguration(dataF);
+        Message.loadLanguage();
+        prefix = lang.getString("prefix","§7[§eEnderDragon§7]§r ");
+        if(configNotFound){sendMessage(Message.configNotFound);}
+        if(dataNotFound){sendMessage(Message.dataNotFound);}
+        if(!getConfig().getString("version").equals("1.8.3") ){
+            sendMessage(Message.configWrongVersion);
         }
         if(!data.getString("version").equals("1.8.1") ){
-            Bukkit.getConsoleSender().sendMessage("§c[EnderDragon] data.yml版本与插件不对应，请更新配置文件");
+            sendMessage(Message.dataWrongVersion);
         }
-        if(!language.getString("version").equals("1.8") ){
-            Bukkit.getConsoleSender().sendMessage("§c[EnderDragon] language.yml版本与插件不对应，请更新配置文件");
+        if(!lang.getString("version").equals("1.8.3") ){
+            sendMessage(Message.langWrongVersion);
         }
-        Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 插件已加载");
-        Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 作者：Xanadu13");
+        sendMessage(Message.loaded);
+        sendMessage("§a[EnderDragon] Author: Xanadu13");
         pm.registerEvents(new CreatureHurt(),this);
         pm.registerEvents(new DragonAttack(),this);
         pm.registerEvents(new DragonDeath(),this);
@@ -76,7 +83,7 @@ public final class EnderDragon extends JavaPlugin {
         getCommand("enderdragon").setExecutor(new MainCommand());
         getCommand("enderdragon").setTabCompleter(new TabCompleter());
         Metrics metrics = new Metrics(this,14850);
-        Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 正在为您检查更新...");
+        sendMessage(Message.checkingUpdate);
         try {
             URLConnection conn = new URL("https://api.github.com/repos/iXanadu13/EnderDragon/releases/latest").openConnection();
             conn.setConnectTimeout(20000);
@@ -87,12 +94,12 @@ public final class EnderDragon extends JavaPlugin {
             String newVer = line.substring(line.indexOf("\"tag_name\"") + 13, line.indexOf("\"target_commitish\"") - 2);
             String localVer = plugin.getDescription().getVersion();
             if (!localVer.equals(newVer)) {
-                Bukkit.getConsoleSender().sendMessage("§e[EnderDragon] 您正在使用的插件版本: v"+localVer);
-                Bukkit.getConsoleSender().sendMessage("§e[EnderDragon] 检测到新版插件v"+newVer+"已发布，请尽快更新");
-                Bukkit.getConsoleSender().sendMessage("§e[EnderDragon] 下载地址：https://www.mcbbs.net/thread-1314199-1-1.html");
+                sendMessage(Message.OutOfDate1.replace("{0}",localVer));
+                sendMessage(Message.OutOfDate2.replace("{1}",newVer));
+                sendMessage(Message.OutOfDate3);
             }
             else{
-                Bukkit.getConsoleSender().sendMessage("§a[EnderDragon] 您正在使用最新版的插件(v"+localVer+")...");
+                sendMessage(Message.UpToDate.replace("{1}",newVer));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +110,12 @@ public final class EnderDragon extends JavaPlugin {
     @Override
     public void onDisable()
     {
-        Bukkit.getConsoleSender().sendMessage("§e[EnderDragon] 插件已卸载");
+        sendMessage(Message.onDisable);
+    }
+
+
+    public void sendMessage(String msg) {
+        Bukkit.getConsoleSender().sendMessage(msg);
     }
 
 

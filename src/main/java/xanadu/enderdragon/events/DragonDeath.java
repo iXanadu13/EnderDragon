@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import xanadu.enderdragon.EnderDragon;
+import xanadu.enderdragon.lang.Message;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,7 +27,7 @@ public class DragonDeath implements Listener {
         if(e.getEntity().getType() != EntityType.ENDER_DRAGON){return;}
         int times = data.getInt("times");
         data.set("times",times+1);
-        data.save(data0);
+        data.save(dataF);
         Player p = e.getEntity().getKiller();
         int exp = plugin.getConfig().getInt("special-dragon.exp-drop");
         int x = plugin.getConfig().getInt("special-dragon.dragon-egg-spawn.x");
@@ -36,10 +37,10 @@ public class DragonDeath implements Listener {
         boolean UseCMD = plugin.getConfig().getBoolean("command.enable");
         boolean EggChance = plugin.getConfig().getInt("special-dragon.dragon-egg-spawn.chance") > ThreadLocalRandom.current().nextInt(0, 100);
         boolean AllBroadcast = !plugin.getConfig().getBoolean("only-special-death-remind");
-        String skill = language.getString("killer-message");
-        String KillMsg = language.getString("dragon-killing-broadcast");
-        String nobody = language.getString("nobody-kill");
-        String InvIsFull = language.getString("player-inv-full");
+        String skill = Message.KillerMessage;
+        String KillMsg = Message.DragonKillingBroadcast;
+        String nobody = Message.NobodyKill;
+        String InvIsFull = Message.PlayerInvFull;
         if(KillMsg != null) {
             if(p != null) {
                 if ((e.getEntity().getScoreboardTags().contains("special")) || (AllBroadcast)) {
