@@ -2,9 +2,6 @@ package xanadu.enderdragon.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +9,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scoreboard.Team;
 import xanadu.enderdragon.lang.Message;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static xanadu.enderdragon.EnderDragon.*;
@@ -19,7 +18,7 @@ import static xanadu.enderdragon.EnderDragon.*;
 public class DragonSpawn implements Listener {
 
     @EventHandler
-    public void OnDragonSpawn(CreatureSpawnEvent e){
+    public void OnDragonSpawn(CreatureSpawnEvent e) throws IOException {
         if(e.getEntity().getType() != EntityType.ENDER_DRAGON){return;}
         int times = data.getInt("times");
         double health = plugin.getConfig().getDouble("special-dragon.max-health");
@@ -38,21 +37,30 @@ public class DragonSpawn implements Listener {
             Bukkit.broadcastMessage(prefix + SpawnMsg.replaceAll("%times%", String.valueOf(times)));
         }
         if(times % circle == 0 && chance) {
-            e.getEntity().addScoreboardTag("special");
+            if(mcMainVersion >= 11){e.getEntity().addScoreboardTag("special");}
+            else{
+                List<String> special = data.getStringList("special");
+                special.add(e.getEntity().getUniqueId().toString());
+                data.set("special",special);
+                data.save(dataF);
+            }
             if(health > 0) {
-                AttributeInstance MaxHealth = e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                assert MaxHealth != null;
-                MaxHealth.addModifier(new AttributeModifier("最大生命值", health - 200, AttributeModifier.Operation.ADD_NUMBER));
+                e.getEntity().setMaxHealth(health);
             }
             e.getEntity().setHealth(SpawnHealth);
-            if (color != null) {
+            if (color != null && mcMainVersion >= 9) {
                 if(!color.equalsIgnoreCase("disable")) {
                     color = color.toUpperCase();
                     if(server.getScoreboardManager().getMainScoreboard().getTeam("enderdragon-glow") == null) {
                         server.getScoreboardManager().getMainScoreboard().registerNewTeam("enderdragon-glow");
                     }
                     Team team = server.getScoreboardManager().getMainScoreboard().getTeam("enderdragon-glow");
-                    team.setColor(ChatColor.valueOf(color));
+                    if(mcMainVersion >= 12) {
+                        team.setColor(ChatColor.valueOf(color));
+                    }
+                    else{
+                        team.setPrefix(ChatColor.valueOf(color).toString());
+                    }
                     team.addEntry(e.getEntity().getUniqueId().toString());
                     e.getEntity().setGlowing(true);
                 }

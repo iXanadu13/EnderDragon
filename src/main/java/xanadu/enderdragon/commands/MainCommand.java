@@ -77,7 +77,7 @@ public class MainCommand implements CommandExecutor {
                     List<String> datum = data.getStringList("items");
                     ItemStack item = p.getItemInHand();
                     datum.add(itemStackToString(item));
-                    datum.add(String.valueOf(chance));
+                    datum.add(ChanceStr);
                     data.set("items", datum);
                     try {
                         data.save(dataF);
@@ -85,7 +85,7 @@ public class MainCommand implements CommandExecutor {
                         throw new RuntimeException(e);
                     }
                     data = YamlConfiguration.loadConfiguration(dataF);
-                    p.sendMessage(prefix + Message.DropItemAddSucceed.replace("{chance}",""+chance));
+                    p.sendMessage(prefix + Message.DropItemAddSucceed.replace("{chance}",ChanceStr));
 
                 }
             }
@@ -119,18 +119,17 @@ public class MainCommand implements CommandExecutor {
                     int max = datum.size() / 2 ;
                     for(int i=0 ; i<max ; ){
                         i = i + 1;
-                        double chance = Double.parseDouble(datum.get(i*2-1));
                         String str = datum.get(i*2-2);
                         ItemStack item = StringToItemStack(str);
                         ItemMeta meta = item.getItemMeta();
                         if(meta != null) {
                             List<String> lore = meta.getLore();
                             if(lore != null) {
-                                lore.add("§6("+Message.DropChance+": " + chance + "%)§r");
+                                lore.add("§6("+Message.DropChance+": " + datum.get(i*2-1) + "%)§r");
                                 meta.setLore(lore);
                             }
                             else{
-                                meta.setLore(Collections.singletonList("§6("+Message.DropChance+": " + chance + "%)§r"));
+                                meta.setLore(Collections.singletonList("§6("+Message.DropChance+": " + datum.get(i*2-1) + "%)§r"));
                             }
                             item.setItemMeta(meta);
                         }

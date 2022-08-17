@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import xanadu.enderdragon.lang.Message;
+import xanadu.enderdragon.tools.MyMath;
 
 import static xanadu.enderdragon.EnderDragon.*;
 
@@ -20,10 +21,17 @@ public class CreatureHurt implements Listener {
         if(e.getDamager().getType() != EntityType.PLAYER){return;}
         if(e.getEntity().getType() != EntityType.ENDER_DRAGON){return;}
         Player p = (Player) e.getDamager();
-        double damage = e.getDamage();
+        double damage = MyMath.div(e.getFinalDamage(),1,2);
         MSG = MSG.replaceAll("%damage%", String.valueOf(damage));
-        if(DamageVisual == 1){p.sendTitle("",MSG,5,40,5);}
+        if(DamageVisual == 1){
+            if(mcMainVersion >= 11){p.sendTitle("",MSG,5,40,5);}
+            else if(mcMainVersion >= 9){p.sendTitle("",MSG);}
+        }
         if(DamageVisual == 2){p.sendMessage(MSG);}
-        if(DamageVisual == 3){p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(MSG));}
+        if(DamageVisual == 3){
+            if(mcMainVersion >= 10){
+                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(MSG));
+            }
+        }
     }
 }

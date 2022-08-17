@@ -18,7 +18,7 @@ public class DragonAttack implements Listener {
     @EventHandler
     public void OnDragonAttack(EntityDamageByEntityEvent e){
         if(e.getDamager().getType() != EntityType.ENDER_DRAGON){return;}
-        if(!e.getDamager().getScoreboardTags().contains("special")){return;}
+        if(!isSpecial(e.getDamager())){return;}
         double multiple = plugin.getConfig().getDouble("special-dragon.damage-multiply");
         double rate = plugin.getConfig().getDouble("special-dragon.suck-blood.rate") / 100;
         double BasicSuck = plugin.getConfig().getDouble("special-dragon.suck-blood.base-suck-blood");

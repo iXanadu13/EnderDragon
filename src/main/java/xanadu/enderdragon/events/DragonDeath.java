@@ -43,7 +43,7 @@ public class DragonDeath implements Listener {
         String InvIsFull = Message.PlayerInvFull;
         if(KillMsg != null) {
             if(p != null) {
-                if ((e.getEntity().getScoreboardTags().contains("special")) || (AllBroadcast)) {
+                if (isSpecial(e.getEntity()) || AllBroadcast) {
                     Bukkit.broadcastMessage(prefix + KillMsg.replaceAll("%times%", String.valueOf(times)).replaceAll("%player%", p.getDisplayName()));
                 }
             }
@@ -57,13 +57,13 @@ public class DragonDeath implements Listener {
                 String name = names.toString();
                 if(name.equals("")){name = nobody;}
                 if(name.endsWith(",")){name = name.substring(0,name.length()-1);}
-                if ((e.getEntity().getScoreboardTags().contains("special")) || (AllBroadcast)) {
+                if (isSpecial(e.getEntity()) || AllBroadcast) {
                     Bukkit.broadcastMessage(prefix + KillMsg.replaceAll("%times%", String.valueOf(times)).replaceAll("%player%", name));
                 }
             }
         }
         if(UseCMD) {
-            if (e.getEntity().getScoreboardTags().contains("special")) {
+            if (isSpecial(e.getEntity())) {
                 List<String> CMDList = plugin.getConfig().getStringList("command.special-dragon");
                 for (String command : CMDList) {
                     if (!(p == null && command.contains("%player%"))) {
@@ -80,7 +80,7 @@ public class DragonDeath implements Listener {
                 }
             }
         }
-        if(e.getEntity().getScoreboardTags().contains("special")){
+        if(isSpecial(e.getEntity())){
             e.setDroppedExp(exp);
             if (EggChance) {
                 BukkitRunnable runnable = new BukkitRunnable() {
@@ -117,6 +117,12 @@ public class DragonDeath implements Listener {
                 }
             }
             if(warning){p.sendMessage(prefix + InvIsFull);}
+            if(mcMainVersion < 11) {
+                List<String> special = data.getStringList("special");
+                special.remove(e.getEntity().getUniqueId().toString());
+                data.set("special", special);
+                data.save(dataF);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -33,12 +34,15 @@ public final class EnderDragon extends JavaPlugin {
     public static File langF;
     public static FileConfiguration data;
     public static FileConfiguration lang;
+    public static int mcMainVersion;
+    public static int mcPatchVersion;
 
     @Override
     public void onEnable() {
         plugin = this;
         server = plugin.getServer();
         pm = Bukkit.getPluginManager();
+        mcMainVersion = getMinecraftVersion();
         boolean configNotFound = false;
         boolean dataNotFound = false;
         if (!new File(getDataFolder(), "config.yml").exists()) {
@@ -66,7 +70,7 @@ public final class EnderDragon extends JavaPlugin {
         if(!getConfig().getString("version").equals("1.8.3") ){
             sendMessage(Message.configWrongVersion);
         }
-        if(!data.getString("version").equals("1.8.1") ){
+        if(!data.getString("version").equals("1.8.4") ){
             sendMessage(Message.dataWrongVersion);
         }
         if(!lang.getString("version").equals("1.8.3") ){
@@ -134,6 +138,23 @@ public final class EnderDragon extends JavaPlugin {
             item = new ItemStack(Material.AIR, 1);
         }
         return item;
+    }
+    private int getMinecraftVersion() {
+        String[] version = getServer().getBukkitVersion().replace('-', '.').split("\\.");
+        try {
+            mcPatchVersion = Integer.parseInt(version[2]);
+        } catch (NumberFormatException ignored) {
+        }
+        return Integer.parseInt(version[1]);
+    }
+    public static boolean isSpecial(Entity e){
+        if(mcMainVersion >= 11){
+            return e.getScoreboardTags().contains("special");
+        }
+        else{
+            String uuid = e.getUniqueId().toString();
+            return data.getStringList("special").contains(uuid);
+        }
     }
 
 }

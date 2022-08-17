@@ -2,6 +2,7 @@
 version: 1.8.3
 
 #可选: 'Chinese','English'
+#Spigot1.8等远古服务端不支持中文
 lang: 'Chinese'
 
 #普通末影龙
@@ -80,17 +81,16 @@ special-dragon:
     y: 70
     z: 0
 
-  #特殊龙发光的颜色
+  #特殊龙发光的颜色(mc1.8及以下版本不可用)
   #若要关闭发光功能，设置该项为“disable”
-  #所有可用颜色如下(不区分大小写)
   #AQUA-青色，BLACK-黑色，BLUE-蓝色，DARK_AQUA-深青，DARK_BLUE-深蓝，DARK_GRAY-深灰，DARK_GREEN-深绿，DARK_PURPLE-深紫，DARK_RED-深红，GOLD-金色，GRAY-灰色，GREEN-绿色，LIGHT_PURPLE-紫色，RED-红色，WHITE-白色，YELLOW-黄色
   glow-color: GOLD
 
   #玩家攻击末影龙时伤害显示
   #填入0代表不显示
-  #填入1代表显示在副标题栏(会有略微视野遮挡)
+  #填入1代表显示在副标题栏(会有略微视野遮挡)(mc1.8及以下版本不可用)
   #输入2代表显示在聊天栏(可能会刷屏)
-  #输入3代表显示在ActionBar(推荐)
+  #输入3代表显示在ActionBar(推荐)(mc1.9及以下版本不可用)
   damage-visible: 3
 
   #指令/ed drop gui 打开的页面的标题
