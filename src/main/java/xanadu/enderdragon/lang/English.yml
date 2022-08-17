@@ -11,7 +11,7 @@ loaded: '§a[EnderDragon] Enabling the plugin...'
 checkingUpdate: '§a[EnderDragon] Checking update...'
 OutOfDate1: '§e[EnderDragon] Your version: v{0}'
 OutOfDate2: '§e[EnderDragon] New version: v{1}'
-OutOfDate3: '§e[EnderDragon] Download Link: https://www.spigotmc.org/resources/enderdragon-1-12-1-19.101583'
+OutOfDate3: '§e[EnderDragon] Download Link: https://www.spigotmc.org/resources/enderdragon.101583'
 UpToDate: '§a[EnderDragon] You are using the latest version (v{1})...'
 onDisable: '§e[EnderDragon] Disabling the plugin...'
 
