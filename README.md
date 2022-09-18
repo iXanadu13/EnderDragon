@@ -5,4 +5,4 @@ An easy plugin that can customize your EnderDragon for Minecraft Servers, suppor
 
 Download: 
 - https://www.mcbbs.net/thread-1314199-1-1.html
-- https://www.spigotmc.org/resources/enderdragon-1-8-1-19.101583
+- https://www.spigotmc.org/resources/enderdragon.101583
