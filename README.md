@@ -4,5 +4,4 @@ An easy plugin that can customize your EnderDragon for Minecraft Servers, suppor
 一个可以自定义末影龙的服务端插件，支持1.8及以上版本。
 
 Download: 
-- https://www.mcbbs.net/thread-1314199-1-1.html
 - https://www.spigotmc.org/resources/enderdragon.101583
