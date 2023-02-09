@@ -1,0 +1,46 @@
+#配置文件版本，请勿修改
+version: 2.0.0
+
+#可选: 'Chinese','English'
+lang: 'English'
+
+#可选: 'Disable'（不启用）,'ChatBox'（聊天栏）,'SubTitle'（副标题）,'ActionBar'（状态栏）
+damage_visible_mode: ActionBar
+
+#可选: 'edge','pc'
+#'edge': 使用权重来决定每次生成哪条龙（包括默认龙default）
+#'pc': 即“优先级+概率”，插件会先尝试生成（按照其设定的概率）优先级最高的龙，如果失败则尝试下一条，如果都失败就生成默认龙default
+#注意，在pc模式下，默认龙是用来兜底的，也就是说，如果你使用的是该模式，给默认龙设置再高的优先级都无效
+special_dragon_jude_mode: 'edge'
+
+#格式: '名字:权重'
+#这里的名字与文件名一一对应，如果你要增加新的龙配置，需要在plugins/EnderDragon/setting中新建一个"名字.yml"文件，然后在这里加上一项：- '名字:权重'
+dragon_setting_file:
+  - 'default:5'
+  - 'special:5'
+
+#自动复活末影龙
+auto_respawn:
+  #是否启用，true/false
+  enable: false
+  #对应的末地世界名字
+  world_the_end_name: world_the_end
+  #复活时间
+  # minute:30            表示每30分钟复活
+  # hour:4               表示每4小时复活
+  # day:1,00:00          表示每天00:00复活
+  # day:10,14:30         表示每10天的14:30复活
+  # week:6,22:00         表示每周6的22:00复活
+  # week:7,09:00         表示每周周日的09:00复活
+  # month:8,11:43        表示每月8号的11:43复活
+  # year:200,00:00       表示每年第200天的00:00复活
+  respawn_time: 'day:10,22:00'
+  #复活过程中，末地传送门上的末地水晶能否被生存模式玩家破坏（被破坏则复活被中止）
+  invulnerable: false
+
+#如果设置为true，玩家手动放置末地水晶将无法复活末影龙，但不影响末地水晶的合成、放置
+resist_player_respawn: false
+#如果设置为true，玩家无法用玻璃瓶收集龙息
+resist_dragon_breath_gather: false
+#指令/ed drop gui 打开的默认主页面
+main_gui: main

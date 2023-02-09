@@ -1,0 +1,40 @@
+version: 2.0.0
+
+plugin:
+  prefix: '§7[§eEnderDragon§7]§r '
+  wrong_file_version: 'File {file_name} is out of date，please update it.'
+  read_file: 'Reading file '
+  item_read_error: 'Item read error! Key: '
+  checking_update: 'Checking update...'
+  check_update_fail: 'Checking update fail. Please check your network settings.'
+  out_of_date: 'Your version: v{0}\nNew version: v{1}\nDownload Link: https://www.spigotmc.org/resources/enderdragon.101583'
+  up_to_date: 'You are using the latest version (v{1})...'
+  disable: 'Disabling the plugin...'
+  file_save_error: 'File {file_name} save error!'
+
+command:
+  no_permission: "§4I'm Sorry,but you do not have permission to do that."
+  reload_config: '§aConfig reload complete.'
+  only_player: '§cOnly player can do this.'
+  drop_item:
+    add:
+      empty: '§cThere is nothing to add, please hold something.'
+      invalid_chance: '§cThis drop-chance is invalid: §e'
+      succeed: '§aDrop item add succeed with §c{chance}%§a drop-chance.'
+    clear: '§aDrop-item config has been cleared.'
+
+gui:
+  default_title: '§8§l§k||§6§lSpecial Drop§8§l§k||'
+  not_found: "§cCan't find this gui."
+  item_lore: '§6(chance: {drop_chance}%)§r'
+dragon:
+  damage_display: 'Damage amount to dragon : §e%damage%.§r(§a%remain_health%§r/§c%max_health%§r)'
+  player_inv_full: '§cYour inventory is full,special drop-item maybe fell at your feet.'
+  no_killer: '???'
+  auto_respawn: 'The next dragon will respawn soon...'
+  not_found: "§cCan't find this dragon."
+
+CommandTips1: '§e/ed reload §a- reload the config'
+CommandTips2: '§e/ed respawn §a- respawn a dragon'
+CommandTips3: '§e/ed drop gui §a- view the drop_item'
+CommandTips4: '§e/ed drop add <name> <chance> §a- add drop_item to one dragon'

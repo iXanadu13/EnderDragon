@@ -1,0 +1,149 @@
+version: 2.0.0
+#This is used for plugin internal identification.
+#Please make sure the value is unique among all the types of dragons
+unique_name: 'default'
+display_name: 'Ender Dragon'
+#In "edge" mode, this(priority) will be ignored.
+#In "pc" mode, dragon with higher priority will be judged earlier
+priority: -32768
+#the chance of spawning a special ender dragon
+#Now you can also enter a double here (unit:%)
+#You shouldn't add "%".
+spawn_chance: 100
+#the icon that represents this dragon in gui view
+#If this format is invalid in your mc version(such as 1.12.2),use this:
+#icon:
+#  ==: org.bukkit.inventory.ItemStack
+#  type: APPLE
+#  amount: 1
+#  meta:
+#    ==: ItemMeta
+#    meta-type: UNSPECIFIC
+#    display-name: '§rNormal Dragon'
+icon:
+  ==: org.bukkit.inventory.ItemStack
+  v: 3105
+  type: APPLE
+  amount: 1
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: '{"text":"Normal Dragon"}'
+#the format of gui this dragon will use(chosen in file view.yml,multiple dragons can share the same one)
+drop_gui: default_gui
+#please enter a double that above 0
+#Valid example: “100”,“1000.0”,“200.00” etc.
+#TIPS: The max_health of native ender-dragon is 200.
+max_health: 200
+#the health of ender-dragon when it spawns
+#please enter a double that above 0
+#don't make it above the "max_health"
+spawn_health: 200
+#please enter an integer here
+#TIPS: In native mc,the first ender dragon drops 12000 exp,afterwards 500 exp per dragon
+exp_drop: 500
+dragon_egg_spawn:
+  #the chance of spawning a dragon egg when this dragon died
+  #enter an integer or a double (from 0 to 100)(unit:%)
+  chance: 0
+  #the dragon-egg spawn delay after this dragon died
+  #please enter an integer that above 0 (unit:ticks,20ticks=1 second)
+  #Spawning an egg after the restoration of exit portal can avoid some trouble
+  delay: 410
+  #the position where the dragon egg spawns
+  x: 0
+  y: 70
+  z: 0
+
+#4 options below (contains "modify") revise the amount on native basement,instead of the final amount
+#the damage modify when this dragon attacks player with body or limb (allow double and negative value)
+attack_damage_modify: 0
+#allow double and negative value(Native dragon move_speed: 0.7)
+move_speed_modify: 0
+#allow double and negative value
+armor_modify: 0
+#allow double and negative value
+armor_toughness_modify: 0
+#the health-regain amount every second when the ender-dragon is healed by ender-crystal(Native: 2.0 per second)
+crystal_heal_speed: 2.0
+#"none" represents not glowing; "random" is also optional
+#enable color: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW
+glow_color: none
+#dragon recover health when cause damage to other entity
+#suck_amount = real_damage * <rate>(auto regard as "%") + <basic_amount>
+suck_blood:
+  enable: false
+  #unit: %
+  rate: 0
+  #allow double
+  base_amount: 0
+  #whether only trigger when dragon attack the player
+  only_player: true
+
+bossbar:
+  #enable:BLUE,GREEN,RED,PINK,PURPLE,WHITE,YELLOW
+  color: pink
+  #enable:SOLID,SEGMENTED_6,SEGMENTED_10,SEGMENTED_12,SEGMENTED_20
+  style: 'SOLID'
+
+effect_cloud:
+  #enter a double that above 0
+  original_radius: 5
+  #how many blocks it's radius will enlarge per second
+  expand_speed: 0.1
+  #enter an integer that above 0 (unit: second)
+  duration: 30
+  #RGB module,example:'255:255:0' (yellow)
+  #"none" represents original type
+  color: none
+  #please follow the format: '<potion> <duration> <level>'
+  #please enter an integer that above 0 at "duration"(unit:second)
+  #please enter an integer (from 1 to 256) at "level"
+  #Some potion's name differs from that in mc native command,here are all the potions you can use:
+  #ABSORPTION,BAD_OMEN,BLINDNESS,CONDUIT_POWER,CONFUSION,DAMAGE_RESISTANCE,DARKNESS,DOLPHINS_GRACE
+  #FAST_DIGGING,FIRE_RESISTANCE,GLOWING,HARM,HEAL,HEALTH_BOOST,HERO_OF_THE_VILLAGE,HUNGER
+  #INCREASE_DAMAGE,INVISIBILITY,JUMP,LEVITATION,LUCK,NIGHT_VISION,POISON,REGENERATION,SATURATION
+  #SLOW,SLOW_DIGGING,SLOW_FALLING,SPEED,UNLUCK,WATER_BREATHING,WEAKNESS,WITHER
+  potion:
+    - 'harm 60 2'
+    - 'BLINDNESS 10 1'
+#All the settings below can be disabled with a "[]",example:
+#attack_potion_effect: []
+
+#the effect give to player when this ender dragon attacks player with body or limb
+#the format is the same as effect_cloud.potion
+attack_potion_effect:
+  - ''
+  - ''
+  - ''
+#commands that server will run when this dragon spawn
+#Attention: You shouldn't add “/” at the beginning of each command!
+spawn_cmd:
+  - ''
+  - ''
+  - ''
+#commands that server will run when this dragon been killed(exclude '/kill')
+#You can use %player% respective the name of killer
+#if plugin can't find who kill the dragon,commands that contain '%player%' won't be performed
+#Example: - 'give %player% apple 1'
+death_cmd:
+  - ''
+  - ''
+  - ''
+#Message send to everyone when this dragon spawn
+#"%times" respective the ordinal number of this dragon
+spawn_broadcast_msg:
+  - '§aDragon No.%times% has spawned.'
+  - ''
+#Message send to everyone when this dragon is killed(exclude '/kill')
+#"%times" respective the ordinal number of this dragon
+#The plugin will try to find the killer as far as possible.If can't find the killer, %player% will be replaced with the 'dragon.no_killer' in language file
+death_broadcast_msg:
+  - '§bDragon No.%times% has been killed by %player%'
+  - ''
+  - ''
+#message that will be sent to the killer(if he/she can be found)
+msg_to_killer:
+  - '§bCongratulations, You have been the dragon slayer!'
+  - ''
+  - ''
