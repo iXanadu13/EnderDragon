@@ -18,13 +18,15 @@ public class EntityDamageByEntityListener implements Listener {
     public void OnDragonAttack(EntityDamageByEntityEvent e){
         Entity victim = e.getEntity();
         Entity attack = e.getDamager();
-        if(!(attack instanceof EnderDragon dragon)) return;
+        if(!(attack instanceof EnderDragon)) return;
+        EnderDragon dragon = (EnderDragon) attack;
         String unique_name = getSpecialKey(dragon);
         if(unique_name == null) return;
         MyDragon myDragon = mp.get(unique_name);
         if(myDragon == null) return;
         e.setDamage(Math.max(0.1, e.getDamage() + myDragon.attack_damage_modify));
-        if(victim instanceof Player player){
+        if(victim instanceof Player){
+            Player player = (Player) victim;
             for(PotionEffect effect : myDragon.attack_potion_effect){
                 player.addPotionEffect(effect);
             }
@@ -45,9 +47,12 @@ public class EntityDamageByEntityListener implements Listener {
         if(e.getDamage() <= 0.0) return;
         Entity victim = e.getEntity();
         Entity entity = e.getDamager();
-        if(victim instanceof EnderDragon dragon){
-            if(entity instanceof TNTPrimed tnt){
-                if(!(tnt.getSource() instanceof Player damager)) return;
+        if(victim instanceof EnderDragon){
+            EnderDragon dragon = (EnderDragon) victim;
+            if(entity instanceof TNTPrimed){
+                TNTPrimed tnt = (TNTPrimed) entity;
+                if(!(tnt.getSource() instanceof Player)) return;
+                Player damager = (Player) tnt.getSource();
                 pm.callEvent(new DragonDamageByPlayerEvent(damager,dragon,e.getCause(),e.getFinalDamage()));
             }
         }

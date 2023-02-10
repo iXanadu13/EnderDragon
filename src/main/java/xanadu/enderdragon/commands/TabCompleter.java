@@ -1,18 +1,18 @@
 package xanadu.enderdragon.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static xanadu.enderdragon.manager.DragonManager.dragon_names;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
-    private static final List<String> arguments_1 = List.of(new String[]{"drop", "reload", "respawn", "update"});
-    private static final List<String> arguments_2 = List.of(new String[]{"add", "clear", "gui"});
+    private static final List<String> arguments_1 = Arrays.asList("drop", "reload", "respawn", "update");
+    private static final List<String> arguments_2 = Arrays.asList("add", "clear", "gui");
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 

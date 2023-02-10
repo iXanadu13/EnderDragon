@@ -18,14 +18,36 @@ public abstract class Task {
     protected Task(TaskType type,String str){
         this.type = type;
         switch (type){
-            case minute, hour -> this.period = Integer.parseInt(str);
-            case day -> this.period = Integer.parseInt(str.split(",")[0]);
-            case week, month, year -> this.day = Integer.parseInt(str.split(",")[0]);
+            case minute :
+            case hour : {
+                this.period = Integer.parseInt(str);
+                break;
+            }
+            case day : {
+                this.period = Integer.parseInt(str.split(",")[0]);
+                break;
+            }
+            case week :
+            case month :
+            case year : {
+                this.day = Integer.parseInt(str.split(",")[0]);
+                break;
+            }
         }
         if(data.getString(path) == null){
             switch (type){
-                case minute, hour -> this.nextTime = this.getNextTime(LocalDateTime.now());
-                case day, week, month, year -> calcNextTime(str);
+                case minute :
+                case hour : {
+                    this.nextTime = this.getNextTime(LocalDateTime.now());
+                    break;
+                }
+                case day :
+                case week :
+                case month :
+                case year : {
+                    calcNextTime(str);
+                    break;
+                }
             }
             saveFile(nextTime);
         }

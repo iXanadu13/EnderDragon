@@ -24,47 +24,42 @@ public class InventoryListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void OnInventoryClick(InventoryClickEvent e){
         InventoryHolder holder = e.getInventory().getHolder();
-        if(!(holder instanceof GUIHolder guiHolder)) return;
-        if(!(guiHolder.getGUI() instanceof GUIWrapper guiWrapper)) return;
+        if(!(holder instanceof GUIHolder)) return;
+        e.setCancelled(true);
+        GUIHolder guiHolder = (GUIHolder) holder;
+        if(!(guiHolder.getGUI() instanceof GUIWrapper)) return;
+        GUIWrapper guiWrapper = (GUIWrapper) guiHolder.getGUI();
         if(e.getClickedInventory() instanceof PlayerInventory){
-            e.setCancelled(true);
             return;
         }
         if(e.getClick() != ClickType.LEFT && e.getClick() != ClickType.RIGHT){
-            e.setCancelled(true);
             return;
         }
         if(e.getRawSlot() >= 54 || e.getRawSlot() < 0){ //点击箱子以外界面会返回-999
-            e.setCancelled(true);
             return;
         }
         Player p = (Player) e.getWhoClicked();
         GUISlot slot = guiWrapper.getSlot(e.getRawSlot());
         GUISlotType type = slot.getType();
         if(type == GUISlotType.EMPTY || type == GUISlotType.TIP || type == GUISlotType.PAGE_TIP || type == GUISlotType.ITEM_SLOT){
-            e.setCancelled(true);
             return;
         }
         if(type == GUISlotType.PAGE_PREV){
-            e.setCancelled(true);
             guiWrapper.prev();
             p.updateInventory();
             return;
         }
         if(type == GUISlotType.PAGE_NEXT){
-            e.setCancelled(true);
             guiWrapper.next();
             p.updateInventory();
             return;
         }
         if(type == GUISlotType.PAGE_JUMP){
-            e.setCancelled(true);
             String name = ((PageJumpSlot)slot).getGuiName();
             GuiManager.openGui(p,name);
             return;
         }
         if(type == GUISlotType.DRAGON_SLOT){
-            e.setCancelled(true);
             String unique_name = guiWrapper.getData(guiWrapper.getPage(),e.getRawSlot());
             MyDragon dragon = mp.get(unique_name);
             if(dragon == null){
@@ -79,8 +74,9 @@ public class InventoryListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void OnInventoryDrag(InventoryDragEvent e){
         InventoryHolder holder = e.getInventory().getHolder();
-        if(!(holder instanceof GUIHolder guiHolder)) return;
-        if(!(guiHolder.getGUI() instanceof GUIWrapper guiWrapper)) return;
+        if(!(holder instanceof GUIHolder)) return;
+        GUIHolder guiHolder = (GUIHolder) holder;
+        if(!(guiHolder.getGUI() instanceof GUIWrapper)) return;
         e.setCancelled(true);
     }
 }

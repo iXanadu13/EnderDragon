@@ -26,25 +26,25 @@ public class TaskManager {
         String[] str = string.split(":",2);
         TaskType taskType = TaskType.getByName(str[0]);
         switch (taskType){
-            case minute -> {
+            case minute : {
                 return new Minute(TaskType.minute,str[1]);
             }
-            case hour -> {
+            case hour : {
                 return new Hour(TaskType.hour,str[1]);
             }
-            case day -> {
+            case day : {
                 return new Day(TaskType.day,str[1]);
             }
-            case week -> {
+            case week : {
                 return new Week(TaskType.week,str[1]);
             }
-            case month -> {
+            case month : {
                 return new Month(TaskType.month,str[1]);
             }
-            case year -> {
+            case year : {
                 return new Year(TaskType.year,str[1]);
             }
-            default -> {
+            default : {
                 return null;
             }
         }

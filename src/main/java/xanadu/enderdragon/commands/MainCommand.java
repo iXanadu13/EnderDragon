@@ -31,7 +31,7 @@ public class MainCommand implements CommandExecutor {
         }
         if (args.length == 1) {
             switch (args[0].toLowerCase()){
-                case "reload" -> {
+                case "reload" : {
                     if(!sender.hasPermission("ed.reload")){
                         sendFeedback(sender,Lang.command_no_permission);
                         return false;
@@ -41,19 +41,20 @@ public class MainCommand implements CommandExecutor {
                     sendFeedback(sender,Lang.command_reload_config);
                     return true;
                 }
-                case "respawn" -> {
+                case "respawn" : {
                     if(!sender.hasPermission("ed.respawn")){
                         sendFeedback(sender,Lang.command_no_permission);
                         return false;
                     }
-                    if(!(sender instanceof Player player)){
+                    if(!(sender instanceof Player)){
                         sendFeedback(sender,Lang.command_only_player);
                         return false;
                     }
+                    Player player = (Player) sender;
                     EnderDragon.getInstance().getDragonManager().initiateRespawn(player);
                     return true;
                 }
-                case "update" -> {
+                case "update" : {
                     if(!sender.hasPermission("ed.update")){
                         sendFeedback(sender,Lang.command_no_permission);
                         return false;
@@ -65,19 +66,20 @@ public class MainCommand implements CommandExecutor {
                     }
                     return true;
                 }
-                default -> {
+                default : {
                     sendCommandTips(sender);
                     return false;
                 }
             }
         }
         if (args[0].equalsIgnoreCase("drop")) {
-            if(!(sender instanceof Player p)) {
+            if(!(sender instanceof Player)) {
                 sendFeedback(sender,Lang.command_only_player);
                 return false;
             }
+            Player p = (Player) sender;
             switch (args[1].toLowerCase()){
-                case "gui" -> {
+                case "gui" : {
                     if(!sender.hasPermission("ed.drop.gui")){
                         sendFeedback(sender,Lang.command_no_permission);
                         return false;
@@ -96,8 +98,9 @@ public class MainCommand implements CommandExecutor {
                         openGui(p,dragon.drop_gui,key);
                         return true;
                     }
+                    break;
                 }
-                case "clear" -> {
+                case "clear" : {
                     if(!sender.hasPermission("ed.drop.edit")){
                         sendFeedback(sender,Lang.command_no_permission);
                         return false;
@@ -108,8 +111,9 @@ public class MainCommand implements CommandExecutor {
                         sendFeedback(sender,Lang.command_drop_item_clear);
                         return true;
                     }
+                    break;
                 }
-                case "add" -> {
+                case "add" : {
                     if(!sender.hasPermission("ed.drop.edit")){
                         sendFeedback(sender,Lang.command_no_permission);
                         return false;
@@ -138,8 +142,9 @@ public class MainCommand implements CommandExecutor {
                         sendFeedback(p,Lang.command_drop_item_add_succeed.replaceAll("\\{chance}",ChanceStr));
                         return true;
                     }
+                    break;
                 }
-                default -> {
+                default : {
                     sendCommandTips(sender);
                     return false;
                 }

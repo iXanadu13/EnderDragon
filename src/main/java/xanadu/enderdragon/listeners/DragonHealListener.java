@@ -13,7 +13,8 @@ import static xanadu.enderdragon.manager.DragonManager.mp;
 public class DragonHealListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void OnDragonHeal(EntityRegainHealthEvent e){
-        if(!(e.getEntity() instanceof EnderDragon dragon)) return;
+        if(!(e.getEntity() instanceof EnderDragon)) return;
+        EnderDragon dragon = (EnderDragon) e.getEntity();
         if(!e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.ENDER_CRYSTAL)) return;
         String unique_name = getSpecialKey(dragon);
         if(unique_name == null) return;

@@ -349,11 +349,24 @@ public class DragonManager {
                 Object WorldProviderTheEnd = WorldProviderTheEndClass.cast(worldProvider);
                 String method_name;
                 switch (version) {
-                    case "v1_12_R1" -> method_name = "t";
-                    case "v1_13_R1", "v1_13_R2" -> method_name = "r";
-                    case "v1_14_R1" -> method_name = "q";
-                    case "v1_15_R1" -> method_name = "o";
-                    default -> method_name = null;
+                    case "v1_12_R1" : {
+                        method_name = "t";
+                        break;
+                    }
+                    case "v1_13_R1" :
+                    case "v1_13_R2" : {
+                        method_name = "r";
+                        break;
+                    }
+                    case "v1_14_R1" : {
+                        method_name = "q";
+                        break;
+                    }
+                    case "v1_15_R1" : {
+                        method_name = "o";
+                        break;
+                    }
+                    default : method_name = null;
                 }
                 if(method_name == null) return null;
                 Method method = WorldProviderTheEnd.getClass().getDeclaredMethod(method_name);

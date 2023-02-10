@@ -22,10 +22,19 @@ public class DragonDamageByPlayerListener implements Listener {
         double remain_health = Math.max(dragon.getHealth()-e.getFinalDamage(),0.0);
         String str = Lang.dragon_damage_display.replaceAll("%damage%", format(damage)).replaceAll("%remain_health%",format(remain_health)).replaceAll("%max_health%",format(max_health));
         switch (Config.damage_visible_mode.toLowerCase()){
-            case "actionbar" -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(str));
-            case "chatbox" -> Lang.sendFeedback(p,str);
-            case "subtitle" -> p.sendTitle("",str,5,40,5);
-            default -> {
+            case "actionbar" : {
+                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(str));
+                break;
+            }
+            case "chatbox" : {
+                Lang.sendFeedback(p,str);
+                break;
+            }
+            case "subtitle" : {
+                p.sendTitle("",str,5,40,5);
+                break;
+            }
+            default : {
 
             }
 

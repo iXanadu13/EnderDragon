@@ -27,7 +27,8 @@ import static xanadu.enderdragon.manager.DragonManager.*;
 public class CreatureSpawnListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void OnDragonSpawn(CreatureSpawnEvent e){
-        if(!(e.getEntity() instanceof EnderDragon dragon)) return;
+        if(!(e.getEntity() instanceof EnderDragon)) return;
+        EnderDragon dragon = (EnderDragon) e.getEntity();
         MyDragon myDragon = judge();
         if(myDragon == null) {
             Lang.warn("special_dragon_jude_mode setting error!");
@@ -86,9 +87,11 @@ public class CreatureSpawnListener implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGH)
     public void OnEffectCloudSpawn(final EntitySpawnEvent e){
-        if(!(e.getEntity() instanceof AreaEffectCloud effectCloud)) return;
+        if(!(e.getEntity() instanceof AreaEffectCloud)) return;
+        AreaEffectCloud effectCloud = (AreaEffectCloud) e.getEntity();
         if(effectCloud.getSource() == null) return;
-        if(!(effectCloud.getSource() instanceof EnderDragon dragon)) return;
+        if(!(effectCloud.getSource() instanceof EnderDragon)) return;
+        EnderDragon dragon = (EnderDragon) effectCloud.getSource();
         String unique_name = getSpecialKey(dragon);
         if(unique_name == null) return;
         MyDragon myDragon = mp.get(unique_name);
@@ -116,7 +119,8 @@ public class CreatureSpawnListener implements Listener {
         Location cen = p.getLocation().clone().add(0d,0.9d,0d);
         Collection<Entity> list = world.getNearbyEntities(cen,2.3d,2.9d,2.3d);
         for(Entity entity : list){
-            if(entity instanceof AreaEffectCloud effectCloud) {
+            if(entity instanceof AreaEffectCloud) {
+                AreaEffectCloud effectCloud = (AreaEffectCloud) entity;
                 if(effectCloud.getSource() instanceof EnderDragon){
                     e.setCancelled(true);
                     break;

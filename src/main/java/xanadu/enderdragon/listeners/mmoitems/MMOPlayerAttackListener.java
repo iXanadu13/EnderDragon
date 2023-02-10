@@ -17,9 +17,10 @@ public class MMOPlayerAttackListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void meleeAttacks(PlayerAttackEvent e) {
-        if (!(e.getAttack() instanceof MeleeAttackMetadata attackMetadata)) {
+        if (!(e.getAttack() instanceof MeleeAttackMetadata)) {
             return;
         }
+        MeleeAttackMetadata attackMetadata = (MeleeAttackMetadata) e.getAttack();
         Player player = e.getPlayer();
         PlayerData playerData = PlayerData.get(player);
         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItem(attackMetadata.getHand().toBukkit()));

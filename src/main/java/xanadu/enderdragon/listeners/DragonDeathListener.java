@@ -28,7 +28,8 @@ import static xanadu.enderdragon.manager.DragonManager.mp;
 public class DragonDeathListener implements Listener {
     @EventHandler
     public void OnDragonDeath(EntityDeathEvent e){
-        if(!(e.getEntity() instanceof EnderDragon dragon)) return;
+        if(!(e.getEntity() instanceof EnderDragon)) return;
+        EnderDragon dragon = (EnderDragon) e.getEntity();
         String unique_name = getSpecialKey(dragon);
         if(unique_name == null) return;
         MyDragon myDragon = mp.get(unique_name);
