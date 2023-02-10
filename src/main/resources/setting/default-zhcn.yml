@@ -1,5 +1,5 @@
 #文件版本，请勿修改
-version: 2.0.0
+version: 2.0.1
 #用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
 unique_name: 'default'
 display_name: '末影龙'
@@ -9,24 +9,24 @@ priority: -32768
 #生成概率，允许小数，单位：%
 spawn_chance: 100
 #gui页面中的图标
-#如果这种格式在你的服务器不支持（比如1.12.2），请使用以下这种格式：
-#icon:
-#  ==: org.bukkit.inventory.ItemStack
-#  type: APPLE
-#  amount: 1
-#  meta:
-#    ==: ItemMeta
-#    meta-type: UNSPECIFIC
-#    display-name: '§r末影龙'
 icon:
   ==: org.bukkit.inventory.ItemStack
-  v: 3105
   type: APPLE
   amount: 1
   meta:
     ==: ItemMeta
     meta-type: UNSPECIFIC
-    display-name: '{"text":"末影龙"}'
+    display-name: '§r末影龙'
+#MC1.19:
+#icon:
+#  ==: org.bukkit.inventory.ItemStack
+#  v: 3105
+#  type: APPLE
+#  amount: 1
+#  meta:
+#    ==: ItemMeta
+#    meta-type: UNSPECIFIC
+#    display-name: '{"text":"末影龙"}'
 #gui页面的格式（对应view.yml文件中的gui，允许多种龙共用同一个）
 drop_gui: default_gui
 #最大生命值，允许小数

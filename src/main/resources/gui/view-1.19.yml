@@ -12,12 +12,12 @@ main:
       type: TIP
       data:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 7
+        v: 3105
+        type: GRAY_STAINED_GLASS_PANE
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§r'
+          display-name: '{"text":""}'
         ItemFlags:
           - HIDE_ENCHANTS
           - HIDE_ATTRIBUTES
@@ -28,47 +28,49 @@ main:
       type: PAGE_PREV
       data:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 5
+        v: 3105
+        type: LIME_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rPrev Page'
+          display-name: '{"italic":false,"text":"Prev Page"}'
       data_disable:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 15
+        v: 3105
+        type: BLACK_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rPrev Page'
+          display-name: '{"italic":false,"text":"Prev Page"}'
     E:
       type: EMPTY
     N:
       type: PAGE_NEXT
       data:
         ==: org.bukkit.inventory.ItemStack
-        type: ARROW
+        v: 3105
+        type: LIME_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rNext Page'
+          display-name: '{"text":"Next Page"}'
       data_disable:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 15
+        v: 3105
+        type: BLACK_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rNext Page'
+          display-name: '{"italic":false,"text":"Next Page"}'
     X:
       type: PAGE_TIP
       data:
         ==: org.bukkit.inventory.ItemStack
+        v: 3105
         type: PAPER
 default_gui:
   Page: 1000
@@ -84,12 +86,12 @@ default_gui:
       type: TIP
       data:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 7
+        v: 3105
+        type: GRAY_STAINED_GLASS_PANE
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§r'
+          display-name: '{"text":""}'
         ItemFlags:
           - HIDE_ENCHANTS
           - HIDE_ATTRIBUTES
@@ -101,6 +103,7 @@ default_gui:
       gui: main
       data:
         ==: org.bukkit.inventory.ItemStack
+        v: 3105
         type: ENCHANTED_BOOK
         meta:
           ==: ItemMeta
@@ -110,45 +113,47 @@ default_gui:
       type: PAGE_PREV
       data:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 5
+        v: 3105
+        type: LIME_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rPrev Page'
+          display-name: '{"italic":false,"text":"Prev Page"}'
       data_disable:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 15
+        v: 3105
+        type: BLACK_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rPrev Page'
+          display-name: '{"italic":false,"text":"Prev Page"}'
     E:
       type: EMPTY
     N:
       type: PAGE_NEXT
       data:
         ==: org.bukkit.inventory.ItemStack
-        type: ARROW
+        v: 3105
+        type: LIME_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rNext Page'
+          display-name: '{"text":"Next Page"}'
       data_disable:
         ==: org.bukkit.inventory.ItemStack
-        type: STAINED_GLASS_PANE
-        damage: 15
+        v: 3105
+        type: BLACK_STAINED_GLASS_PANE
         amount: 1
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          display-name: '§rNext Page'
+          display-name: '{"italic":false,"text":"Next Page"}'
     X:
       type: PAGE_TIP
       data:
         ==: org.bukkit.inventory.ItemStack
+        v: 3105
         type: PAPER

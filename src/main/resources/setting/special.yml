@@ -1,5 +1,5 @@
 #文件版本，请勿修改
-version: 2.0.0
+version: 2.0.1
 #用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
 unique_name: 'special001'
 display_name: '特殊末影龙'
@@ -11,13 +11,22 @@ spawn_chance: 10
 #gui页面中的图标
 icon:
   ==: org.bukkit.inventory.ItemStack
-  v: 3105
   type: DIAMOND
   amount: 1
   meta:
     ==: ItemMeta
     meta-type: UNSPECIFIC
-    display-name: '{"text":"特殊末影龙"}'
+    display-name: '§r特殊末影龙'
+#MC1.19:
+#icon:
+#  ==: org.bukkit.inventory.ItemStack
+#  v: 3105
+#  type: DIAMOND
+#  amount: 1
+#  meta:
+#    ==: ItemMeta
+#    meta-type: UNSPECIFIC
+#    display-name: '{"text":"特殊末影龙"}'
 #gui页面的格式（对应view.yml文件中的gui，允许多种龙共用同一个）
 drop_gui: default_gui
 #最大生命值，允许小数

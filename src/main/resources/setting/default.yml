@@ -1,4 +1,4 @@
-version: 2.0.0
+version: 2.0.1
 #This is used for plugin internal identification.
 #Please make sure the value is unique among all the types of dragons
 unique_name: 'default'
@@ -11,24 +11,24 @@ priority: -32768
 #You shouldn't add "%".
 spawn_chance: 100
 #the icon that represents this dragon in gui view
-#If this format is invalid in your mc version(such as 1.12.2),use this:
-#icon:
-#  ==: org.bukkit.inventory.ItemStack
-#  type: APPLE
-#  amount: 1
-#  meta:
-#    ==: ItemMeta
-#    meta-type: UNSPECIFIC
-#    display-name: '§rNormal Dragon'
 icon:
   ==: org.bukkit.inventory.ItemStack
-  v: 3105
   type: APPLE
   amount: 1
   meta:
     ==: ItemMeta
     meta-type: UNSPECIFIC
-    display-name: '{"text":"Normal Dragon"}'
+    display-name: '§rNormal Dragon'
+#MC1.19:
+#icon:
+#  ==: org.bukkit.inventory.ItemStack
+#  v: 3105
+#  type: APPLE
+#  amount: 1
+#  meta:
+#    ==: ItemMeta
+#    meta-type: UNSPECIFIC
+#    display-name: '{"text":"Normal Dragon"}'
 #the format of gui this dragon will use(chosen in file view.yml,multiple dragons can share the same one)
 drop_gui: default_gui
 #please enter a double that above 0
