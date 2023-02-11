@@ -76,7 +76,6 @@ public class CreatureSpawnListener implements Listener {
         int d0 = block.getX();
         int d1 = block.getY() + 1;
         int d2 = block.getZ();
-        if(d0>=6 || d0<=-6 || d2>=6 || d2<=-6) return;
         if(world.getBlockAt(d0, d1, d2).getType() != Material.AIR) return;
         Location cen = block.getLocation().clone().add(0.5,1,0.5);
         Collection<Entity> list = world.getNearbyEntities(cen,0.5,1,0.5);
