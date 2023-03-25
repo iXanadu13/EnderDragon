@@ -91,7 +91,7 @@ public class DragonManager {
 
     }
     public static MyDragon judge(){
-        if(Config.special_dragon_jude_mode.equalsIgnoreCase("edge")){
+        if(Config.special_dragon_jude_mode.equalsIgnoreCase("weight")){
             int cnt = 0, random = ThreadLocalRandom.current().nextInt(0, sum);
             for(MyDragon cur : dragons){
                 if(cnt <= random && cnt + cur.edge > random){
@@ -109,6 +109,16 @@ public class DragonManager {
                 if(judge) return cur;
             }
             return cur;
+        }
+        else if(Config.special_dragon_jude_mode.equalsIgnoreCase("edge")){
+            int cnt = 0, random = ThreadLocalRandom.current().nextInt(0, sum);
+            for(MyDragon cur : dragons){
+                if(cnt <= random && cnt + cur.edge > random){
+                    return cur;
+                }
+                cnt += cur.edge;
+            }
+            error("\"edge\" in \"special_dragon_jude_mode\" of config.yml is deprecated!Please use \"weight\" instead.");
         }
         return null;
     }
@@ -242,6 +252,12 @@ public class DragonManager {
         mp.clear();
         dragon_names.clear();
     }
+
+    public static void setAttribute(EnderDragon dragon, Attribute attribute, double amount){
+        AttributeInstance instance = dragon.getAttribute(attribute);
+        assert instance != null;
+        instance.setBaseValue(amount);
+    }
     public static void modifyAttribute(EnderDragon dragon, Attribute attribute, double amount){
         AttributeInstance instance = dragon.getAttribute(attribute);
         assert instance != null;
@@ -279,8 +295,12 @@ public class DragonManager {
             if(battle.getRespawnPhase() == DragonBattle.RespawnPhase.NONE){
                 Location cen = battle.getEndPortalLocation();
                 if(cen == null) {
-                    error("The world_the_end is unloaded.");
-                    return false;
+                    battle.initiateRespawn();
+                    cen = battle.getEndPortalLocation();
+                    if(cen == null){
+                        error("The world_the_end is unloaded.");
+                        return false;
+                    }
                 }
                 placeEndCrystals(world,cen);
                 battle.initiateRespawn();
@@ -312,8 +332,13 @@ public class DragonManager {
             field.setAccessible(true);
             Object BlockPosition = field.get(battle);
             if(BlockPosition == null){
-                error("The world_the_end is unloaded.");
-                return false;
+                if (this.DragonBattle_e == null) this.DragonBattle_e = battle.getClass().getMethod("e");
+                this.DragonBattle_e.invoke(battle);
+                BlockPosition = field.get(battle);
+                if(BlockPosition == null){
+                    error("The world_the_end is unloaded.");
+                    return false;
+                }
             }
             if(this.getX == null) this.getX = BlockPosition.getClass().getMethod("getX");
             if(this.getY == null) this.getY = BlockPosition.getClass().getMethod("getY");
