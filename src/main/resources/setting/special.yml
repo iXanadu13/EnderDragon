@@ -1,14 +1,20 @@
-#文件版本，请勿修改
+# File version, do not edit
 version: 2.0.1
-#用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
+
+# Unique ID used by plugin to identify each type of dragon 
+# unique_name needs to be different in each dragon settings file
 unique_name: 'special001'
-display_name: '特殊末影龙'
-#在edge模式下，此项（priority）会被忽略。
-#在pc模式下，数值越大优先级越高，优先级更高的会先判断
+display_name: 'Special Ender Dragon'
+
+# In weight mode this setting will be ignored.
+# In PC mode, higher the value, the more likely this dragon type 
+# will be picked to spawn
 priority: 1
-#生成概率，允许小数，单位：%
+
+# Spawn probability percentage (Don't add the %).  Decimals allowed.
 spawn_chance: 10
-#gui页面中的图标
+
+# Icons in the gui page
 icon:
   ==: org.bukkit.inventory.ItemStack
   type: DIAMOND
@@ -16,7 +22,8 @@ icon:
   meta:
     ==: ItemMeta
     meta-type: UNSPECIFIC
-    display-name: '§r特殊末影龙'
+    display-name: '§rSpecial Ender Dragon'
+
 #MC1.19:
 #icon:
 #  ==: org.bukkit.inventory.ItemStack
@@ -26,112 +33,171 @@ icon:
 #  meta:
 #    ==: ItemMeta
 #    meta-type: UNSPECIFIC
-#    display-name: '{"text":"特殊末影龙"}'
-#gui页面的格式（对应view.yml文件中的gui，允许多种龙共用同一个）
+#    display-name: '{"text":"Special Ender Dragon"}'
+
+# The format of the gui page (defined in view.yml, multiple dragons
+# can share the same gui page
 drop_gui: default_gui
-#最大生命值，允许小数
+
+# Max health, decimals allowed
 max_health: 400
-#生成时的生命值，允许小数
+
+# Health at spawn, decimals allowed
 spawn_health: 300
-#死亡时掉落的经验值，请填整数
-#原版第一次击杀末影龙掉落12000经验，此后每一次击杀掉落500经验
+
+# Experience dropped upon death, integers only
+# The vanilla dragon drops 12,000 experience for the first time 
+# and 500 experience for each subsequent kill
 exp_drop: 12000
+
+# Dragon egg spawn settings
 dragon_egg_spawn:
-  #龙蛋生成概率，允许小数，范围0-100，单位：%
+  # Dragon egg spawn probability in percentage (Don't add %)
+  # Decimals allowed, range 0-100
   chance: 60
-  #龙蛋生成延迟，单位tick，20ticks=1s，请填整数
-  #末影龙死后大约20秒（400ticks）后末地传送门生成，因此加一个延迟可以形成龙蛋和传送门几乎一起出现的效果
-  #此外，如果在龙蛋生成前玩家在下方放了火把，床之类的方块，龙蛋下落后会直接形成掉落物回主世界，加一个延迟可以减少不必要的麻烦
+
+  # Dragon egg generation delay in ticks, 20 ticks = 1s, integers only
+  # The end portal is generated about 20 seconds (400ticks) after the ender dragon 
+  # dies, so adding a delay can cause the dragon egg and the portal to appear nearly
+  # simultaneously.  Also, if the player places torches, beds and other blocks below 
+  # before the dragon egg is generated, it will immediately drop and return to the main 
+  # world once it falls. Adding a delay can make it easier to collect the dragon egg.
   delay: 410
-  #龙蛋生成坐标（末地）
-  #y轴设置70一般没问题，希望更精确的话请依照自己服务器情况而定
+
+  # Dragon egg spawn coordinates (The End)
+  # It is generally no problem to set the y-axis to 70. If you want to be more precise 
+  # you can adjust this based on your server configuration.
   x: 0
   y: 70
   z: 0
-#以下含有“modify”的项均为在原来的数值基础上修改，而非最终值
-#末影龙冲撞/振翅伤害修改，允许小数，可以是负值
+
+# The following fields containing "modify" are all modified based off of the vanilla 
+# value and is not the value of the setting itself.
+# Ender dragon impact/flap damage modification, decimals and negative values allowed
 attack_damage_modify: 5.0
-#末影龙移速修改，允许小数，可以是负值，原版初始值0.7
+
+# Enderdragon speed modification, decimals and negative values allowed
+# The vanilla value for speed is 0.7
 move_speed_modify: 0.1
-#末影龙护甲值修改，允许小数，可以是负值
+
+# Enter dragon armor value modification, decimals and negative values allowed
 armor_modify: 2.0
-#末影龙盔甲韧性修改，允许小数，可以是负值
+
+# Ender Dragon armor toughness modification, decimals and negative values allowed
 armor_toughness_modify: 1.0
-#末地水晶每秒治疗量，允许小数，原版为2.0
+
+# End crystal healing amount per second, decimals allowed
+# The vanilla value for healing speed is 2.0
 crystal_heal_speed: 5.0
-#末影龙发光颜色，填none不发光，填random表示随机(1.16.3及以上版本可用)
-#AQUA-青色，BLACK-黑色，BLUE-蓝色，DARK_AQUA-深青，DARK_BLUE-深蓝，DARK_GRAY-深灰，DARK_GREEN-深绿，DARK_PURPLE-深紫，DARK_RED-深红，GOLD-金色，GRAY-灰色，GREEN-绿色，LIGHT_PURPLE-紫色，RED-红色，WHITE-白色，YELLOW-黄色
+
+# The color of the ender dragon's glow, if you fill in none, it will not glow,
+# if you fill in random, it means random (available in versions 1.16.3 and above)
+# Color values are: AQUA (cyan), BLACK (black), BLUE (blue), DARK_AQUA (dark cyan), 
+# DARK_BLUE (dark blue), DARK_GRAY (dark gray), DARK_GREEN (dark green), 
+# DARK_PURPLE (dark purple), DARK_RED (dark red), GOLD (gold), GRAY (gray), 
+# GREEN (green), LIGHT_PURPLE (purple), RED (red), WHITE (white), YELLOW (yellow)
 glow_color: gold
-#末影龙攻击吸血，公式：最终值=实际伤害*rate（自动按百分数计算）+base_amount
+
+# Ender dragon attacks and sucks blood, formula: final value = actual damage * rate 
+# (automatically calculated as a percentage) + base_amount
 suck_blood:
-  #是否启用
+
+  # Whether or not to enable (true or false)
   enable: true
-  #吸血比率，单位：%
+
+  # Blood sucking rate in percent (Don't add %)
   rate: 20
-  #基础吸血值，允许小数
+
+  # Basic life-sucking value, decimals allowed
   base_amount: 2
-  #只在攻击玩家时触发
+
+  # Only triggers when attacking the player (true or false)
   only_player: true
 
+# Boss bar settings
 bossbar:
-  #BLUE,GREEN,RED,PINK,PURPLE,WHITE,YELLOW
+  #Available options: BLUE,GREEN,RED,PINK,PURPLE,WHITE,YELLOW
   color: green
-  #SOLID:整条,SEGMENTED_6:将血条分为6个部分,SEGMENTED_10:将血条分为10个部分,SEGMENTED_12:将血条分为12个部分,SEGMENTED_20:将血条分为20个部分
+
+  # Boss bar style
+  # Available options are: SOLID (Whole Bar), SEGMENTED_6 (6 Segments), SEGMENTED_10 (10 segments), 
+  # SEGMENTED_12 (12 Segments), SEGMENTED_20 (20 Segments)
   style: 'SEGMENTED_12'
 
-#末影龙火球命中后产生的效果云
+#The effect cloud produced after the ender dragon fireball hits
 effect_cloud:
-  #初始半径，允许小数
+
+  # Initial radius, decimals allowed
   original_radius: 5
-  #扩大速度（单位：格/秒）
+
+  # Expansion speed (unit: grid/second) decimals allowed
   expand_speed: 0.1
-  #存在时间，请填整数（单位：秒）
+
+   # Linger time (in seconds), integers only
   duration: 30
-  #使用RGB颜色格式，比如黄色对应的格式为'255:255:0'
-  #填"none"代表使用初始的效果（紫色龙息粒子）
+
+  # Dragon's breath particle effects color.
+  # Uses RGB color format (Ex: the code for yellow is '255:255:0')
+  # Set to "none" for vanilla particle color (purple dragon's breath)
   color: none
-  #请严格安装'药水效果 持续时间 药水等级'的格式
-  #持续时间请填入大于0的整数(单位：秒)
-  #药水等级取值1-256的整数，输入1即代表1级，与effect指令不同！
-  #ABSORPTION:伤害吸收,BAD_OMEN:不祥之兆,BLINDNESS:失明,CONDUIT_POWER:潮涌能量,CONFUSION:反胃,DAMAGE_RESISTANCE:抗性提升
-  #DARKNESS:黑暗,DOLPHINS_GRACE:海豚的恩惠,FAST_DIGGING:急迫,FIRE_RESISTANCE:防火,GLOWING:发光,HARM:瞬间伤害,HEAL:瞬间治疗
-  #HEALTH_BOOST:生命提升,HERO_OF_THE_VILLAGE:村庄英雄,HUNGER:饥饿,INCREASE_DAMAGE:力量,INVISIBILITY:隐身,JUMP:跳跃提升
-  #LEVITATION:漂浮,LUCK:幸运,NIGHT_VISION:夜视,POISON:中毒,REGENERATION:生命恢复,SATURATION:饱和,SLOW:缓慢
-  #SLOW_DIGGING:挖掘疲劳,SLOW_FALLING:缓降,SPEED:速度,UNLUCK:霉运,WATER_BREATHING:水下呼吸,WEAKNESS:虚弱,WITHER:凋零
+
+  # Add Potion Effects
+  #
+  # Format (separated by spaces): 
+  # potion effect (see list), duration (in seconds), potion level (int between 1 and 256)
+  # Note: Potion level is an integer between 1 and 256 and will be set to that exact potion 
+  # level which differs from how it works in the effect command (as an amplifier)
+  # Available effects: ABSORPTION (damage absorption), BAD_OMEN (bad omen), BLINDNESS (blindness), 
+  # CONDUIT_POWER (surge energy), CONFUSION (nausea), DAMAGE_RESISTANCE (resistance increase), 
+  # DARKNESS (darkness), DOLPHINS_GRACE (dolphin's grace), FAST_DIGGING (haste), 
+  # FIRE_RESISTANCE (fire resistance), GLOWING (glowing), HARM (instant damage), HEAL (instant heal),
+  # HEALTH_BOOST (health boost), HERO_OF_THE_VILLAGE (hero of the village), HUNGER (hunger), 
+  # INCREASE_DAMAGE (strength), INVISIBILITY (invisibility), JUMP (jump boost), LEVITATION (levitation), 
+  # LUCK (luck), NIGHT_VISION (night vision), POISON (poison), REGENERATION (health regeneration), 
+  # SATURATION (restores hunger), SLOW (slowness), SLOW_DIGGING (mining fatigue), 
+  # SLOW_FALLING (slow falling), SPEED (speed boost), UNLUCK (bad luck), WATER_BREATHING (water breathing), 
+  # WEAKNESS (weakness), WITHER (wither)
   potion:
     - 'harm 60 2'
     - 'BLINDNESS 10 1'
 
-#以下配置均可用中括号表示不启用，即：
-#attack_potion_effect: []
+#The following configurations are all available.
+# Brackets indicate that they are not enabled ( Ex: attack_potion_effect: [] )
 
-#末影龙攻击附带药水效果
-#格式同上
+# Ender dragon attack with potion effect
+# Format same as above
 attack_potion_effect:
   - 'wither 10 1'
   - 'hunger 60 1'
   - 'weakness 30 2'
-#这种末影龙生成时执行的命令
+
+# The command(s) to execute when this type of dragon is spawned
 spawn_cmd:
   - ''
   - ''
   - ''
-#这种末影龙死亡时执行的命令（指令杀死无效），可用%player%代表最终屠龙者，若找不到则含%player%的此行命令不执行
+
+# The command(s) to execute when this type of dragon dies (unless killed with command). 
+# You can use placeholder %player% to represent the final dragon slayer, if not found
+# the command in that line will not be excecuted
 death_cmd:
   - ''
   - ''
   - ''
-#这种末影龙生成时全服播报内容
+
+# Message broadcast to the whole server when this type of dragon is spawned
 spawn_broadcast_msg:
-  - '§a第 %times% 条末影龙已被复活'
-  - '§6这条末影龙散发着神秘的气息...'
-#这种末影龙死亡时全服播报内容（指令杀死无效）
+  - '§aEnder dragon number %times% has been spawned.'
+  - '§6This dragon exudes a mysterious atmosphere...'
+
+# Message broadcast to the whole server when this type of dragon is killed
 death_broadcast_msg:
-  - '§b第 %times% 条末影龙已被 %player% 击杀'
+  - '§bEnder dragon number %times% has been killed by %player%'
   - ''
   - ''
-#发送给末影龙最终击杀者的话
+
+# Message sent to the final killer of the Ender Dragon
 msg_to_killer:
-  - '§6恭喜你，这条龙掉落了龙蛋和大量经验！'
+  - '§6Congratulations, this dragon drops dragon eggs and a lot of experience!'
   - ''
   - ''
