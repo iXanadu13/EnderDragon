@@ -3,7 +3,7 @@ version: 2.0.1
 #Please make sure the value is unique among all the types of dragons
 unique_name: 'default'
 display_name: 'Ender Dragon'
-#In "edge" mode, this(priority) will be ignored.
+#In "weight" mode, this(priority) will be ignored.
 #In "pc" mode, dragon with higher priority will be judged earlier
 priority: -32768
 #the chance of spawning a special ender dragon
