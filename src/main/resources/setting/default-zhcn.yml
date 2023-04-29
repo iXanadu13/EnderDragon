@@ -3,7 +3,7 @@ version: 2.0.1
 #用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
 unique_name: 'default'
 display_name: '末影龙'
-#在edge模式下，此项（priority）会被忽略。
+#在weight模式下，此项（priority）会被忽略。
 #在pc模式下，数值越大优先级越高，优先级更高的会先判断
 priority: -32768
 #生成概率，允许小数，单位：%
