@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
@@ -94,6 +95,9 @@ public class CreatureSpawnListener implements Listener {
         Collection<Entity> list = world.getNearbyEntities(cen,0.5,1,0.5);
         if(!list.isEmpty()) return;
         e.setCancelled(true);
+        ItemStack item = e.getItem();
+        int amount = item.getAmount();
+        e.getItem().setAmount(amount-1);
         EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen,EntityType.ENDER_CRYSTAL);
         crystal.setShowingBottom(false);
     }
