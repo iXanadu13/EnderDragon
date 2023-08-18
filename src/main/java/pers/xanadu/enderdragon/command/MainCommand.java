@@ -205,6 +205,7 @@ public class MainCommand implements CommandExecutor {
                     Lang.sendFeedback(sender,Lang.command_only_player);
                     return false;
                 }
+                if(args.length < 2) break;
                 Player p = (Player) sender;
                 switch (args[1].toLowerCase()){
                     case "gui" : {
