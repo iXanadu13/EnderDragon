@@ -16,16 +16,16 @@ import pers.xanadu.enderdragon.command.TabCompleter;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.gui.GUIHolder;
-import pers.xanadu.enderdragon.hook.Papi;
+import pers.xanadu.enderdragon.hook.HookManager;
 import pers.xanadu.enderdragon.listener.*;
 import pers.xanadu.enderdragon.listener.mythiclib.PlayerAttackListener;
 import pers.xanadu.enderdragon.manager.*;
+import pers.xanadu.enderdragon.maven.DependencyManager;
 import pers.xanadu.enderdragon.metrics.Metrics;
 import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
 import pers.xanadu.enderdragon.nms.NMSItem.I_NMSItemManager;
 import pers.xanadu.enderdragon.nms.RespawnAnchor.I_RespawnAnchorManager;
 import pers.xanadu.enderdragon.nms.WorldData.I_WorldDataManager;
-import pers.xanadu.enderdragon.task.DragonRespawnRunnable;
 import pers.xanadu.enderdragon.util.NMSUtil;
 import pers.xanadu.enderdragon.util.Version;
 
@@ -34,12 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static pers.xanadu.enderdragon.util.MyUpdater.checkUpdate;
+import static pers.xanadu.enderdragon.util.UpdateChecker.checkUpdate;
 
 public final class EnderDragon extends JavaPlugin {
     private static EnderDragon instance;
     public static Plugin plugin;
-    public static Server server;
     public static PluginManager pm;
     public static File dataF;
     public static File langF;
@@ -54,14 +53,17 @@ public final class EnderDragon extends JavaPlugin {
     private I_RespawnAnchorManager i_respawnAnchorManager;
     private static boolean finish = false;
     @Override
+    public void onLoad(){
+        plugin = this;
+        instance = this;
+        pm = Bukkit.getPluginManager();
+        loadConfig();
+        if(Config.expansion_groovy) DependencyManager.onEnable();
+    }
+    @Override
     public void onEnable() {
         Lang.info("Enabling plugin...");
         Lang.info("Author: Xanadu13");
-        plugin = this;
-        instance = this;
-        server = plugin.getServer();
-        pm = Bukkit.getPluginManager();
-        loadConfig();
         Version.init();
         dragonManager = new DragonManager();
         worldManager = new WorldManager();
@@ -81,22 +83,22 @@ public final class EnderDragon extends JavaPlugin {
         TimerManager.enable();
         registerEvents();
         registerCommands();
-        handleHooks();
+        HookManager.init();
         reloadAll();
         if(Config.advanced_setting_save_respawn_status) setRespawnStatus();
 //        if(Config.advanced_setting_glowing_fix) fixGlowing();
         checkUpdate();
         new Metrics(this,14850);
         boolean out_of_date = false;
-        if(!"2.1.0".equals(Lang.version)){
+        if(!Version.lang.equals(Lang.version)){
             out_of_date = true;
             Lang.warn(Lang.plugin_wrong_file_version.replace("{file_name}", Config.lang + ".yml"));
         }
-        if(!"2.1.0".equals(Config.version)){
+        if(!Version.config.equals(Config.version)){
             out_of_date = true;
             Lang.warn(Lang.plugin_wrong_file_version.replace("{file_name}","config.yml"));
         }
-        if(!"2.1.0".equals(data.getString("version"))){
+        if(!Version.data.equals(data.getString("version"))){
             out_of_date = true;
             Lang.warn(Lang.plugin_wrong_file_version.replace("{file_name}","data.yml"));
         }
@@ -107,12 +109,16 @@ public final class EnderDragon extends JavaPlugin {
         WorldManager.reload();
         GlowManager.reload();
         EnderDragon.getInstance().loadFiles();
+        if(DependencyManager.isGroovyLoaded()) {
+            Config.saveDirectoryResource("expansion/groovy",false);
+            GroovyManager.reload();
+        }
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(!TaskManager.getCurrentTimeWithSpecialFormat().endsWith("0")) return;
                 this.cancel();
-                DragonRespawnRunnable.reload();
+                TaskManager.reload();
             }
         };
         new BukkitRunnable() {
@@ -122,10 +128,7 @@ public final class EnderDragon extends JavaPlugin {
                 this.cancel();
                 DragonManager.reload();
                 GuiManager.loadGui();
-                if(Config.auto_respawn_enable){
-                    TaskManager.reload();
-                    runnable.runTaskTimer(plugin,0,1);
-                }
+                runnable.runTaskTimer(plugin,0,1);
             }
         }.runTaskTimer(plugin, 1, 5);
     }
@@ -135,10 +138,11 @@ public final class EnderDragon extends JavaPlugin {
         if(Config.advanced_setting_save_respawn_status){
             Bukkit.getWorlds().forEach(world -> {
                 if(!Config.blacklist_worlds.contains(world.getName())){
+                    char split = data.options().pathSeparator();
                     if(EnderDragon.getInstance().getDragonManager().isRespawnRunning(world)){
-                        data.set("respawn_fix."+world.getName(),true);
+                        data.set("respawn_fix"+split+world.getName(),true);
                     }
-                    else data.set("respawn_fix."+world.getName(),false);
+                    else data.set("respawn_fix"+split+world.getName(),false);
                 }
             });
         }
@@ -166,24 +170,20 @@ public final class EnderDragon extends JavaPlugin {
         GuiManager.disable();
         instance.unregisterCommands();
         HandlerList.unregisterAll(plugin);
-        server.getScheduler().cancelTasks(plugin);
-        server.getServicesManager().unregisterAll(plugin);
+        plugin.getServer().getScheduler().cancelTasks(plugin);
+        plugin.getServer().getServicesManager().unregisterAll(plugin);
         Lang.warn(Lang.plugin_disable);
         System.gc();
     }
-    private void handleHooks(){
-        if(pm.getPlugin("PlaceholderAPI") != null){
-            Lang.info("Hooking to PlaceholderAPI...");
-            new Papi(this);
-        }
-    }
+
     private void registerEvents(){
-        pm.registerEvents(new CreatureSpawnListener(),this);
         pm.registerEvents(new DragonAttackListener(),this);
         pm.registerEvents(new DragonDamageByPlayerListener(),this);
         pm.registerEvents(new DragonDeathListener(),this);
         pm.registerEvents(new DragonExplosionHurtListener(),this);
+        pm.registerEvents(new DragonFireballListener(),this);
         pm.registerEvents(new DragonHealListener(),this);
+        pm.registerEvents(new DragonSpawnListener(),this);
         //pm.registerEvents(new EndGatewayListener(),this);
         pm.registerEvents(new InventoryListener(),this);
         pm.registerEvents(new PlayerListener(),this);
