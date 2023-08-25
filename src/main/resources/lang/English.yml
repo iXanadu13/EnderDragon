@@ -1,0 +1,74 @@
+version: 2.2.0
+
+plugin:
+  prefix: '§7[§eEnderDragon§7]§r '
+  wrong_file_version: 'File {file_name} is out of date, please update it.'
+  read_file: 'Reading file '
+  item_read_error: 'Item read error! Key: '
+  checking_update: 'Checking update...'
+  check_update_fail: 'Checking update fail. Please check your network settings.'
+  out_of_date: 'Your version: v{0}\nNew version: v{1}\nDownload Link: https://www.spigotmc.org/resources/enderdragon.101583'
+  up_to_date: 'You are using the latest version (v{1})...'
+  disable: 'Disabling the plugin...'
+  file_save_error: 'File {file_name} save error!'
+
+command:
+  no_permission: "§4I'm Sorry,but you do not have permission to do that."
+  reload_config: '§aConfig reload complete.'
+  only_player: '§cOnly player can do this.'
+  drop_item:
+    add:
+      empty: '§cThere is nothing to add, please hold something.'
+      invalid_chance: '§cThis drop-chance is invalid: §e'
+      succeed: '§aDrop item add succeed with §c{chance}%§a drop-chance.'
+    clear: '§aDrop-item config has been cleared.'
+    remove:
+      invalid_num: "§cCan't parse Your input to an integer: §e"
+      fail: '§cFailed to remove this item...'
+      succeed: '§aSucceed to remove this item!'
+  respawn_cd:
+    disable: '§c"respawn_cd.enable" in config.yml has been disabled!'
+    remove: '§aSucceed to remove the respawn countdown in {world}.'
+    removeAll: '§aRespawn countdown in every world have been removed!'
+    retry: '§cRespawn Task conflict, will be retried in the next cycle...'
+    set: '§aRespawn will start in §c{second}§a second(s) after the next dragon_death.'
+    start:
+      already_started: '§cThe countdown has already been started!'
+      none: '§cThere is no respawn_cd in this world!'
+      succeed: '§aRespawn countdown starts!'
+
+gui:
+  default_title: '§8§l§k||§6§lSpecial Drop§8§l§k||'
+  not_found: "§cCan't find this gui."
+  item_lore: '§6(chance: {drop_chance}%)§r'
+  item_cmd_lore: '§6Shift+RightClick§f to remove§r'
+
+dragon:
+  damage_display: 'Damage amount to dragon : §e%damage%.§r(§a%remain_health%§r/§c%max_health%§r)'
+  player_inv_full: '§cYour inventory is full,special drop-item maybe fell at your feet.'
+  no_killer: '???'
+  auto_respawn: 'The next dragon will respawn soon...'
+  not_found: "§cCan't find this dragon."
+  damage_statistics:
+    text: '§7[§dDragon Slaying Report§7]'
+    hover:
+      prefix:
+        - '§5§m---------------§r[§eReport§r]§5§m---------------§r'
+        - '┤§7  Name: %dragon_display_name%§r'
+        - '┤§7  Total damage: %damage_sum%§r'
+        - '┤§7  Participants: §r'
+      mt: '└───§7 %rank%. %player%: §a%damage%§8(%percent%)§r'
+      exceeds_limit: '└──§7 and %exceeds_number% more...'
+      suffix:
+        - '§5§m--------------------------------------'
+
+world:
+  env_fix_enable: 'World environment has been fixed.'
+
+expansion:
+  groovy_disable: '§cGroovy script engine is disabled!'
+
+CommandTips1: '§e/ed reload §a- reload the config'
+CommandTips2: '§e/ed respawn §a- respawn a dragon'
+CommandTips3: '§e/ed drop gui §a- view the drop_item'
+CommandTips4: '§e/ed drop add <name> <chance> §a- add drop_item to one dragon'

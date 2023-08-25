@@ -1,0 +1,74 @@
+version: 2.2.0
+
+plugin:
+  prefix: '§7[§eEnderDragon§7]§r '
+  wrong_file_version: '{file_name} 版本与插件不对应，请更新文件'
+  read_file: '正在读取 '
+  item_read_error: '物品格式错误，错误项: '
+  checking_update: '正在为您检查更新...'
+  check_update_fail: '检查更新失败，请确认您的网络配置'
+  out_of_date: '您正在使用的插件版本: v{0}\n检测到新版插件v{1}已发布，请尽快更新\n下载地址：https://www.spigotmc.org/resources/enderdragon.101583'
+  up_to_date: '您正在使用最新版的插件(v{1})...'
+  disable: '正在卸载插件...'
+  file_save_error: '文件 {file_name} 保存失败!'
+
+command:
+  no_permission: "§4你没有使用该命令的权限"
+  reload_config: '§a配置文件已重载'
+  only_player: '§c这个指令只能由玩家执行'
+  drop_item:
+    add:
+      empty: '§c添加掉落物失败，你手上没有拿物品...'
+      invalid_chance: '§c您输入的掉落概率是不合法的: §e'
+      succeed: '§a掉落物添加成功，概率为: §c{chance}%'
+    clear: '§a掉落物配置已清空'
+    remove:
+      invalid_num: '§c您输入的不是整数: §e'
+      fail: '§c掉落物移除失败！'
+      succeed: '§a掉落物移除成功！'
+  respawn_cd:
+    disable: '§c您暂未在config.yml中启用respawn_cd.enable!'
+    remove: '§a已移除位于{world}的复活倒计时.'
+    removeAll: '§a已移除所有世界的复活倒计时.'
+    retry: '§c复活任务冲突，将在一个周期后重试.'
+    set: '§a下一条末影龙被击杀后，复活将在§c{second}§a秒后开始.'
+    start:
+      already_started: '§c请勿重复运行倒计时!'
+      none: '§c这个世界暂未设置复活倒计时!'
+      succeed: '§a复活倒计时已开始!'
+
+gui:
+  default_title: '§8§l§k||§6§l龙之宝藏§8§l§k||'
+  not_found: "§c这个gui不存在."
+  item_lore: '§6(概率: {drop_chance}%)§r'
+  item_cmd_lore: '§6Shift+右键§f 移除§r'
+
+dragon:
+  damage_display: '对末影龙的伤害: §e%damage%.§r(§a%remain_health%§r/§c%max_health%§r)'
+  player_inv_full: '§c您的背包已满，战利品可能已掉落在您的脚下'
+  no_killer: '玩家远程'
+  auto_respawn: '下一条末影龙即将复活...'
+  not_found: "§c无法找到这条龙的信息"
+  damage_statistics:
+    text: '§7[§d查看伤害统计§7]'
+    hover:
+      prefix:
+        - '§5§m---------------§r[§e伤害统计§r]§5§m---------------§r'
+        - '┤  §7末影龙名字: %dragon_display_name%§r'
+        - '┤  §7伤害总和: %damage_sum%§r'
+        - '┤  §7参与者: §r'
+      mt: '└─── §7%rank%. %player%: §a%damage%§8(%percent%)§r'
+      exceeds_limit: '└── §7还有%exceeds_number%名玩家未显示...'
+      suffix:
+        - '§5§m--------------------------------------'
+
+world:
+  env_fix_enable: '世界环境修复已启用'
+
+expansion:
+  groovy_disable: '§cGroovy脚本引擎未启用!'
+
+CommandTips1: '§e/ed reload §a重载配置文件'
+CommandTips2: '§e/ed respawn §a复活一条末影龙'
+CommandTips3: '§e/ed drop §a末影龙掉落物设置'
+CommandTips4: '§e/ed drop add 名字 概率 §a为一条末影龙增加掉落物'

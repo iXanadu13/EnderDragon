@@ -1,0 +1,232 @@
+## Special thanks to Phaxius for the translation
+
+# File version, do not edit
+version: 2.2.0
+
+# Unique ID used by plugin to identify each type of dragon
+# unique_name needs to be different in each dragon settings file
+unique_name: 'special001'
+display_name: 'Special Ender Dragon'
+
+# In "weight" mode this setting will be ignored.
+# In "pc" mode, higher the value, the more likely this dragon type will be picked to spawn
+priority: 1
+
+# Spawn probability percentage (Don't add the %).  Decimals allowed.
+spawn_chance: 10
+
+# Icons in the gui page
+icon:
+  ==: org.bukkit.inventory.ItemStack
+  type: DIAMOND
+  amount: 1
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: '§rSpecial Ender Dragon'
+
+#MC1.19:
+#icon:
+#  ==: org.bukkit.inventory.ItemStack
+#  v: 3105
+#  type: DIAMOND
+#  amount: 1
+#  meta:
+#    ==: ItemMeta
+#    meta-type: UNSPECIFIC
+#    display-name: '{"text":"Special Ender Dragon"}'
+
+# The format of the gui page
+# defined in view.yml, multiple dragons can share the same gui page
+drop_gui: default_gui
+
+# Max health, decimals allowed
+max_health: 400
+
+# Health at spawn, decimals allowed
+spawn_health: 300
+
+# the least interval time between injuries (unit:tick, 1tick=0.05s)
+no_damage_tick: 10
+
+# Experience dropped upon death, integers only
+# The vanilla dragon drops 12,000 experience for the first time
+# and 500 experience for each subsequent kill
+exp_drop: 12000
+
+# Dragon egg spawn settings
+dragon_egg_spawn:
+  # Dragon egg spawn probability in percentage (Don't add %)
+  # Decimals allowed, range 0-100
+  chance: 60
+
+  # Dragon egg generation delay in ticks, 20 ticks = 1s, integers only
+  # The end portal is generated about 20 seconds (400ticks) after the ender dragon
+  # dies, so adding a delay can cause the dragon egg and the portal to appear nearly
+  # simultaneously.  Also, if the player places torches, beds and other blocks below
+  # before the dragon egg is generated, it will immediately drop and return to the main
+  # world once it falls. Adding a delay can make it easier to collect the dragon egg.
+  delay: 410
+
+  # Dragon egg spawn coordinates (The End)
+  # It is generally no problem to set the y-axis to 70. If you want to be more precise
+  # you can adjust this based on your server configuration.
+  x: 0
+  y: 70
+  z: 0
+
+# The following fields containing "modify" are all modified based off of the vanilla
+# Enter dragon armor value modification, decimals and negative values allowed
+armor_modify: 2.0
+
+# Ender Dragon armor toughness modification, decimals and negative values allowed
+armor_toughness_modify: 1.0
+
+# End crystal healing amount per second, decimals allowed
+# The vanilla value for healing speed is 2.0
+crystal_heal_speed: 5.0
+
+# The color of the ender dragon's glow, if you fill in none, it will not glow,
+# if you fill in random, it means random (available in versions 1.16.3 and above)
+# Color values are: AQUA (cyan), BLACK (black), BLUE (blue), DARK_AQUA (dark cyan),
+# DARK_BLUE (dark blue), DARK_GRAY (dark gray), DARK_GREEN (dark green),
+# DARK_PURPLE (dark purple), DARK_RED (dark red), GOLD (gold), GRAY (gray),
+# GREEN (green), LIGHT_PURPLE (purple), RED (red), WHITE (white), YELLOW (yellow)
+glow_color: gold
+
+attack:
+  # value and is not the value of the setting itself.
+  # Ender dragon impact/flap damage modification, decimals and negative values allowed
+  damage_modify: 5.0
+
+  # Ender dragon attack with potion effect
+  # the format is the same as effect_cloud.potion
+  potion_effect:
+    - 'wither 10 1'
+    - 'hunger 60 1'
+    - 'weakness 30 2'
+
+  # the effect give to player when this ender dragon attacks player with body or limb
+  # format: (<type>: seconds)
+  extra_effect:
+    fire: 0
+    # "freeze" can only be used in server greater than or equal to version 1.17
+    freeze: 0
+
+
+# Ender dragon attacks and sucks blood, formula: final value = actual damage * rate
+# (automatically calculated as a percentage) + base_amount
+suck_blood:
+
+  # Whether or not to enable (true or false)
+  enable: true
+
+  # Blood sucking rate in percent (Don't add %)
+  rate: 20
+
+  # Basic life-sucking value, decimals allowed
+  base_amount: 2
+
+  # Only triggers when attacking the player (true or false)
+  only_player: true
+
+# Boss bar settings
+bossbar:
+  #Available options: BLUE,GREEN,RED,PINK,PURPLE,WHITE,YELLOW
+  color: green
+
+  # Boss bar style
+  # Available options are: SOLID (Whole Bar), SEGMENTED_6 (6 Segments), SEGMENTED_10 (10 segments),
+  # SEGMENTED_12 (12 Segments), SEGMENTED_20 (20 Segments)
+  style: 'SEGMENTED_12'
+
+#The effect cloud produced after the ender dragon fireball hits
+effect_cloud:
+
+  # Initial radius, decimals allowed
+  original_radius: 5
+
+  # Expansion speed (unit: grid/second) decimals allowed
+  expand_speed: 0.1
+
+  # Linger time (in seconds), integers only
+  duration: 30
+
+  # Dragon's breath particle effects color.
+  # Uses RGB color format (Ex: the code for yellow is '255:255:0')
+  # Set to "none" for vanilla particle color (purple dragon's breath)
+  color: none
+
+  # Add Potion Effects
+  #
+  # Format (separated by spaces):
+  # potion effect (see list), duration (in seconds), potion level (int between 1 and 256)
+  # Note: Potion level is an integer between 1 and 256 and will be set to that exact potion
+  # level which differs from how it works in the effect command (as an amplifier)
+  # Available effects: ABSORPTION (damage absorption), BAD_OMEN (bad omen), BLINDNESS (blindness),
+  # CONDUIT_POWER (surge energy), CONFUSION (nausea), DAMAGE_RESISTANCE (resistance increase),
+  # DARKNESS (darkness), DOLPHINS_GRACE (dolphin's grace), FAST_DIGGING (haste),
+  # FIRE_RESISTANCE (fire resistance), GLOWING (glowing), HARM (instant damage), HEAL (instant heal),
+  # HEALTH_BOOST (health boost), HERO_OF_THE_VILLAGE (hero of the village), HUNGER (hunger),
+  # INCREASE_DAMAGE (strength), INVISIBILITY (invisibility), JUMP (jump boost), LEVITATION (levitation),
+  # LUCK (luck), NIGHT_VISION (night vision), POISON (poison), REGENERATION (health regeneration),
+  # SATURATION (restores hunger), SLOW (slowness), SLOW_DIGGING (mining fatigue),
+  # SLOW_FALLING (slow falling), SPEED (speed boost), UNLUCK (bad luck), WATER_BREATHING (water breathing),
+  # WEAKNESS (weakness), WITHER (wither)
+  potion:
+    - 'harm 60 2'
+    - 'BLINDNESS 10 1'
+
+
+# Brackets indicate that they are not enabled ( Ex: spawn_cmd: [] )
+
+# The command(s) to execute when this type of dragon is spawned
+spawn_cmd:
+  - ''
+  - ''
+  - ''
+
+# The command(s) to execute when this type of dragon dies (unless killed with command).
+# You can use placeholder %player% to represent the final dragon slayer, if not found
+# the command in that line will not be excecuted
+death_cmd:
+  - ''
+  - ''
+  - ''
+
+# Message broadcast to the whole server when this type of dragon is spawned
+spawn_broadcast_msg:
+  - '§aEnder dragon number %times% has been spawned.'
+  - '§6This dragon exudes a mysterious atmosphere...'
+
+# Message broadcast to the whole server when this type of dragon is killed
+death_broadcast_msg:
+  - '§bEnder dragon number %times% has been killed by %player%'
+  - 'Rewards has been distributed! {damage_statistics}'
+  - ''
+
+# Message sent to the final killer of the Ender Dragon
+msg_to_killer:
+  - '§6Congratulations, this dragon drops dragon eggs and a lot of experience!'
+  - ''
+  - ''
+
+reward_dist:
+  # enable: [all,drop,killer,pack,rank,termwise]
+  # all: Give to all participants in dragon slaying.
+  # drop: Dropped item, players can grab it casually.
+  # killer: Only give to the final killer.
+  # pack: Pack all items that trigger drop and distribute them to players weighted based on their damage percentage.
+  # rank: Strictly based on player damage ranking, give the top few players with the highest damage.
+  # termwise: Assign the items that trigger the drop ONE BY ONE to the player based on the weighted proportion of damage.
+  type: rank
+  drop:
+    # Whether the dropped item glows.
+    # Refer to the previous 'glow_color' for configuration method
+    glow: green
+  pack:
+    # the number of player(s) can be selected at most
+    max_num: 1
+  rank:
+    # Top few can receive rewards
+    max_num: 1

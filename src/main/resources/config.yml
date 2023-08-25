@@ -1,0 +1,92 @@
+#You don't need to edit it.
+version: 2.2.0
+
+#Enabled: 'Chinese','English'
+lang: 'English'
+
+#Enabled: 'Disable','ChatBox','SubTitle','ActionBar'
+damage_visible_mode: ActionBar
+
+damage_statistics:
+  # Display how many player at most
+  limit: 10
+
+#Enabled: 'weight','pc' ('edge' is deprecated!)
+#'weight'(edge): means using weight to decide which dragon(including default dragon) to spawn.
+#'pc': namely 'priority+chance', dragons(except the default one) will be sorted in descending order of priority, and plugin will sequently try to spawn each dragon(according to respective chance). Once succeed, it will spawn and dragons behind it will be skipped. If all attempts fail, spawn the default one.
+special_dragon_jude_mode: 'weight'
+
+#format: '<NAME>:<WEIGHT>'   (<NAME> -> file name; <WEIGHT> -> positive integer)
+# For example, if you want to add a new dragon,
+# you can create a new file named '<NAME>.yml' in plugins/EnderDragon/setting,
+# and then add - '<NAME>:<WEIGHT>' here
+dragon_setting_file:
+  - 'default:5'
+  - 'special:5'
+
+auto_respawn:
+  # You can add more entries without duplicate name according to the format.
+  task1:
+    enable: false
+    world_name: world_the_end
+    #some examples:
+    # minute:30            -> respawn every 30 minutes
+    # hour:4               -> respawn every 4 hours
+    # day:1,00:00          -> respawn at 00:00 every day
+    # day:10,14:30         -> respawn at 14:30 every 10 days
+    # week:6,22:00         -> respawn at 22:00 every Saturday(the 6th day of one week)
+    # week:7,09:00         -> respawn at 09:00 every Sunday
+    # month:8,11:43        -> respawn at 11:43,the 8th day every month
+    # year:200,00:00       -> respawn at 00:00,the 200th day every year
+    respawn_time: 'day:10,22:00'
+  task_2:
+    enable: false
+    world_name: world_the_end
+    respawn_time: 'week:7,20:00'
+
+
+
+#"respawn_cd" works as accurate countdown, and have an independent system.
+#The configuration can be modified with command "/ed respawn_cd".
+#"auto_respawn.invulnerable" has same effect on this.
+respawn_cd:
+  enable: true
+
+#if set this to true, player(in survival mode) can't break the end_crystal after auto_respawn starts
+crystal_invulnerable: false
+#if set this to true, end_crystal can still be crafted or placed,but end_crystal that placed by player cannot respawn the ender_dragon
+resist_player_respawn: false
+#if set this to true, player cannot gather dragon_breath with glass_bottle
+resist_dragon_breath_gather: false
+#The gui that will be shown when using "/ed drop gui"
+main_gui: main
+
+#The spawn of ender_dragon in these worlds will be ignored by this plugin.
+blacklist_worlds:
+  - 'world'
+  - 'world_nether'
+
+#optional: [default/nbt/advanced]
+item_format:
+  reward: default
+
+#Whether hook to other plugins
+hook_plugins:
+  MythicLib: true
+
+#Whether enable script expansion
+#Due to dependency loading, this configuration change will only take effect after reloading the server
+expansion:
+  groovy: false
+
+#[true/false]
+debug: false
+
+#Do not modify the configuration below unless you know what you are doing
+advanced_setting:
+  # In some mohist-server, environment of world may be loaded incorrectly, which affects the respawn function.
+  # You can set this to "true" and reload server to fix it.
+  world_env_fix: false
+  save_respawn_status: false
+  backslash_split:
+    reward: false
