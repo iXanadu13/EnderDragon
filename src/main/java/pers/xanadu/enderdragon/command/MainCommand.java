@@ -31,39 +31,34 @@ public class MainCommand implements CommandExecutor {
             return false;
         }
         switch(args[0].toLowerCase()){
-            case "parse" : {
-//                if(!(sender instanceof Player)) {
-//                    Lang.sendFeedback(sender,Lang.command_only_player);
-//                    return false;
-//                }
-
-                if(sender.isOp()){
-                    if(args.length == 2) GroovyManager.invoke("test.groovy", args[1]);
-                    else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],Bukkit.getPlayer(args[2]));
-//                    List<Entity> entities = p.getNearbyEntities(50,50,50);
-//                    entities.forEach(entity -> {
-//                        if(entity instanceof org.bukkit.entity.EnderDragon){
-//                            org.bukkit.entity.EnderDragon dragon = (org.bukkit.entity.EnderDragon) entity;
-//                            //dragon.setPhase(CHARGE_PLAYER);
-//                            //SkillManager.launchDragonFireball(dragon,p.getLocation());
-//                            SkillManager.callEnderManReinforce(p,3);
-//                        }
+//            case "parse" : {
+//                if(!sender.isOp()) return false;
 //
+//                if(args.length == 2) GroovyManager.invoke("test.groovy", args[1]);
+//                else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],Bukkit.getPlayer(args[2]));
+////                List<Entity> entities = p.getNearbyEntities(50,50,50);
+////                entities.forEach(entity -> {
+////                    if(entity instanceof org.bukkit.entity.EnderDragon){
+////                        org.bukkit.entity.EnderDragon dragon = (org.bukkit.entity.EnderDragon) entity;
+////                        //dragon.setPhase(CHARGE_PLAYER);
+////                        //SkillManager.launchDragonFireball(dragon,p.getLocation());
+////                        SkillManager.callEnderManReinforce(p,3);
+////                    }
+////
+////
+//////                    if(entity instanceof org.bukkit.entity.EnderDragon){
+//////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
+//////                    }
+//////                    if(entity instanceof ComplexEntityPart){
+//////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
+//////                    }
+//////                    if(entity instanceof ComplexLivingEntity){
+//////                        Bukkit.broadcastMessage(entity.getName());//8 EnderDragon
+//////                    }
+////                });
 //
-////                        if(entity instanceof org.bukkit.entity.EnderDragon){
-////                            Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
-////                        }
-////                        if(entity instanceof ComplexEntityPart){
-////                            Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
-////                        }
-////                        if(entity instanceof ComplexLivingEntity){
-////                            Bukkit.broadcastMessage(entity.getName());//8 EnderDragon
-////                        }
-//                    });
-
-                }
-                return true;
-            }
+//                return true;
+//            }
             case "action" : {
                 if(!sender.isOp()){
                     Lang.sendFeedback(sender,Lang.command_no_permission);
