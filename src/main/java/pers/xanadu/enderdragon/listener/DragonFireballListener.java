@@ -22,23 +22,23 @@ import static pers.xanadu.enderdragon.manager.DragonManager.mp;
 
 public class DragonFireballListener implements Listener {
 
-    @EventHandler
-    public void OnDragonChangePhase(EnderDragonChangePhaseEvent e){
-        //Bukkit.broadcastMessage("old: "+e.getCurrentPhase());
-        //Bukkit.broadcastMessage("new: "+e.getNewPhase());
-    }
-    @EventHandler
-    public void OnDragonFireballLaunch(ProjectileLaunchEvent e){
-        Projectile projectile = e.getEntity();
-        if(!(projectile instanceof DragonFireball)) return;
-        Bukkit.broadcastMessage("DragonFireball launched!");
-        DragonFireball fireball = (DragonFireball) e.getEntity();
-        ProjectileSource source = projectile.getShooter();
-        if(source instanceof EnderDragon){
-            Bukkit.broadcastMessage("status set!");
-        }
-
-    }
+//    @EventHandler
+//    public void OnDragonChangePhase(EnderDragonChangePhaseEvent e){
+//        //Bukkit.broadcastMessage("old: "+e.getCurrentPhase());
+//        //Bukkit.broadcastMessage("new: "+e.getNewPhase());
+//    }
+//    @EventHandler
+//    public void OnDragonFireballLaunch(ProjectileLaunchEvent e){
+//        Projectile projectile = e.getEntity();
+//        if(!(projectile instanceof DragonFireball)) return;
+//        Bukkit.broadcastMessage("DragonFireball launched!");
+//        DragonFireball fireball = (DragonFireball) e.getEntity();
+//        ProjectileSource source = projectile.getShooter();
+//        if(source instanceof EnderDragon){
+//            Bukkit.broadcastMessage("status set!");
+//        }
+//
+//    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void OnEffectCloudSpawn(final EntitySpawnEvent e){
