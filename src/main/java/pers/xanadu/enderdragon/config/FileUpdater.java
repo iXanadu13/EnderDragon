@@ -121,12 +121,12 @@ public class FileUpdater {
             File new_data_file = new File(plugin.getDataFolder(),"new/data.yml");
             FileConfiguration new_data = YamlConfiguration.loadConfiguration(new_data_file);
             String next_time = new_data.getString("auto_respawn.next_respawn_time");
+            new_data.set("version","2.2.0");
             if(next_time!=null && respawn_world_name!=null){
-                new_data.set("version","2.2.0");
                 new_data.set("auto_respawn.task1.world_name",respawn_world_name);
                 new_data.set("auto_respawn.task1.next_respawn_time",next_time);
-                new_data.save(new_data_file);
             }
+            new_data.save(new_data_file);
         }
         else Lang.error("The version of data.yml is not supported!");
         Lang.info("New config files are generated in plugins/EnderDragon/new.");
