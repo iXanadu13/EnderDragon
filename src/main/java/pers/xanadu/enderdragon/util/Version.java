@@ -47,7 +47,9 @@ public class Version {
             case "v1_12_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_12_R1.BossBarManager();
             case "v1_13_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_13_R1.BossBarManager();
             case "v1_13_R2" : return new pers.xanadu.enderdragon.nms.BossBar.v1_13_R2.BossBarManager();
-            default: return null;
+            case "v1_14_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_14_R1.BossBarManager();
+            case "v1_15_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_15_R1.BossBarManager();
+            default: return new pers.xanadu.enderdragon.nms.BossBar.v1_16_R1_above.BossBarManager();
         }
     }
     public static I_WorldDataManager getWorldDataManager(){
