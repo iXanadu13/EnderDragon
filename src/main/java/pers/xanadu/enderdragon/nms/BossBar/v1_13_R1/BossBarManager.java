@@ -7,6 +7,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_13_R1.util.CraftChatMessage;
 import pers.xanadu.enderdragon.config.Lang;
+import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
 
 import java.io.File;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import static pers.xanadu.enderdragon.EnderDragon.getInstance;
 import static pers.xanadu.enderdragon.EnderDragon.plugin;
 
 public class BossBarManager implements I_BossBarManager {
@@ -24,7 +24,8 @@ public class BossBarManager implements I_BossBarManager {
         YamlConfiguration yml = new YamlConfiguration();
         worlds.forEach(world -> {
             try{
-                Object edb = getInstance().getNMSManager().getEnderDragonBattle(world);
+                Object edb = DragonManager.getEnderDragonBattle(world);
+                assert edb != null;
                 if(BossBattleServer == null) BossBattleServer = edb.getClass().getDeclaredField("c");
                 BossBattleServer.setAccessible(true);
                 BossBattleServer bbs = (BossBattleServer) BossBattleServer.get(edb);
@@ -56,7 +57,8 @@ public class BossBarManager implements I_BossBarManager {
         }
         worlds.forEach(world -> {
             try{
-                Object edb = getInstance().getNMSManager().getEnderDragonBattle(world);
+                Object edb = DragonManager.getEnderDragonBattle(world);
+                assert edb != null;
                 if(BossBattleServer == null) BossBattleServer = edb.getClass().getDeclaredField("c");
                 BossBattleServer.setAccessible(true);
                 BossBattleServer bbs = (BossBattleServer) BossBattleServer.get(edb);
@@ -79,7 +81,8 @@ public class BossBarManager implements I_BossBarManager {
         bbs.setDarkenSky(true);
         bbs.setPlayMusic(true);
         try{
-            Object edb = getInstance().getNMSManager().getEnderDragonBattle(world);
+            Object edb = DragonManager.getEnderDragonBattle(world);
+            assert edb != null;
             if(BossBattleServer == null) BossBattleServer = edb.getClass().getDeclaredField("c");
             BossBattleServer.setAccessible(true);
             BossBattleServer.set(edb,bbs);

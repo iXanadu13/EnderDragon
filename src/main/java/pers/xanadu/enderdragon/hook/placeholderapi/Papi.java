@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.xanadu.enderdragon.EnderDragon;
+import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.TimerManager;
 import pers.xanadu.enderdragon.task.DragonRespawnTimer;
 import pers.xanadu.enderdragon.util.MathUtil;
@@ -46,8 +47,7 @@ public class Papi extends PlaceholderExpansion {
     public String onPlaceholderRequest(final Player player, final @NotNull String params){
         if(params.equals("can_respawn")){
             if(player == null) return String.valueOf(false);
-            boolean res = EnderDragon.getInstance().getDragonManager().canRespawn(player.getWorld());
-            return String.valueOf(res);
+            return String.valueOf(DragonManager.canRespawn(player.getWorld()));
         }
         if(params.equals("respawn_cd_progress")){
             if(player == null) return null;
@@ -73,8 +73,7 @@ public class Papi extends PlaceholderExpansion {
         if(params.startsWith("can_respawn_")){
             String name = params.substring("can_respawn_".length());
             World world = Bukkit.getWorld(name);
-            boolean res = EnderDragon.getInstance().getDragonManager().canRespawn(world);
-            return String.valueOf(res);
+            return String.valueOf(DragonManager.canRespawn(world));
         }
         if(params.startsWith("respawn_cd_progress_")){
             String name = params.substring("respawn_cd_progress_".length());

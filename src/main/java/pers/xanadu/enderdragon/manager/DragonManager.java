@@ -33,10 +33,15 @@ public class DragonManager {
     public static List<String> dragon_names = new ArrayList<>();
     private static int sum = 0;
     private static final int[][] nxt = {{3,0},{0,3},{-3,0},{0,-3}};
-    private Method DragonBattle_e;
-    private Method getX;
-    private Method getY;
-    private Method getZ;
+    private static final int[][] nxt_2 = {{2,0},{0,2},{-2,0},{0,-2}};
+    private static final String getEDB_base;
+    private static Class<?> CraftWorldClass;
+    private static Class<?> WorldProviderTheEndClass;
+    private static Class<?> EnderDragonBattleClass;
+    private static Method DragonBattle_e;
+    private static Method getX;
+    private static Method getY;
+    private static Method getZ;
 
     public static void reload(){
         new BukkitRunnable(){
@@ -278,25 +283,77 @@ public class DragonManager {
         instance.addModifier(new AttributeModifier("EnderDragon",amount,AttributeModifier.Operation.ADD_NUMBER));
     }
 
-    public void initiateRespawn(final Player p){
-        DragonRespawnResult res = initiateRespawn(p.getWorld());
+    public static void initiateRespawn(final Player p,final String uniqueId){
+        DragonRespawnResult res = initiateRespawn(p.getWorld(),uniqueId);
         if(res == DragonRespawnResult.success) Lang.broadcastMSG(Lang.dragon_auto_respawn);
         else Lang.sendFeedback(p,"§c"+res.getMessage());
     }
-    public void initiateRespawn(final CommandSender sender,final String world_name){
-        DragonRespawnResult res = initiateRespawn(Bukkit.getWorld(world_name));
+    public static void initiateRespawn(final CommandSender sender,final String world_name,final String uniqueId){
+        DragonRespawnResult res = initiateRespawn(Bukkit.getWorld(world_name),uniqueId);
         if(res == DragonRespawnResult.success) Lang.broadcastMSG(Lang.dragon_auto_respawn);
         else Lang.sendFeedback(sender,"§c"+res.getMessage());
     }
-    public void initiateRespawn(final String world_name){
-        DragonRespawnResult res = initiateRespawn(Bukkit.getWorld(world_name));
+    public static void initiateRespawn(final String world_name,final String uniqueId){
+        DragonRespawnResult res = initiateRespawn(Bukkit.getWorld(world_name),uniqueId);
         if(res == DragonRespawnResult.success) Lang.broadcastMSG(Lang.dragon_auto_respawn);
         else Lang.error(res.getMessage());
     }
-    public boolean canRespawn(final String world_name){
+    public static DragonRespawnResult initiateRespawn(final World world,final String uniqueId){
+        if(world == null) return DragonRespawnResult.world_not_found;
+        if(world.getEnvironment() != World.Environment.THE_END) return DragonRespawnResult.world_wrong_env;
+        if(Version.mcMainVersion >= 16){
+            DragonBattle battle = world.getEnderDragonBattle();
+            assert battle != null;
+            if(battle.getEnderDragon() != null) return DragonRespawnResult.dragon_has_existed;
+            if(battle.getRespawnPhase() != DragonBattle.RespawnPhase.NONE) return DragonRespawnResult.respawn_has_started;
+            Location cen = battle.getEndPortalLocation();
+            if(cen == null) {
+                battle.initiateRespawn();
+                cen = battle.getEndPortalLocation();
+                if(cen == null){
+                    return DragonRespawnResult.world_unloaded;//也可尝试chunk.load()
+                }
+            }
+            if(uniqueId == null) placeEndCrystals(cen);
+            else placeEndCrystals(cen,uniqueId);
+            battle.initiateRespawn();
+            return DragonRespawnResult.success;
+        }
+        try {
+            Object battle = getEnderDragonBattle(world);
+            assert battle != null;
+            Field k = EnderDragonBattleClass.getDeclaredField("k");
+            k.setAccessible(true);
+            Object isAlive = k.get(battle);
+            if(!((boolean) isAlive)) return DragonRespawnResult.dragon_has_existed;
+            Field p = EnderDragonBattleClass.getDeclaredField("p");
+            p.setAccessible(true);
+            Object phase = p.get(battle);
+            if(phase != null) return DragonRespawnResult.respawn_has_started;
+            Field field = EnderDragonBattleClass.getDeclaredField("o");
+            field.setAccessible(true);
+            Object BlockPosition = field.get(battle);
+            if(BlockPosition == null){
+                DragonBattle_e.invoke(battle);
+                BlockPosition = field.get(battle);
+                if(BlockPosition == null) return DragonRespawnResult.world_unloaded;
+            }
+            if(getX == null) getX = BlockPosition.getClass().getMethod("getX");
+            if(getY == null) getY = BlockPosition.getClass().getMethod("getY");
+            if(getZ == null) getZ = BlockPosition.getClass().getMethod("getZ");
+            Location loc = new Location(world,(int)getX.invoke(BlockPosition),(int)getY.invoke(BlockPosition),(int)getZ.invoke(BlockPosition));
+            if(uniqueId == null) placeEndCrystals(loc);
+            else placeEndCrystals(loc,uniqueId);
+            DragonBattle_e.invoke(battle);
+            return DragonRespawnResult.success;
+        } catch (ReflectiveOperationException e) {
+            return DragonRespawnResult.version_not_support;
+        }
+    }
+    public static boolean canRespawn(final String world_name){
         return canRespawn(Bukkit.getWorld(world_name));
     }
-    public boolean canRespawn(final World world){
+    public static boolean canRespawn(final World world){
         if(world == null) return false;
         if(world.getEnvironment() != World.Environment.THE_END) return false;
         if(Version.mcMainVersion >= 16){//executes 1e5 times within 27ms
@@ -315,22 +372,21 @@ public class DragonManager {
             return true;
         }
         try {//executes 1e5 times within 76ms
-            Object battle = getInstance().getNMSManager().getEnderDragonBattle(world);
+            Object battle = getEnderDragonBattle(world);
             if(battle == null) return false;
-            Field k = battle.getClass().getDeclaredField("k");
+            Field k = EnderDragonBattleClass.getDeclaredField("k");
             k.setAccessible(true);
             Object isAlive = k.get(battle);
             if(!((boolean) isAlive)) return false;
-            Field p = battle.getClass().getDeclaredField("p");
+            Field p = EnderDragonBattleClass.getDeclaredField("p");
             p.setAccessible(true);
             Object phase = p.get(battle);
             if(phase != null) return false;
-            Field field = battle.getClass().getDeclaredField("o");
+            Field field = EnderDragonBattleClass.getDeclaredField("o");
             field.setAccessible(true);
             Object BlockPosition = field.get(battle);
             if(BlockPosition == null){
-                if (this.DragonBattle_e == null) this.DragonBattle_e = battle.getClass().getMethod("e");
-                this.DragonBattle_e.invoke(battle);
+                DragonBattle_e.invoke(battle);
                 BlockPosition = field.get(battle);
                 if(BlockPosition == null) return false;
             }
@@ -339,7 +395,39 @@ public class DragonManager {
             return false;
         }
     }
-    public boolean isRespawnRunning(final World world){
+    public static Location getEndPortalLocation(final World world){
+        if(world == null) return null;
+        if(world.getEnvironment() != World.Environment.THE_END) return null;
+        if(Version.mcMainVersion >= 16){
+            DragonBattle battle = world.getEnderDragonBattle();
+            if(battle == null) return null;
+            Location cen = battle.getEndPortalLocation();
+            if(cen == null) {
+                battle.initiateRespawn();
+                cen = battle.getEndPortalLocation();
+            }
+            return cen;
+        }
+        try {
+            Object battle = getEnderDragonBattle(world);
+            if(battle == null) return null;
+            Field field = EnderDragonBattleClass.getDeclaredField("o");
+            field.setAccessible(true);
+            Object BlockPosition = field.get(battle);
+            if(BlockPosition == null){
+                DragonBattle_e.invoke(battle);
+                BlockPosition = field.get(battle);
+                if(BlockPosition == null) return null;
+            }
+            if(getX == null) getX = BlockPosition.getClass().getMethod("getX");
+            if(getY == null) getY = BlockPosition.getClass().getMethod("getY");
+            if(getZ == null) getZ = BlockPosition.getClass().getMethod("getZ");
+            return new Location(world,(int)getX.invoke(BlockPosition),(int)getY.invoke(BlockPosition),(int)getZ.invoke(BlockPosition));
+        } catch (ReflectiveOperationException e) {
+            return null;
+        }
+    }
+    public static boolean isRespawnRunning(final World world){
         if(world == null) return false;
         if(world.getEnvironment() != World.Environment.THE_END) return false;
         if(Version.mcMainVersion >= 16){
@@ -348,9 +436,9 @@ public class DragonManager {
             return battle.getRespawnPhase() != DragonBattle.RespawnPhase.NONE;
         }
         try {
-            Object battle = getInstance().getNMSManager().getEnderDragonBattle(world);
+            Object battle = getEnderDragonBattle(world);
             assert battle != null;
-            Field p = battle.getClass().getDeclaredField("p");
+            Field p = EnderDragonBattleClass.getDeclaredField("p");
             p.setAccessible(true);
             Object phase = p.get(battle);
             return phase != null;
@@ -359,7 +447,7 @@ public class DragonManager {
             return false;
         }
     }
-    public void refresh_respawn(final World world){
+    public static void refresh_respawn(final World world){
         if(world == null) return;
         if(world.getEnvironment() != World.Environment.THE_END) return;
         if(Version.mcMainVersion >= 16){
@@ -369,16 +457,113 @@ public class DragonManager {
             return;
         }
         try {
-            Object battle = getInstance().getNMSManager().getEnderDragonBattle(world);
+            Object battle = getEnderDragonBattle(world);
             assert battle != null;
-            if (this.DragonBattle_e == null) this.DragonBattle_e = battle.getClass().getMethod("e");
-            this.DragonBattle_e.invoke(battle);
+            DragonBattle_e.invoke(battle);
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
     }
-
-    private DragonRespawnResult initiateRespawn(final World world){
+    private static void placeEndCrystals(final Location cen){
+        World world = cen.getWorld();
+        if(world == null) return;
+        cen.add(0.5,1,0.5);
+        for(int i = 0; i < 4; i++){
+            EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen.clone().add(nxt[i][0],0,nxt[i][1]), EntityType.ENDER_CRYSTAL);
+            if(Config.crystal_invulnerable) crystal.setInvulnerable(true);
+            crystal.setShowingBottom(false);
+        }
+    }
+    private static void placeEndCrystals(final Location cen,final String uniqueId){
+        World world = cen.getWorld();
+        if(world == null) return;
+        cen.add(0.5,1,0.5);
+        for(int i=0;i<4;i++){
+            Location loc = cen.clone().add(nxt_2[i][0],0,nxt_2[i][1]);
+            world.getNearbyEntities(loc,0.5,0.5,0.5).forEach(entity -> {
+                if(entity instanceof EnderCrystal) entity.remove();
+            });
+        }
+        for(int i = 0; i < 4; i++){
+            EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen.clone().add(nxt[i][0],0,nxt[i][1]), EntityType.ENDER_CRYSTAL);
+            if(Config.crystal_invulnerable) crystal.setInvulnerable(true);
+            crystal.setShowingBottom(false);
+            crystal.addScoreboardTag("ed_spe_"+uniqueId);
+        }
+    }
+    public static MyDragon getDesignatedDragon(final World world){
+        List<EnderCrystal> list = new ArrayList<>();
+        Location cen = DragonManager.getEndPortalLocation(world).add(0.5,1,0.5);
+        for(int i=0;i<4;i++){
+            Location loc = cen.clone().add(nxt_2[i][0],0,nxt_2[i][1]);
+            world.getNearbyEntities(loc,0.5,0.5,0.5).forEach(entity -> {
+                if(entity instanceof EnderCrystal) list.add((EnderCrystal) entity);
+            });
+        }
+        for(EnderCrystal crystal : list) {
+            Set<String> tags = crystal.getScoreboardTags();
+            for(MyDragon a : dragons){
+                if(tags.contains("ed_spe_"+a.unique_name)) {
+                    return a;
+                }
+            }
+        }
+        return null;
+    }
+    public static Object getEnderDragonBattle(final World world){
+        String version = Version.getVersion();
+        if (Version.mcMainVersion>=12 && Version.mcMainVersion<16) {
+            try {
+                Object worldServer = getWorldServer(world);
+                assert worldServer != null;
+                Field field = worldServer.getClass().getField("worldProvider");
+                Object worldProvider = field.get(worldServer);
+                Object WorldProviderTheEnd = WorldProviderTheEndClass.cast(worldProvider);
+                String method_name = getEDB_base;
+                if(method_name == null) return null;
+                Method method = WorldProviderTheEnd.getClass().getDeclaredMethod(method_name);
+                return method.invoke(WorldProviderTheEnd);
+            } catch (ReflectiveOperationException e) {
+                Lang.warn("Your server version (" + version + ") is not supported!");
+                e.printStackTrace();
+            }
+        }
+        Lang.warn("Your server version (" + version + ") is not supported!");
+        return null;
+    }
+    private static Object getWorldServer(final World world) {
+        try {
+            Object castClass = getCraftWorld(world);
+            return CraftWorldClass.getDeclaredMethod("getHandle").invoke(castClass);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private static Object getCraftWorld(final World world) {
+        if (CraftWorldClass.isInstance(world)) return CraftWorldClass.cast(world);
+        return null;
+    }
+    @Deprecated
+    public static void initiateRespawn(final Player p){
+        DragonRespawnResult res = initiateRespawn(p.getWorld());
+        if(res == DragonRespawnResult.success) Lang.broadcastMSG(Lang.dragon_auto_respawn);
+        else Lang.sendFeedback(p,"§c"+res.getMessage());
+    }
+    @Deprecated
+    public static void initiateRespawn(final CommandSender sender,final String world_name){
+        DragonRespawnResult res = initiateRespawn(Bukkit.getWorld(world_name));
+        if(res == DragonRespawnResult.success) Lang.broadcastMSG(Lang.dragon_auto_respawn);
+        else Lang.sendFeedback(sender,"§c"+res.getMessage());
+    }
+    @Deprecated
+    public static void initiateRespawn(final String world_name){
+        DragonRespawnResult res = initiateRespawn(Bukkit.getWorld(world_name));
+        if(res == DragonRespawnResult.success) Lang.broadcastMSG(Lang.dragon_auto_respawn);
+        else Lang.error(res.getMessage());
+    }
+    @Deprecated
+    public static DragonRespawnResult initiateRespawn(final World world){
         if(world == null) return DragonRespawnResult.world_not_found;
         if(world.getEnvironment() != World.Environment.THE_END) return DragonRespawnResult.world_wrong_env;
         if(Version.mcMainVersion >= 16){
@@ -391,52 +576,41 @@ public class DragonManager {
                 battle.initiateRespawn();
                 cen = battle.getEndPortalLocation();
                 if(cen == null){
-                    return DragonRespawnResult.world_unloaded;//也可尝试chunk.load()
+                    return DragonRespawnResult.world_unloaded;
                 }
             }
-            placeEndCrystals(world,cen);
+            placeEndCrystals(cen);
             battle.initiateRespawn();
             return DragonRespawnResult.success;
         }
         try {
-            Object battle = getInstance().getNMSManager().getEnderDragonBattle(world);
+            Object battle = getEnderDragonBattle(world);
             assert battle != null;
-            Field k = battle.getClass().getDeclaredField("k");
+            Field k = EnderDragonBattleClass.getDeclaredField("k");
             k.setAccessible(true);
             Object isAlive = k.get(battle);
             if(!((boolean) isAlive)) return DragonRespawnResult.dragon_has_existed;
-            Field p = battle.getClass().getDeclaredField("p");
+            Field p = EnderDragonBattleClass.getDeclaredField("p");
             p.setAccessible(true);
             Object phase = p.get(battle);
             if(phase != null) return DragonRespawnResult.respawn_has_started;
-            Field field = battle.getClass().getDeclaredField("o");
+            Field field = EnderDragonBattleClass.getDeclaredField("o");
             field.setAccessible(true);
             Object BlockPosition = field.get(battle);
             if(BlockPosition == null){
-                if (this.DragonBattle_e == null) this.DragonBattle_e = battle.getClass().getMethod("e");
-                this.DragonBattle_e.invoke(battle);
+                DragonBattle_e.invoke(battle);
                 BlockPosition = field.get(battle);
                 if(BlockPosition == null) return DragonRespawnResult.world_unloaded;
             }
-            if(this.getX == null) this.getX = BlockPosition.getClass().getMethod("getX");
-            if(this.getY == null) this.getY = BlockPosition.getClass().getMethod("getY");
-            if(this.getZ == null) this.getZ = BlockPosition.getClass().getMethod("getZ");
-            Location loc = new Location(world,(int)getX.invoke(BlockPosition),(int)this.getY.invoke(BlockPosition),(int)this.getZ.invoke(BlockPosition));
-            placeEndCrystals(world, loc);
-            if (this.DragonBattle_e == null) this.DragonBattle_e = battle.getClass().getMethod("e");
-            this.DragonBattle_e.invoke(battle);
+            if(getX == null) getX = BlockPosition.getClass().getMethod("getX");
+            if(getY == null) getY = BlockPosition.getClass().getMethod("getY");
+            if(getZ == null) getZ = BlockPosition.getClass().getMethod("getZ");
+            Location loc = new Location(world,(int)getX.invoke(BlockPosition),(int)getY.invoke(BlockPosition),(int)getZ.invoke(BlockPosition));
+            placeEndCrystals(loc);
+            DragonBattle_e.invoke(battle);
             return DragonRespawnResult.success;
         } catch (ReflectiveOperationException e) {
             return DragonRespawnResult.version_not_support;
-        }
-
-    }
-    private void placeEndCrystals(final World world,final Location cen){
-        cen.add(0.5,1,0.5);
-        for(int i = 0; i < 4; i++){
-            EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen.clone().add(nxt[i][0],0,nxt[i][1]), EntityType.ENDER_CRYSTAL);
-            if(Config.crystal_invulnerable) crystal.setInvulnerable(true);
-            crystal.setShowingBottom(false);
         }
     }
     public enum DragonRespawnResult{
@@ -461,4 +635,37 @@ public class DragonManager {
         }
     }
 
+    static{
+        String version = Version.getVersion();
+        switch (version) {
+            case "v1_12_R1" : {
+                getEDB_base = "t";
+                break;
+            }
+            case "v1_13_R1" :
+            case "v1_13_R2" : {
+                getEDB_base = "r";
+                break;
+            }
+            case "v1_14_R1" : {
+                getEDB_base = "q";
+                break;
+            }
+            case "v1_15_R1" : {
+                getEDB_base = "o";
+                break;
+            }
+            default : getEDB_base = null;
+        }
+        if(Version.mcMainVersion>=12 && Version.mcMainVersion<16){
+            try{
+                CraftWorldClass = Class.forName("org.bukkit.craftbukkit." + version + ".CraftWorld");
+                WorldProviderTheEndClass = Class.forName("net.minecraft.server."+version+".WorldProviderTheEnd");
+                EnderDragonBattleClass = Class.forName("net.minecraft.server."+version+".EnderDragonBattle");
+                DragonBattle_e = EnderDragonBattleClass.getMethod("e");
+            }catch (ReflectiveOperationException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }
