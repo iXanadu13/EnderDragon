@@ -27,7 +27,11 @@ public class DragonSpawnListener implements Listener {
         if(!(e.getEntity() instanceof EnderDragon)) return;
         if(Config.blacklist_worlds.contains(e.getEntity().getWorld().getName())) return;
         EnderDragon dragon = (EnderDragon) e.getEntity();
-        MyDragon myDragon = judge();
+        MyDragon myDragon = null;
+        if(e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.DEFAULT){
+            myDragon = getDesignatedDragon(dragon.getWorld());
+        }
+        if(myDragon == null) myDragon = judge();
         if(myDragon == null) {
             Lang.warn("special_dragon_jude_mode setting error!");
             return;

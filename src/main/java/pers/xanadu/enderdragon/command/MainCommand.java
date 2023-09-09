@@ -31,34 +31,34 @@ public class MainCommand implements CommandExecutor {
             return false;
         }
         switch(args[0].toLowerCase()){
-//            case "parse" : {
-//                if(!sender.isOp()) return false;
+            case "parse" : {
+                if(!sender.isOp()) return false;
+
+                if(args.length == 2) GroovyManager.invoke("test.groovy", args[1]);
+                else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],Bukkit.getPlayer(args[2]));
+//                List<Entity> entities = p.getNearbyEntities(50,50,50);
+//                entities.forEach(entity -> {
+//                    if(entity instanceof org.bukkit.entity.EnderDragon){
+//                        org.bukkit.entity.EnderDragon dragon = (org.bukkit.entity.EnderDragon) entity;
+//                        //dragon.setPhase(CHARGE_PLAYER);
+//                        //SkillManager.launchDragonFireball(dragon,p.getLocation());
+//                        SkillManager.callEnderManReinforce(p,3);
+//                    }
 //
-//                if(args.length == 2) GroovyManager.invoke("test.groovy", args[1]);
-//                else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],Bukkit.getPlayer(args[2]));
-////                List<Entity> entities = p.getNearbyEntities(50,50,50);
-////                entities.forEach(entity -> {
+//
 ////                    if(entity instanceof org.bukkit.entity.EnderDragon){
-////                        org.bukkit.entity.EnderDragon dragon = (org.bukkit.entity.EnderDragon) entity;
-////                        //dragon.setPhase(CHARGE_PLAYER);
-////                        //SkillManager.launchDragonFireball(dragon,p.getLocation());
-////                        SkillManager.callEnderManReinforce(p,3);
+////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
 ////                    }
-////
-////
-//////                    if(entity instanceof org.bukkit.entity.EnderDragon){
-//////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
-//////                    }
-//////                    if(entity instanceof ComplexEntityPart){
-//////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
-//////                    }
-//////                    if(entity instanceof ComplexLivingEntity){
-//////                        Bukkit.broadcastMessage(entity.getName());//8 EnderDragon
-//////                    }
-////                });
-//
-//                return true;
-//            }
+////                    if(entity instanceof ComplexEntityPart){
+////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
+////                    }
+////                    if(entity instanceof ComplexLivingEntity){
+////                        Bukkit.broadcastMessage(entity.getName());//8 EnderDragon
+////                    }
+//                });
+
+                return true;
+            }
             case "action" : {
                 if(!sender.isOp()){
                     Lang.sendFeedback(sender,Lang.command_no_permission);
@@ -109,7 +109,34 @@ public class MainCommand implements CommandExecutor {
                 }
                 break;
             }
-            case "respawn" : {//ed respawn [world_name]
+            case "spawn" : {//ed spawn [dragon] (world_name)
+                if(!sender.hasPermission("ed.respawn")){
+                    Lang.sendFeedback(sender,Lang.command_no_permission);
+                    return false;
+                }
+                if(args.length == 2){
+                    if(!(sender instanceof Player)){
+                        Lang.sendFeedback(sender,"§cConsole usage: /ed spawn [dragon] [world_name]");
+                        return false;
+                    }
+                    Player player = (Player) sender;
+                    DragonManager.initiateRespawn(player,args[1]);
+                    return true;
+                }
+                else if(args.length == 3){
+                    String world_name = args[2];
+                    DragonManager.initiateRespawn(sender,world_name,args[1]);
+                    return true;
+                }
+                else{//if world_name contains " "
+                    int size = args.length;
+                    StringBuilder builder = new StringBuilder(args[2]);
+                    for(int i=3;i<size;i++) builder.append(" ").append(args[i]);
+                    DragonManager.initiateRespawn(sender,builder.toString(),args[1]);
+                    return true;
+                }
+            }
+            case "respawn" : {//ed respawn (world_name)
                 if(!sender.hasPermission("ed.respawn")){
                     Lang.sendFeedback(sender,Lang.command_no_permission);
                     return false;
@@ -120,19 +147,19 @@ public class MainCommand implements CommandExecutor {
                         return false;
                     }
                     Player player = (Player) sender;
-                    EnderDragon.getInstance().getDragonManager().initiateRespawn(player);
+                    DragonManager.initiateRespawn(player);
                     return true;
                 }
                 else if(args.length == 2){
                     String world_name = args[1];
-                    EnderDragon.getInstance().getDragonManager().initiateRespawn(sender,world_name);
+                    DragonManager.initiateRespawn(sender,world_name);
                     return true;
                 }
-                else {
+                else {//if world_name contains " "
                     int size = args.length;
                     StringBuilder builder = new StringBuilder(args[1]);
                     for(int i=2;i<size;i++) builder.append(" ").append(args[i]);
-                    EnderDragon.getInstance().getDragonManager().initiateRespawn(sender,builder.toString());
+                    DragonManager.initiateRespawn(sender,builder.toString());
                     return true;
                 }
             }
