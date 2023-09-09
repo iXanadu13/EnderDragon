@@ -19,6 +19,7 @@ public class Config {
     public static boolean debug;
     public static boolean advanced_setting_world_env_fix;
     public static boolean advanced_setting_save_respawn_status;
+    public static boolean advanced_setting_save_bossbar;
     public static boolean advanced_setting_glowing_fix;
     public static boolean advanced_setting_backslash_split_reward;
     public static String damage_visible_mode;
