@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.manager.*;
-import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.maven.DependencyManager;
 import pers.xanadu.enderdragon.reward.Chance;
 import pers.xanadu.enderdragon.config.FileUpdater;
@@ -33,7 +32,6 @@ public class MainCommand implements CommandExecutor {
         switch(args[0].toLowerCase()){
             case "parse" : {
                 if(!sender.isOp()) return false;
-
                 if(args.length == 2) GroovyManager.invoke("test.groovy", args[1]);
                 else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],Bukkit.getPlayer(args[2]));
 //                List<Entity> entities = p.getNearbyEntities(50,50,50);
@@ -128,7 +126,7 @@ public class MainCommand implements CommandExecutor {
                     DragonManager.initiateRespawn(sender,world_name,args[1]);
                     return true;
                 }
-                else{//if world_name contains " "
+                else if(args.length > 3){//if world_name contains " "
                     int size = args.length;
                     StringBuilder builder = new StringBuilder(args[2]);
                     for(int i=3;i<size;i++) builder.append(" ").append(args[i]);
