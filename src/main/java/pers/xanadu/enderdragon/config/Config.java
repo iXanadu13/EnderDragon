@@ -35,6 +35,7 @@ public class Config {
     public static String item_format_reward;
     public static List<String> dragon_setting_file;
     public static List<String> blacklist_worlds;
+    public static List<String> blacklist_spawn_reason;
     private static final String pluginFilePath;
 
     public static void reload(FileConfiguration file){
