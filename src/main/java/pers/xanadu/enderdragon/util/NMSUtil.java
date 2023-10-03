@@ -6,11 +6,13 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.jetbrains.annotations.TestOnly;
 import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.config.Config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 public class NMSUtil {
@@ -19,6 +21,9 @@ public class NMSUtil {
     private Method copyNMSStack;
     private Method asBukkitCopy;
     private Method asCraftMirror;
+    /**
+     * 浅拷贝unhandledTags
+     */
     private Method asCraftCopy;
     private Method NMSItemStack_save;
     private Method NMSItemStack_setTag;
@@ -212,6 +217,7 @@ public class NMSUtil {
             return null;
         }
     }
+    @TestOnly
     public void setUnhandledTags(final ItemMeta meta, Map<String,?> unhandledTags){
         try{
             Object craft_meta = CraftMetaItemClass.cast(meta);
@@ -220,6 +226,10 @@ public class NMSUtil {
             e.printStackTrace();
         }
     }
+    /**
+     * @return meta中unhandledTags的引用
+     */
+    @TestOnly
     public Map<String,Object> getUnhandledTags(final ItemMeta meta){
         try{
             Object craft_meta = CraftMetaItemClass.cast(meta);
@@ -242,7 +252,7 @@ public class NMSUtil {
     }
     public String getNBT(final ItemStack item){
         try{
-            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);
+            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);//浅拷贝unhandledTags
             Object ei = asNMSCopy.invoke(null, ci);
             Object cpd = NMSItemStack_save.invoke(ei, NBTTagCompoundClass.newInstance());
             return cpd.toString();
@@ -253,7 +263,7 @@ public class NMSUtil {
     }
     public Object getCPD(final ItemStack item){
         try{
-            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);
+            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);//浅拷贝unhandledTags
             Object ei = asNMSCopy.invoke(null, ci);
             return NMSItemStack_save.invoke(ei, NBTTagCompoundClass.newInstance());
         }catch (ReflectiveOperationException e){
