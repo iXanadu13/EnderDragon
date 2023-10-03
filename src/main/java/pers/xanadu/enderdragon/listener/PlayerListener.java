@@ -49,6 +49,7 @@ public class PlayerListener implements Listener {
         Location cen = block.getLocation().clone().add(0.5,1,0.5);
         Collection<Entity> list = world.getNearbyEntities(cen,0.5,1,0.5);
         if(!list.isEmpty()) return;
+        if(e.getPlayer().getGameMode() == GameMode.ADVENTURE) return;
         e.setCancelled(true);
         if(e.getPlayer().getGameMode() != GameMode.CREATIVE){
             ItemStack item = e.getItem();
