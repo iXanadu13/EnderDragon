@@ -66,6 +66,10 @@ blacklist_worlds:
   - 'world'
   - 'world_nether'
 
+#ender_dragon with these spawn reason will be ignored by this plugin.
+#example: COMMAND,CUSTOM,DEFAULT
+blacklist_spawn_reason: []
+
 #optional: [default/nbt/advanced]
 item_format:
   reward: default

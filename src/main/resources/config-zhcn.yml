@@ -67,6 +67,10 @@ blacklist_worlds:
   - 'world'
   - 'world_nether'
 
+#生成原因包含在这里的末影龙不被插件监听
+#举例: COMMAND,CUSTOM,DEFAULT
+blacklist_spawn_reason: []
+
 #可选: [default/nbt/advanced]
 item_format:
   reward: default

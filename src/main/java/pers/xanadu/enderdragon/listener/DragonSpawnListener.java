@@ -1,5 +1,6 @@
 package pers.xanadu.enderdragon.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -11,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
+import pers.xanadu.enderdragon.event.DragonRespawnEvent;
 import pers.xanadu.enderdragon.manager.DamageManager;
 import pers.xanadu.enderdragon.util.MyDragon;
 import pers.xanadu.enderdragon.util.Version;
@@ -26,6 +28,7 @@ public class DragonSpawnListener implements Listener {
     public void OnDragonSpawn(final CreatureSpawnEvent e){
         if(!(e.getEntity() instanceof EnderDragon)) return;
         if(Config.blacklist_worlds.contains(e.getEntity().getWorld().getName())) return;
+        if(Config.blacklist_spawn_reason.contains(e.getSpawnReason().name())) return;
         EnderDragon dragon = (EnderDragon) e.getEntity();
         MyDragon myDragon = null;
         if(e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.DEFAULT){
@@ -54,8 +57,8 @@ public class DragonSpawnListener implements Listener {
 
         modifyAttribute(dragon, Attribute.GENERIC_ARMOR_TOUGHNESS, myDragon.armor_toughness_modify);
         String color = myDragon.glow_color.toUpperCase();
-        if(!color.equals("NONE")) setGlowingColor(dragon,getGlowColor(color));
-        else dragon.setGlowing(false);
+        if(color.equals("NONE")) dragon.setGlowing(false);
+        else setGlowingColor(dragon,getGlowColor(color));
         String bossBar_color = myDragon.bossbar_color.toUpperCase();
         String bossBar_style = myDragon.bossbar_style.toUpperCase();
 
@@ -69,7 +72,7 @@ public class DragonSpawnListener implements Listener {
         else if(Version.mcMainVersion >= 12){
             getInstance().getBossBarManager().setBossBar(dragon.getWorld(),myDragon.display_name,bossBar_color,bossBar_style);
         }
-        //dragon.getMetadata();
+        Bukkit.getPluginManager().callEvent(new DragonRespawnEvent(dragon,e.getSpawnReason(),myDragon));
     }
 
 }
