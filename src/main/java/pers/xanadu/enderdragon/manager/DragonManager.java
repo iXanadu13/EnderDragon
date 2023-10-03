@@ -324,8 +324,8 @@ public class DragonManager {
             assert battle != null;
             Field k = EnderDragonBattleClass.getDeclaredField("k");
             k.setAccessible(true);
-            Object isAlive = k.get(battle);
-            if(!((boolean) isAlive)) return DragonRespawnResult.dragon_has_existed;
+            Object dragonKilled = k.get(battle);
+            if(!((boolean) dragonKilled)) return DragonRespawnResult.dragon_has_existed;
             Field p = EnderDragonBattleClass.getDeclaredField("p");
             p.setAccessible(true);
             Object phase = p.get(battle);
@@ -376,8 +376,8 @@ public class DragonManager {
             if(battle == null) return false;
             Field k = EnderDragonBattleClass.getDeclaredField("k");
             k.setAccessible(true);
-            Object isAlive = k.get(battle);
-            if(!((boolean) isAlive)) return false;
+            Object dragonKilled = k.get(battle);
+            if(!((boolean) dragonKilled)) return false;
             Field p = EnderDragonBattleClass.getDeclaredField("p");
             p.setAccessible(true);
             Object phase = p.get(battle);
@@ -588,8 +588,8 @@ public class DragonManager {
             assert battle != null;
             Field k = EnderDragonBattleClass.getDeclaredField("k");
             k.setAccessible(true);
-            Object isAlive = k.get(battle);
-            if(!((boolean) isAlive)) return DragonRespawnResult.dragon_has_existed;
+            Object dragonKilled = k.get(battle);
+            if(!((boolean) dragonKilled)) return DragonRespawnResult.dragon_has_existed;
             Field p = EnderDragonBattleClass.getDeclaredField("p");
             p.setAccessible(true);
             Object phase = p.get(battle);
