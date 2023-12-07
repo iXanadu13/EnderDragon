@@ -1,5 +1,5 @@
 #You don't need to edit it.
-version: 2.2.0
+version: 2.3.0
 
 #Enabled: 'Chinese','English'
 lang: 'English'
@@ -66,6 +66,13 @@ blacklist_worlds:
   - 'world'
   - 'world_nether'
 
+# Ender_dragon spawns with these reasons will be ignored by this plugin.
+# common options: COMMAND(spawn with /summon), CUSTOM(generate by other plugins), DEFAULT(by nature, including end_crystal)
+# You can find all spawn reasons here:
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+# example: [COMMAND,CUSTOM]
+blacklist_spawn_reason: []
+
 #optional: [default/nbt/advanced]
 item_format:
   reward: default
@@ -88,5 +95,6 @@ advanced_setting:
   # You can set this to "true" and reload server to fix it.
   world_env_fix: false
   save_respawn_status: false
+  save_bossbar: false
   backslash_split:
     reward: false

@@ -20,13 +20,17 @@ public class DragonBaseHurtListener implements Listener {
             EnderDragon dragon = (EnderDragon) victim;
             if(entity instanceof Player){
                 Player player = (Player) entity;
-                pm.callEvent(new DragonDamageByPlayerEvent(player,dragon,e.getCause(),e.getFinalDamage()));
+                DragonDamageByPlayerEvent event = new DragonDamageByPlayerEvent(player,dragon,e.getCause(),e.getFinalDamage());
+                pm.callEvent(event);
+                if(event.isCancelled()) e.setCancelled(true);
             }
             else if(entity instanceof Projectile){
                 Projectile projectile = (Projectile) entity;
                 if(!(projectile.getShooter() instanceof Player)) return;
                 Player damager = (Player) projectile.getShooter();
-                pm.callEvent(new DragonDamageByPlayerEvent(damager,dragon,e.getCause(),e.getFinalDamage()));
+                DragonDamageByPlayerEvent event = new DragonDamageByPlayerEvent(damager,dragon,e.getCause(),e.getFinalDamage());
+                pm.callEvent(event);
+                if(event.isCancelled()) e.setCancelled(true);
             }
         }
     }

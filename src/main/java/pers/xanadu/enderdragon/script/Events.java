@@ -70,9 +70,6 @@ public class Events<T extends Event> implements Listener, EventExecutor {
         GroovyManager.event_set.add(tmp);
         return tmp;
     }
-//    private static <T extends Event> void register(Class<T> clazz, Events<T> event, EventPriority priority, boolean ignoreCancelled) {
-//        Bukkit.getPluginManager().registerEvent(clazz,event,priority,event,plugin,ignoreCancelled);
-//    }
 
     @Override
     public void execute(@NotNull Listener listener, @NotNull Event event) {

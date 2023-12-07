@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
-    private static final List<String> arguments_ed = Arrays.asList("action", "drop", "reload", "respawn", "respawn_cd", "update");
+    private static final List<String> arguments_ed = Arrays.asList("action", "drop", "reload", "respawn", "respawn_cd", "spawn", "update");
     private static final List<String> arguments_drop = Arrays.asList("add", "clear", "edit", "remove", "gui");
     private static final List<String> arguments_action = Arrays.asList("tell:","tell-colorless:","tell-raw:","groovy:");
     private static final List<String> arguments_respawn_cd = Arrays.asList("get","remove","removeAll","set","start");
@@ -42,6 +42,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             else if(args[0].equalsIgnoreCase("reload")){
                 result.addAll(arguments_reload);
             }
+            else if(args[0].equalsIgnoreCase("spawn")){
+                result.addAll(DragonManager.dragon_names);
+            }
             else if(args[0].equalsIgnoreCase("action")){
                 Stream<String> stream = Bukkit.getOnlinePlayers().stream().map(Player::getName);
                 return filterResult(stream,Arrays.asList("me"),args[args.length-1]);
@@ -59,6 +62,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 if("get".equals(str) || "remove".equals(str) || "removeAll".equals(str) || "set".equals(str) || "start".equals(str)){
                     result.addAll(WorldManager.worlds);
                 }
+            }
+            else if("spawn".equals(args[0])){
+                result.addAll(WorldManager.worlds);
             }
             else if("action".equals(args[0])){
                 result.addAll(arguments_action);

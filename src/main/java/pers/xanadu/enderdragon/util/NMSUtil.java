@@ -6,23 +6,24 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.jetbrains.annotations.TestOnly;
 import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.config.Config;
-import pers.xanadu.enderdragon.config.Lang;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
-import static pers.xanadu.enderdragon.EnderDragon.getInstance;
-
 public class NMSUtil {
-    private String getEDB_base;
     private Method getNMSWord;
     private Method asNMSCopy;
     private Method copyNMSStack;
     private Method asBukkitCopy;
     private Method asCraftMirror;
+    /**
+     * 浅拷贝unhandledTags
+     */
     private Method asCraftCopy;
     private Method NMSItemStack_save;
     private Method NMSItemStack_setTag;
@@ -42,7 +43,7 @@ public class NMSUtil {
     private Class<?> WorldClass;
     private Class<?> CraftWorldClass;
     private Class<?> WorldProviderClass;
-    private Class<?> WorldProviderTheEndClass;
+    //private Class<?> WorldProviderTheEndClass;
     private Class<?> CraftItemStackClass;
     private Class<?> CraftMetaItemClass;
     private Class<?> NMSItemStackClass;
@@ -63,7 +64,7 @@ public class NMSUtil {
             this.world_c_environment.setAccessible(true);
             if(Version.mcMainVersion>=12 && Version.mcMainVersion<16){
                 this.WorldProviderClass = Class.forName("net.minecraft.server."+version+".WorldProvider");
-                this.WorldProviderTheEndClass = Class.forName("net.minecraft.server."+version+".WorldProviderTheEnd");
+                //this.WorldProviderTheEndClass = Class.forName("net.minecraft.server."+version+".WorldProviderTheEnd");
             }
             this.CraftItemStackClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack");
             this.CraftMetaItemClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftMetaItem");
@@ -109,26 +110,6 @@ public class NMSUtil {
 
         }catch(ReflectiveOperationException e){
             e.printStackTrace();
-        }
-        switch (version) {
-            case "v1_12_R1" : {
-                getEDB_base = "t";
-                break;
-            }
-            case "v1_13_R1" :
-            case "v1_13_R2" : {
-                getEDB_base = "r";
-                break;
-            }
-            case "v1_14_R1" : {
-                getEDB_base = "q";
-                break;
-            }
-            case "v1_15_R1" : {
-                getEDB_base = "o";
-                break;
-            }
-            default : getEDB_base = null;
         }
         if(Config.debug) check();
     }
@@ -236,6 +217,7 @@ public class NMSUtil {
             return null;
         }
     }
+    @TestOnly
     public void setUnhandledTags(final ItemMeta meta, Map<String,?> unhandledTags){
         try{
             Object craft_meta = CraftMetaItemClass.cast(meta);
@@ -244,6 +226,10 @@ public class NMSUtil {
             e.printStackTrace();
         }
     }
+    /**
+     * @return meta中unhandledTags的引用
+     */
+    @TestOnly
     public Map<String,Object> getUnhandledTags(final ItemMeta meta){
         try{
             Object craft_meta = CraftMetaItemClass.cast(meta);
@@ -266,7 +252,7 @@ public class NMSUtil {
     }
     public String getNBT(final ItemStack item){
         try{
-            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);
+            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);//浅拷贝unhandledTags
             Object ei = asNMSCopy.invoke(null, ci);
             Object cpd = NMSItemStack_save.invoke(ei, NBTTagCompoundClass.newInstance());
             return cpd.toString();
@@ -277,7 +263,7 @@ public class NMSUtil {
     }
     public Object getCPD(final ItemStack item){
         try{
-            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);
+            Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);//浅拷贝unhandledTags
             Object ei = asNMSCopy.invoke(null, ci);
             return NMSItemStack_save.invoke(ei, NBTTagCompoundClass.newInstance());
         }catch (ReflectiveOperationException e){
@@ -329,27 +315,7 @@ public class NMSUtil {
             e.printStackTrace();
         }
     }
-    public Object getEnderDragonBattle(final World world){
-        String version = Version.getVersion();
-        if (Version.mcMainVersion>=12 && Version.mcMainVersion<16) {
-            try {
-                Object worldServer = getInstance().getNMSManager().getWorldServer(world);
-                assert worldServer != null;
-                Field field = worldServer.getClass().getField("worldProvider");
-                Object worldProvider = field.get(worldServer);
-                Object WorldProviderTheEnd = WorldProviderTheEndClass.cast(worldProvider);
-                String method_name = getInstance().getNMSManager().getEDB_base;
-                if(method_name == null) return null;
-                Method method = WorldProviderTheEnd.getClass().getDeclaredMethod(method_name);
-                return method.invoke(WorldProviderTheEnd);
-            } catch (ReflectiveOperationException e) {
-                Lang.warn("Your server version (" + version + ") is not supported!");
-                e.printStackTrace();
-            }
-        }
-        Lang.warn("Your server version (" + version + ") is not supported!");
-        return null;
-    }
+
     public Object getWorldServer(final World ThisWorld) {
         try {
             Object castClass = getCraftWorld(ThisWorld);

@@ -11,7 +11,7 @@ import static org.bukkit.Bukkit.getServer;
 public class Version {
     public static final String setting_dragon = "2.2.0";
     public static final String lang = "2.2.0";
-    public static final String config = "2.2.0";
+    public static final String config = "2.3.0";
     public static final String data = "2.2.0";
     public static int mcMainVersion;
     public static int mcPatchVersion;
@@ -47,7 +47,9 @@ public class Version {
             case "v1_12_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_12_R1.BossBarManager();
             case "v1_13_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_13_R1.BossBarManager();
             case "v1_13_R2" : return new pers.xanadu.enderdragon.nms.BossBar.v1_13_R2.BossBarManager();
-            default: return null;
+            case "v1_14_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_14_R1.BossBarManager();
+            case "v1_15_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_15_R1.BossBarManager();
+            default: return new pers.xanadu.enderdragon.nms.BossBar.v1_16_R1_above.BossBarManager();
         }
     }
     public static I_WorldDataManager getWorldDataManager(){

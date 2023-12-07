@@ -19,6 +19,7 @@ public class Config {
     public static boolean debug;
     public static boolean advanced_setting_world_env_fix;
     public static boolean advanced_setting_save_respawn_status;
+    public static boolean advanced_setting_save_bossbar;
     public static boolean advanced_setting_glowing_fix;
     public static boolean advanced_setting_backslash_split_reward;
     public static String damage_visible_mode;
@@ -34,6 +35,7 @@ public class Config {
     public static String item_format_reward;
     public static List<String> dragon_setting_file;
     public static List<String> blacklist_worlds;
+    public static List<String> blacklist_spawn_reason;
     private static final String pluginFilePath;
 
     public static void reload(FileConfiguration file){

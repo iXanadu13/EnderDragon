@@ -3,6 +3,7 @@ package pers.xanadu.enderdragon.task;
 import org.bukkit.scheduler.BukkitRunnable;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.EnderDragon;
+import pers.xanadu.enderdragon.manager.DragonManager;
 
 import static pers.xanadu.enderdragon.EnderDragon.*;
 
@@ -22,7 +23,7 @@ public class DragonRespawnRunnable extends BukkitRunnable {
             new BukkitRunnable(){
                 @Override
                 public void run(){
-                    EnderDragon.getInstance().getDragonManager().initiateRespawn(task.world_name);
+                    DragonManager.initiateRespawn(task.world_name);
                     task.updateTime();
                     task.saveFile();
                 }

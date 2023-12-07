@@ -45,7 +45,6 @@ public final class EnderDragon extends JavaPlugin {
     public static FileConfiguration data;
     public static FileConfiguration lang;
     private WorldManager worldManager;
-    private DragonManager dragonManager;
     private NMSUtil nmsManager;
     private I_BossBarManager i_bossBarManager;
     private I_NMSItemManager i_nmsItemManager;
@@ -65,7 +64,6 @@ public final class EnderDragon extends JavaPlugin {
         Lang.info("Enabling plugin...");
         Lang.info("Author: Xanadu13");
         Version.init();
-        dragonManager = new DragonManager();
         worldManager = new WorldManager();
         nmsManager = new NMSUtil();
         nmsManager.init();
@@ -77,7 +75,7 @@ public final class EnderDragon extends JavaPlugin {
             getInstance().getWorldManager().fixWorldEnvironment();
             Lang.info(Lang.world_env_fix_enable);
         }
-        if(Version.mcMainVersion == 12 || Version.mcMainVersion == 13){
+        if(Config.advanced_setting_save_bossbar){
             fixWorldBossBar();
         }
         TimerManager.enable();
@@ -139,7 +137,7 @@ public final class EnderDragon extends JavaPlugin {
             Bukkit.getWorlds().forEach(world -> {
                 if(!Config.blacklist_worlds.contains(world.getName())){
                     char split = data.options().pathSeparator();
-                    if(EnderDragon.getInstance().getDragonManager().isRespawnRunning(world)){
+                    if(DragonManager.isRespawnRunning(world)){
                         data.set("respawn_fix"+split+world.getName(),true);
                     }
                     else data.set("respawn_fix"+split+world.getName(),false);
@@ -153,7 +151,7 @@ public final class EnderDragon extends JavaPlugin {
                 Lang.error(Lang.plugin_file_save_error.replaceAll("\\{file_name}",dataF.getName()));
             }
         }
-        if(Version.mcMainVersion == 12 || Version.mcMainVersion == 13){
+        if(Config.advanced_setting_save_bossbar){
             List<World> worlds = new ArrayList<>();
             Bukkit.getWorlds().forEach(world -> {
                 if(world.getEnvironment()==World.Environment.THE_END&&!Config.blacklist_worlds.contains(world.getName())){
@@ -290,7 +288,7 @@ public final class EnderDragon extends JavaPlugin {
                 if(section != null){
                     section.getKeys(false).forEach(key->{
                         if(section.getBoolean(key)){
-                            EnderDragon.getInstance().getDragonManager().refresh_respawn(Bukkit.getWorld(key));
+                            DragonManager.refresh_respawn(Bukkit.getWorld(key));
                             Lang.info("DragonRespawn continues!");
                         }
                     });
@@ -299,9 +297,6 @@ public final class EnderDragon extends JavaPlugin {
         }.runTaskLater(plugin,100L);
     }
 
-    public DragonManager getDragonManager(){
-        return dragonManager;
-    }
     public WorldManager getWorldManager(){
         return worldManager;
     }

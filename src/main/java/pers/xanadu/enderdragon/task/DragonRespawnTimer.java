@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.config.Lang;
+import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.util.MathUtil;
 
 import static pers.xanadu.enderdragon.EnderDragon.plugin;
@@ -65,8 +66,8 @@ public class DragonRespawnTimer {
                 remainSecond--;
                 if(remainSecond <= 0){
                     Bukkit.getScheduler().runTask(plugin,() -> {
-                        if(EnderDragon.getInstance().getDragonManager().canRespawn(world_name)){
-                            EnderDragon.getInstance().getDragonManager().initiateRespawn(world_name);
+                        if(DragonManager.canRespawn(world_name)){
+                            DragonManager.initiateRespawn(world_name);
                             update();
                         }
                         else {
