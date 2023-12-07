@@ -12,11 +12,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
-import pers.xanadu.enderdragon.event.DragonRespawnEvent;
+import pers.xanadu.enderdragon.event.DragonRespawnPostEvent;
 import pers.xanadu.enderdragon.manager.DamageManager;
 import pers.xanadu.enderdragon.util.MyDragon;
 import pers.xanadu.enderdragon.util.Version;
 
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static pers.xanadu.enderdragon.EnderDragon.*;
@@ -72,7 +73,10 @@ public class DragonSpawnListener implements Listener {
         else if(Version.mcMainVersion >= 12){
             getInstance().getBossBarManager().setBossBar(dragon.getWorld(),myDragon.display_name,bossBar_color,bossBar_style);
         }
-        Bukkit.getPluginManager().callEvent(new DragonRespawnEvent(dragon,e.getSpawnReason(),myDragon));
+        Bukkit.getPluginManager().callEvent(new DragonRespawnPostEvent(dragon,e.getSpawnReason(),myDragon));
+        if(Config.advanced_setting_save_bossbar){
+            getInstance().getBossBarManager().saveBossBarData(Collections.singletonList(dragon.getWorld()));
+        }
     }
 
 }

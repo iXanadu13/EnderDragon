@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class UpdateChecker {
+public final class UpdateChecker {
     public static void checkUpdate(){
         Lang.info(Lang.plugin_checking_update);
         new BukkitRunnable(){

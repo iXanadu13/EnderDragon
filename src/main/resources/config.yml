@@ -66,8 +66,11 @@ blacklist_worlds:
   - 'world'
   - 'world_nether'
 
-#ender_dragon with these spawn reason will be ignored by this plugin.
-#example: COMMAND,CUSTOM,DEFAULT
+# Ender_dragon spawns with these reasons will be ignored by this plugin.
+# common options: COMMAND(spawn with /summon), CUSTOM(generate by other plugins), DEFAULT(by nature, including end_crystal)
+# You can find all spawn reasons here:
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+# example: [COMMAND,CUSTOM]
 blacklist_spawn_reason: []
 
 #optional: [default/nbt/advanced]

@@ -21,6 +21,7 @@ public class PlayerAttackListener implements Listener {
         if(final_damage > 0.0d){
             DragonDamageByPlayerEvent event = new DragonDamageByPlayerEvent(e.getAttacker().getPlayer(),dragon, e.toBukkit().getCause(), final_damage);
             pm.callEvent(event);
+            if(event.isCancelled()) e.setCancelled(true);
         }
     }
 

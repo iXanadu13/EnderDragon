@@ -28,7 +28,7 @@ public class MathUtil {
         BigDecimal b2 = new BigDecimal(d2);
         return b1.divide(b2,len, RoundingMode.HALF_UP).doubleValue();
     }
-    public static int[] hexToInt(final String hex){
+    public static int[] hex2Int(final String hex){
         int[] result = new int[3];
         String s1 = hex.substring(0,2);
         String s2 = hex.substring(2,4);
@@ -38,11 +38,11 @@ public class MathUtil {
         result[2] = Integer.parseInt(s3,16);
         return result;
     }
-    public static String locationToString(final Location loc){
+    public static String location2String(final Location loc){
         if (loc.getWorld() == null) return "";
         return loc.getWorld().getName()+";"+loc.getX()+";"+loc.getY()+";"+loc.getZ();
     }
-    public static Location stringToLocation(final String str){
+    public static Location string2Location(final String str){
         final String[] parts = str.split(";");
         if(parts.length != 4) return null;
         final World world = Bukkit.getWorld(parts[0]);

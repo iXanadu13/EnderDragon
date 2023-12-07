@@ -39,7 +39,9 @@ public class DragonExplosionHurtListener implements Listener {
                 TNTPrimed tnt = (TNTPrimed) entity;
                 if(!(tnt.getSource() instanceof Player)) return;
                 Player damager = (Player) tnt.getSource();
-                pers.xanadu.enderdragon.EnderDragon.pm.callEvent(new DragonDamageByPlayerEvent(damager,dragon,e.getCause(),e.getFinalDamage()));
+                DragonDamageByPlayerEvent event = new DragonDamageByPlayerEvent(damager,dragon,e.getCause(),e.getFinalDamage());
+                pm.callEvent(event);
+                if(event.isCancelled()) e.setCancelled(true);
             }
         }
     }
@@ -54,16 +56,15 @@ public class DragonExplosionHurtListener implements Listener {
         if(e.getCause() != EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) return;
         Entity entity = e.getEntity();
         if(entity instanceof EnderDragon){
-            //Bukkit.broadcastMessage(e.getFinalDamage()+"awa");
             EnderDragon dragon = (EnderDragon) entity;
             for(UUID uuid : mp.keySet()){
                 PlayerExplodeDragonEvent ped = mp.get(uuid);
                 if(ped == null) continue;
                 if(ped.getTime() != time) continue;
                 if(ped.getEnderDragon().getUniqueId() != dragon.getUniqueId()) continue;
-                //mp.remove(uuid);
-                pm.callEvent(new DragonDamageByPlayerEvent(ped.getPlayer(),dragon,cause,e.getFinalDamage()));
-                //Bukkit.broadcastMessage("final: "+e.getFinalDamage());
+                DragonDamageByPlayerEvent event = new DragonDamageByPlayerEvent(ped.getPlayer(),dragon,cause,e.getFinalDamage());
+                pm.callEvent(event);
+                if(event.isCancelled()) e.setCancelled(true);
                 break;
             }
         }
@@ -81,7 +82,6 @@ public class DragonExplosionHurtListener implements Listener {
             break;
         }
     }
-
 
     public static void clearUID(final UUID uuid){
         mp.remove(uuid);

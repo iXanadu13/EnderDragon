@@ -67,8 +67,11 @@ blacklist_worlds:
   - 'world'
   - 'world_nether'
 
-#生成原因包含在这里的末影龙不被插件监听
-#举例: COMMAND,CUSTOM,DEFAULT
+#由以下原因生成的末影龙不被插件监听
+#常用选项：COMMAND(原版summon指令生成),CUSTOM(别的插件生成的),DEFAULT(自然生成，包括玩家放置水晶复活的)
+#你可以在这里找到所有生成原因：
+#https://bukkit.windit.net/javadoc/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+#写法示例: [COMMAND,CUSTOM]
 blacklist_spawn_reason: []
 
 #可选: [default/nbt/advanced]

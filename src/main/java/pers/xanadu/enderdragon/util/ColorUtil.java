@@ -49,8 +49,8 @@ public class ColorUtil {
     }
     private static int[] gradient(String start,String end,int length){
         int[] color = new int[length];
-        int[] rgb1 = MathUtil.hexToInt(start);
-        int[] rgb2 = MathUtil.hexToInt(end);
+        int[] rgb1 = MathUtil.hex2Int(start);
+        int[] rgb2 = MathUtil.hex2Int(end);
         if(length==0){return color;}
         if(length==1){
             for(int j=0;j<3;j++){

@@ -1,16 +1,19 @@
 package expansion.groovy
 
+import groovy.transform.Field
 import org.bukkit.Bukkit
-import pers.xanadu.enderdragon.config.Lang
+
+import static pers.xanadu.enderdragon.EnderDragon.plugin
+
+@Field static def x=5
 
 static void enable(){
-//    Lang.info("I am a test script written in groovy.")
+    //Bukkit.getLogger().info("static variable test: x="+x)
+
 }
 
 
-static void test(){
-    Bukkit.broadcastMessage("you runs test()")
-}
+
 
 
 

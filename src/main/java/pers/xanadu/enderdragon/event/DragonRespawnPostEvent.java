@@ -7,13 +7,17 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.util.MyDragon;
-
-public final class DragonRespawnEvent extends CreatureSpawnEvent {
+/**
+ * Called when a dragon is spawned, filtered through blacklist.
+ * <p>
+ * Cancelling this event make no changes.
+ */
+public final class DragonRespawnPostEvent extends CreatureSpawnEvent {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancel = false;
     private final World world;
     private final MyDragon myDragon;
-    public DragonRespawnEvent(final EnderDragon dragon,final SpawnReason reason,final MyDragon myDragon) {
+    public DragonRespawnPostEvent(final EnderDragon dragon, final SpawnReason reason, final MyDragon myDragon) {
         super(dragon,reason);
         world = dragon.getWorld();
         this.myDragon = myDragon;

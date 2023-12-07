@@ -19,6 +19,7 @@ public class DragonDamageByPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void OnDragonDamageByPlayer(final DragonDamageByPlayerEvent e){
+        if(e.isCancelled()) return;
         Player p = e.getDamager();
         EnderDragon dragon = e.getDragon();
         double health = dragon.getHealth();
