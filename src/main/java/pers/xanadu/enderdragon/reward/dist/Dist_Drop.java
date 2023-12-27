@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import pers.xanadu.enderdragon.manager.GlowManager;
 import pers.xanadu.enderdragon.reward.RewardDist;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

@@ -12,11 +12,13 @@ import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Nullable;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
+import pers.xanadu.enderdragon.metadata.DragonInfo;
 import pers.xanadu.enderdragon.reward.RewardDist;
 import pers.xanadu.enderdragon.util.ExtraPotionEffect;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.util.Version;
 
 import java.io.File;
@@ -28,8 +30,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import static pers.xanadu.enderdragon.EnderDragon.*;
 
 public class DragonManager {
-    public static ArrayList<MyDragon> dragons = new ArrayList<>();
-    public static HashMap<String, MyDragon> mp = new HashMap<>();
+    static final ArrayList<MyDragon> dragons = new ArrayList<>();
+    static final Map<String, MyDragon> mp = new HashMap<>();
     public static List<String> dragon_names = new ArrayList<>();
     private static int sum = 0;
     private static final int[][] nxt = {{3,0},{0,3},{-3,0},{0,-3}};
@@ -272,6 +274,30 @@ public class DragonManager {
         dragon_names.clear();
     }
 
+    /**
+     * 请勿修改MyDragon对象<p>
+     * 方法将在后续被删除
+     * @return MyDragon configuration
+     */
+    @Deprecated
+    public static MyDragon get_dragon_config(String unique_name){
+        return mp.get(unique_name);
+    }
+
+    /**
+     * 请勿修改得到的List
+     */
+    @Deprecated
+    public static List<MyDragon> get_dragons(){
+        return dragons;
+    }
+    @Nullable
+    public static MyDragon getFromInfo(DragonInfo info){
+        return mp.get(info.unique_name);
+    }
+    public static int getCount(){
+        return data.getInt("times");
+    }
     public static void setAttribute(final EnderDragon dragon,final Attribute attribute, double amount){
         AttributeInstance instance = dragon.getAttribute(attribute);
         assert instance != null;

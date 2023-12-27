@@ -12,8 +12,9 @@ import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.ItemManager;
 import pers.xanadu.enderdragon.gui.slot.EmptySlot;
 import pers.xanadu.enderdragon.gui.slot.ItemSlot;
+import pers.xanadu.enderdragon.manager.RewardManager;
 import pers.xanadu.enderdragon.reward.Reward;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -117,7 +118,7 @@ public class GUI {
             resetPagedItem(key,cmd);
         }
         else if(type == 2){
-            for(MyDragon myDragon : DragonManager.dragons){
+            for(MyDragon myDragon : DragonManager.get_dragons()){
                 this.addDragon(myDragon.icon.clone(),myDragon.unique_name);
             }
         }
@@ -125,9 +126,9 @@ public class GUI {
     }
     public void resetPagedItem(String key,boolean cmd){
         this.pagedItems.clear();
-        MyDragon dragon = DragonManager.mp.get(key);
-        if(dragon == null) return;
-        for(Reward reward : dragon.datum){
+        List<Reward> rewards = RewardManager.getRewards(key);
+        if(rewards == null) return;
+        for(Reward reward : rewards){
             if(Config.debug) Bukkit.getLogger().info(reward.toString());
             //if(ItemManager.isEmpty(reward.getItem())) continue;
             ItemStack item = reward.getItem().clone();

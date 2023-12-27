@@ -10,7 +10,7 @@ import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.reward.Reward;
 import pers.xanadu.enderdragon.reward.Chance;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -100,6 +100,16 @@ public class RewardManager {
             throw new RuntimeException(e);
         }
         return false;
+    }
+
+    /**
+     * 请勿修改获取的List
+     * @return rewards of one type of dragon
+     */
+    public static List<Reward> getRewards(String unique_name){
+        MyDragon dragon = DragonManager.mp.get(unique_name);
+        if(dragon == null) return null;
+        return dragon.datum;
     }
     private static File getRewardFile(String key){
         String file_path = "reward/" + key + ".yml";

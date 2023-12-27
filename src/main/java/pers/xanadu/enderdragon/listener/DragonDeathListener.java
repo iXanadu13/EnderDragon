@@ -19,7 +19,7 @@ import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.manager.DamageManager;
 import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.TimerManager;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.util.Pair;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class DragonDeathListener implements Listener {
         EnderDragon dragon = (EnderDragon) e.getEntity();
         String unique_name = DragonManager.getSpecialKey(dragon);
         if(unique_name == null) return;
-        MyDragon myDragon = DragonManager.mp.get(unique_name);
+        MyDragon myDragon = DragonManager.get_dragon_config(unique_name);
         if(myDragon == null) return;
         int times = data.getInt("times");
         data.set("times",times+1);
