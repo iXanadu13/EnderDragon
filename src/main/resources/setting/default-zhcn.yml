@@ -1,5 +1,5 @@
 #文件版本，请勿修改
-version: 2.2.0
+version: 2.4.0
 
 #用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
 unique_name: 'default'
@@ -201,3 +201,34 @@ reward_dist:
   rank:
     # 排名前几可获得奖励
     max_num: 1
+
+# 一些特殊的战利品
+special_loot:
+  # 你可以按格式添加更多条目，但是名称不能重复
+  # 如果找不到执行目标(target)，所在战利品条目会被忽略
+  # 目前支持的type: exp(经验), command(执行指令，可解析伤害排名)
+  loot1:
+    # [true/false]
+    enable: false
+    type: command
+    # %attacker% -> 所有参与屠龙的玩家
+    target: "%attacker%"
+    # %player% -> 目标, %damage% -> 该玩家造成的总伤害
+    data:
+      - 'give %player% stone 1'
+      - 'ed action %player% tell: 你获得了保底奖励.'
+  loot2:
+    enable: false
+    type: command
+    # %attacker_top_<rank>% -> 在屠龙中取得此排名的玩家
+    target: "%attacker_top_1%"
+    data:
+      - 'ed action %player% tell: 你的伤害占比是最高的!'
+      - 'ed action %player% tell: 你造成的伤害: %damage%'
+  loot_exp1:
+    enable: false
+    type: exp
+    target: "%attacker_top_2%"
+    data:
+      # 给予排名第二的玩家20点经验
+      amount: 20

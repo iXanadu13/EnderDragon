@@ -63,7 +63,6 @@ public class GroovyManager {
         binding.setVariable("itemStack",player.getItemInHand());
         binding.setVariable("world",player.getWorld());
         GroovyShell shell = new GroovyShell(GroovyManager.class.getClassLoader(),binding,compilerConfig);
-        //Bukkit.broadcastMessage(lib);
         return shell.evaluate(lib+expression);
     }
 

@@ -4,10 +4,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import pers.xanadu.enderdragon.reward.Reward;
 import pers.xanadu.enderdragon.reward.RewardDist;
+import pers.xanadu.enderdragon.reward.SpecialLoot;
 import pers.xanadu.enderdragon.util.ExtraPotionEffect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MyDragon implements Comparable<MyDragon>{
     public ItemStack icon;
@@ -54,6 +56,7 @@ public class MyDragon implements Comparable<MyDragon>{
     public List<PotionEffect> effect_cloud_potion;
     public List<Reward> datum = new ArrayList<>();
     public RewardDist reward_dist;
+    public Map<Integer, List<SpecialLoot>> lootMap;
 
     @Override
     public int compareTo(final MyDragon o) {

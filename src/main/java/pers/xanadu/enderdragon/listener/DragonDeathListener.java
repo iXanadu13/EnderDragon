@@ -20,11 +20,14 @@ import pers.xanadu.enderdragon.manager.DamageManager;
 import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.TimerManager;
 import pers.xanadu.enderdragon.metadata.MyDragon;
+import pers.xanadu.enderdragon.reward.SpecialLoot;
 import pers.xanadu.enderdragon.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static pers.xanadu.enderdragon.EnderDragon.*;
@@ -80,6 +83,7 @@ public class DragonDeathListener implements Listener {
                 }
             }
             handleBroadcast(processed,myDragon,dragon);
+            handleSpecialLoot(myDragon,dragon);
         }
         DamageManager.data.remove(dragon.getUniqueId());
         Lang.runCommands(myDragon.death_cmd,p);
@@ -89,6 +93,27 @@ public class DragonDeathListener implements Listener {
             }
         }
         TimerManager.startTimer(dragon.getWorld().getName());
+    }
+    private static void handleSpecialLoot(final MyDragon myDragon, final EnderDragon dragon){
+        List<Pair<String,Double>> list = DamageManager.getDamageList(dragon.getUniqueId());
+        list.sort(DamageManager::sortByDamage);
+        Set<String> online_players = new HashSet<>();
+        Bukkit.getOnlinePlayers().forEach(player -> online_players.add(player.getName()));
+        List<SpecialLoot> participants = myDragon.lootMap.get(0);
+        boolean tag = participants != null;
+        int size = list.size();
+        for(int i=0;i<size;i++){
+            Pair<String,Double> pair = list.get(i);
+            String name = pair.first;
+            //玩家不在线
+            if(!online_players.contains(name)) continue;
+            String damage = String.format("%.2f",pair.second);
+            //所有参与者
+            if(tag) participants.forEach(loot -> loot.accept(name,damage));
+            //针对特殊名次
+            List<SpecialLoot> loots = myDragon.lootMap.get(i+1);
+            if(loots!=null) loots.forEach(loot -> loot.accept(name,damage));
+        }
     }
     public static void handleBroadcast(final List<String> list,final MyDragon myDragon,final EnderDragon dragon){
         boolean find = false;

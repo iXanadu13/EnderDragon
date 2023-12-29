@@ -9,40 +9,104 @@ import static pers.xanadu.enderdragon.EnderDragon.*;
 
 public class FileUpdater {
     public static void update() throws IOException {
-
         FileConfiguration config_old = plugin.getConfig();
-        if("2.2.0".equals(config_old.getString("version"))){
-            Config.saveResource("config.yml","new/config.yml",true);
-            File config_new_F = new File(plugin.getDataFolder(),"new/config.yml");
-            FileConfiguration config_new = YamlConfiguration.loadConfiguration(config_new_F);
-            config_new.set("lang",config_old.getString("lang"));
-            config_new.set("damage_visible_mode",config_old.getString("damage_visible_mode"));
-            config_new.set("damage_statistics.limit",config_old.getInt("damage_statistics.limit"));
-            String judge_mode = config_old.getString("special_dragon_jude_mode");
-            if("edge".equals(judge_mode)) judge_mode = "weight";//"edge" is deprecated
-            config_new.set("special_dragon_jude_mode",judge_mode);
-            config_new.set("dragon_setting_file",config_old.getStringList("dragon_setting_file"));
-            // auto_respawn
-            config_new.set("auto_respawn",config_old.getConfigurationSection("auto_respawn"));
-
-            config_new.set("respawn_cd.enable",config_old.getBoolean("respawn_cd.enable"));
-            config_new.set("crystal_invulnerable",config_old.getBoolean("crystal_invulnerable"));
-            config_new.set("resist_player_respawn",config_old.getBoolean("resist_player_respawn"));
-            config_new.set("resist_dragon_breath_gather",config_old.getBoolean("resist_dragon_breath_gather"));
-            config_new.set("main_gui",config_old.getString("main_gui"));
-            config_new.set("blacklist_worlds",config_old.getStringList("blacklist_worlds"));
-            config_new.set("item_format.reward",config_old.getString("item_format.reward"));
-            config_new.set("hook_plugins.MythicLib",config_old.getBoolean("hook_plugins.MythicLib"));
-            config_new.set("expansion.groovy",config_old.getBoolean("expansion.groovy"));
-            config_new.set("debug",config_old.getBoolean("debug"));
-            config_new.set("advanced_setting.world_env_fix",config_old.getBoolean("advanced_setting.world_env_fix"));
-            config_new.set("advanced_setting.save_respawn_status",config_old.getBoolean("advanced_setting.save_respawn_status"));
-            config_new.set("save_bossbar",config_old.getBoolean("save_bossbar"));
-            config_new.set("backslash_split.reward",config_old.getBoolean("backslash_split.reward"));
-            config_new.save(config_new_F);
+        boolean chinese = "Chinese".equals(config_old.getString("lang"));
+        File folder = new File(plugin.getDataFolder(),"setting");
+        if(folder.exists()){
+            File[] files = folder.listFiles();
+            if(files != null){
+                for(File file : files){
+                    FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                    String ver = config.getString("version");
+                    if(!"2.2.0".equals(ver)) {
+                        Lang.error("The version of setting/"+file.getName()+" is not supported!");
+                        continue;
+                    }
+                    String name = file.getName();
+                    Config.copyFile("setting/"+name,"new/setting/"+name,true);
+                }
+                File new_folder = new File(plugin.getDataFolder(),"new/setting/");
+                files = new_folder.listFiles();
+                if(files != null){
+                    for(File file : files){
+                        FileOutputStream out = new FileOutputStream(file,true);
+                        if (chinese){
+                            out.write(("\n\n" +
+                                    "# 一些特殊的战利品\n" +
+                                    "special_loot:\n" +
+                                    "  # 你可以按格式添加更多条目，但是名称不能重复\n" +
+                                    "  # 如果找不到执行目标(target)，所在战利品条目会被忽略\n" +
+                                    "  # 目前支持的type: exp(经验), command(执行指令，可解析伤害排名)\n" +
+                                    "  loot1:\n" +
+                                    "    # [true/false]\n" +
+                                    "    enable: false\n" +
+                                    "    type: command\n" +
+                                    "    # %attacker% -> 所有参与屠龙的玩家\n" +
+                                    "    target: \"%attacker%\"\n" +
+                                    "    # %player% -> 目标, %damage% -> 该玩家造成的总伤害\n" +
+                                    "    data:\n" +
+                                    "      - 'give %player% stone 1'\n" +
+                                    "      - 'ed action %player% tell: 你获得了保底奖励.'\n" +
+                                    "  loot2:\n" +
+                                    "    enable: false\n" +
+                                    "    type: command\n" +
+                                    "    # %attacker_top_<rank>% -> 在屠龙中取得此排名的玩家\n" +
+                                    "    target: \"%attacker_top_1%\"\n" +
+                                    "    data:\n" +
+                                    "      - 'ed action %player% tell: 你的伤害占比是最高的!'\n" +
+                                    "      - 'ed action %player% tell: 你造成的伤害: %damage%'\n" +
+                                    "  loot_exp1:\n" +
+                                    "    enable: false\n" +
+                                    "    type: exp\n" +
+                                    "    target: \"%attacker_top_2%\"\n" +
+                                    "    data:\n" +
+                                    "      # 给予排名第二的玩家20点经验\n" +
+                                    "      amount: 20\n" +
+                                    "\n\n"
+                            ).getBytes());
+                        }
+                        else{
+                            out.write(("\n\n" +
+                                    "special_loot:\n" +
+                                    "  # You can add more entries with DIFFERENT name according to the format.\n" +
+                                    "  # If such target not exists, this option will be ignored.\n" +
+                                    "  # type: exp, command\n" +
+                                    "  loot1:\n" +
+                                    "    # [true/false]\n" +
+                                    "    enable: false\n" +
+                                    "    type: command\n" +
+                                    "    # %attacker% -> all participants in dragon slaying\n" +
+                                    "    target: \"%attacker%\"\n" +
+                                    "    # %player% -> target, %damage% -> this player's damage to EnderDragon\n" +
+                                    "    data:\n" +
+                                    "      - 'give %player% stone 1'\n" +
+                                    "      - 'ed action %player% tell: This is a guaranteed reward.'\n" +
+                                    "  loot2:\n" +
+                                    "    enable: false\n" +
+                                    "    type: command\n" +
+                                    "    # %attacker_top_<rank>% -> the player with exactly this rank\n" +
+                                    "    target: \"%attacker_top_1%\"\n" +
+                                    "    data:\n" +
+                                    "      - 'ed action %player% tell: You are the one who causes the highest damage!'\n" +
+                                    "      - 'ed action %player% tell: Your damage: %damage%'\n" +
+                                    "  loot_exp1:\n" +
+                                    "    enable: false\n" +
+                                    "    type: exp\n" +
+                                    "    target: \"%attacker_top_2%\"\n" +
+                                    "    data:\n" +
+                                    "      # add 20 exp for the rank_2 player\n" +
+                                    "      amount: 20\n" +
+                                    "\n\n"
+                            ).getBytes());
+                        }
+                        out.close();
+                        FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
+                        fc.set("version","2.4.0");
+                        fc.save(file);
+                    }
+                }
+            }
         }
-        else Lang.error("The version of config.yml is not supported!");
-
         Lang.info("New config files are generated in plugins/EnderDragon/new.");
         Lang.warn("Attention: Please confirm the accuracy before using new config!");
     }
