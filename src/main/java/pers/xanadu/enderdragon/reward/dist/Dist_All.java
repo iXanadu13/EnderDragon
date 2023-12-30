@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.manager.DamageManager;
 import pers.xanadu.enderdragon.reward.RewardDist;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;

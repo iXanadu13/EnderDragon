@@ -17,7 +17,7 @@ import pers.xanadu.enderdragon.gui.slot.PageJumpSlot;
 import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.GuiManager;
 import pers.xanadu.enderdragon.manager.RewardManager;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 
 public class InventoryListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
@@ -65,7 +65,7 @@ public class InventoryListener implements Listener {
             }
             if(type == GUISlotType.DRAGON_SLOT){
                 String unique_name = guiWrapper.getData(guiWrapper.getPage(),e.getRawSlot());
-                MyDragon dragon = DragonManager.mp.get(unique_name);
+                MyDragon dragon = DragonManager.get_dragon_config(unique_name);
                 if(dragon == null){
                     Lang.sendFeedback(p,Lang.gui_not_found);
                     return;
@@ -98,7 +98,7 @@ public class InventoryListener implements Listener {
             }
             if(type == GUISlotType.DRAGON_SLOT){
                 String unique_name = guiWrapper.getData(guiWrapper.getPage(),e.getRawSlot());
-                MyDragon dragon = DragonManager.mp.get(unique_name);
+                MyDragon dragon = DragonManager.get_dragon_config(unique_name);
                 if(dragon == null){
                     Lang.sendFeedback(p,Lang.gui_not_found);
                     return;

@@ -1,7 +1,7 @@
 ## Special thanks to Phaxius for the translation
 
 # File version, do not edit
-version: 2.2.0
+version: 2.4.0
 
 # Unique ID used by plugin to identify each type of dragon
 # unique_name needs to be different in each dragon settings file
@@ -230,3 +230,33 @@ reward_dist:
   rank:
     # Top few can receive rewards
     max_num: 1
+
+special_loot:
+  # You can add more entries with DIFFERENT name according to the format.
+  # If such target not exists, this option will be ignored.
+  # type: exp, command
+  loot1:
+    # [true/false]
+    enable: false
+    type: command
+    # %attacker% -> all participants in dragon slaying
+    target: "%attacker%"
+    # %player% -> target, %damage% -> this player's damage to EnderDragon
+    data:
+      - 'give %player% stone 1'
+      - 'ed action %player% tell: This is a guaranteed reward.'
+  loot2:
+    enable: false
+    type: command
+    # %attacker_top_<rank>% -> the player with exactly this rank
+    target: "%attacker_top_1%"
+    data:
+      - 'ed action %player% tell: You are the one who causes the highest damage!'
+      - 'ed action %player% tell: Your damage: %damage%'
+  loot_exp1:
+    enable: false
+    type: exp
+    target: "%attacker_top_2%"
+    data:
+      # add 20 exp for the rank_2 player
+      amount: 20

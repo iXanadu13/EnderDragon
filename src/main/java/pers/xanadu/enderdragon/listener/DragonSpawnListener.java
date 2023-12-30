@@ -14,7 +14,8 @@ import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.event.DragonRespawnPostEvent;
 import pers.xanadu.enderdragon.manager.DamageManager;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.DragonInfo;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.util.Version;
 
 import java.util.*;
@@ -39,6 +40,15 @@ public class DragonSpawnListener implements Listener {
         if(myDragon == null) {
             Lang.warn("special_dragon_jude_mode setting error!");
             return;
+        }
+        DragonInfo info = new DragonInfo(myDragon.unique_name);
+        Bukkit.getPluginManager().callEvent(new DragonRespawnPostEvent(dragon,e.getSpawnReason(),info));
+        MyDragon update = getFromInfo(info);
+        if(update == null) {
+            Lang.error("Unknown unique_name in DragonInfo: "+info.unique_name);
+        }
+        else{
+            myDragon = update;
         }
         setSpecialKey(dragon, myDragon.unique_name);
         DamageManager.data.put(dragon.getUniqueId(),new ConcurrentHashMap<>());
@@ -73,7 +83,6 @@ public class DragonSpawnListener implements Listener {
         else if(Version.mcMainVersion >= 12){
             getInstance().getBossBarManager().setBossBar(dragon.getWorld(),myDragon.display_name,bossBar_color,bossBar_style);
         }
-        Bukkit.getPluginManager().callEvent(new DragonRespawnPostEvent(dragon,e.getSpawnReason(),myDragon));
         if(Config.advanced_setting_save_bossbar){
             getInstance().getBossBarManager().saveBossBarData(Collections.singletonList(dragon.getWorld()));
         }

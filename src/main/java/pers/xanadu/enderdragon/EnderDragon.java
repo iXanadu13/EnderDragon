@@ -246,6 +246,7 @@ public final class EnderDragon extends JavaPlugin {
             catch (Exception ignored) {}
         }
     }
+
     private void fixWorldBossBar(){
         new BukkitRunnable(){
             @Override

@@ -6,7 +6,8 @@ import org.bukkit.entity.EnderDragon;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import pers.xanadu.enderdragon.manager.DragonManager;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.DragonInfo;
+
 /**
  * Called when a dragon is spawned, filtered through blacklist.
  * <p>
@@ -16,11 +17,11 @@ public final class DragonRespawnPostEvent extends CreatureSpawnEvent {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancel = false;
     private final World world;
-    private final MyDragon myDragon;
-    public DragonRespawnPostEvent(final EnderDragon dragon, final SpawnReason reason, final MyDragon myDragon) {
+    private final DragonInfo info;
+    public DragonRespawnPostEvent(final EnderDragon dragon, final SpawnReason reason, final DragonInfo dragonInfo) {
         super(dragon,reason);
         world = dragon.getWorld();
-        this.myDragon = myDragon;
+        this.info = dragonInfo;
     }
 
     public EnderDragon getEnderDragon(){
@@ -30,11 +31,8 @@ public final class DragonRespawnPostEvent extends CreatureSpawnEvent {
     public Location getEndPortalLocation(){
         return DragonManager.getEndPortalLocation(world);
     }
-    public MyDragon getDragonConfiguration(){
-        return myDragon;
-    }
-    public String getDragonUniqueId(){
-        return myDragon.unique_name;
+    public DragonInfo getDragonInformation(){
+        return info;
     }
     public static HandlerList getHandlerList() {
         return handlers;

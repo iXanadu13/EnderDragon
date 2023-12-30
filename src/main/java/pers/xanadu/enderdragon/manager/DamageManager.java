@@ -1,5 +1,7 @@
 package pers.xanadu.enderdragon.manager;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import pers.xanadu.enderdragon.util.Pair;
 
 import java.util.ArrayList;
@@ -20,6 +22,15 @@ public class DamageManager {
         if(p2.second>p1.second) return 1;
         if(p2.second.equals(p1.second)) return 0;
         return -1;
+    }
+
+
+
+    public static void gc(){
+        for(UUID uuid : DamageManager.data.keySet()){
+            Entity entity = Bukkit.getEntity(uuid);
+            if(entity == null || entity.isDead()) DamageManager.data.remove(uuid);
+        }
     }
 
 }

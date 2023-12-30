@@ -6,17 +6,21 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Nullable;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
+import pers.xanadu.enderdragon.metadata.DragonInfo;
 import pers.xanadu.enderdragon.reward.RewardDist;
+import pers.xanadu.enderdragon.reward.SpecialLoot;
 import pers.xanadu.enderdragon.util.ExtraPotionEffect;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.util.Version;
 
 import java.io.File;
@@ -24,12 +28,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static pers.xanadu.enderdragon.EnderDragon.*;
 
 public class DragonManager {
-    public static ArrayList<MyDragon> dragons = new ArrayList<>();
-    public static HashMap<String, MyDragon> mp = new HashMap<>();
+    static final ArrayList<MyDragon> dragons = new ArrayList<>();
+    static final Map<String, MyDragon> mp = new HashMap<>();
     public static List<String> dragon_names = new ArrayList<>();
     private static int sum = 0;
     private static final int[][] nxt = {{3,0},{0,3},{-3,0},{0,-3}};
@@ -42,6 +48,7 @@ public class DragonManager {
     private static Method getX;
     private static Method getY;
     private static Method getZ;
+    private static final Pattern pattern_attacker_top = Pattern.compile("%attacker_top_(\\d+)%");
 
     public static void reload(){
         new BukkitRunnable(){
@@ -261,10 +268,66 @@ public class DragonManager {
         }
         myDragon.effect_cloud_potion = effectCloudPotions;
         myDragon.reward_dist = RewardDist.parse(f.getConfigurationSection("reward_dist"));
+        ConfigurationSection loots = f.getConfigurationSection("special_loot");
+        Map<Integer, List<SpecialLoot>> loot_mp = new HashMap<>();
+        if(loots != null){
+            for (String key : loots.getKeys(false)) {
+                ConfigurationSection loot = loots.getConfigurationSection(key);
+                if(loot == null || !loot.getBoolean("enable")) continue;
+                String type = loot.getString("type");
+                SpecialLoot specialLoot;
+                if("command".equals(type)){
+                    List<String> commands = loot.getStringList("data");
+                    specialLoot = (player, damage) -> handleCommandLoot(commands,player,damage);
+                }
+                else if("exp".equals(type)){
+                    int amount = loot.getInt("data"+f.options().pathSeparator()+"amount");
+                    specialLoot = (player, __) -> {
+                        Player p = Bukkit.getPlayer(player);
+                        if(p != null) p.giveExp(amount);
+                    };
+                }
+                else{
+                    Lang.error("Unknown special_loot type: "+type);
+                    continue;
+                }
+                String target = loot.getString("target");
+                if(target == null) continue;
+                if("%attacker%".equals(target)){
+                    loot_mp.compute(0,(k,v)->{
+                        if(v==null) return Collections.singletonList(specialLoot);
+                        v.add(specialLoot);
+                        return v;
+                    });
+                }
+                else{
+                    Matcher matcher = pattern_attacker_top.matcher(target);
+                    if (matcher.find()) {
+                        Integer rank = Integer.parseInt(matcher.group(1));
+                        loot_mp.compute(rank,(k,v)->{
+                            if(v==null) return Collections.singletonList(specialLoot);
+                            v.add(specialLoot);
+                            return v;
+                        });
+                    } else {
+                        Lang.error("Wrong special_loot target: "+target);
+                        continue;
+                    }
+                }
+            }
+        }
+        myDragon.lootMap = loot_mp;
         dragons.add(myDragon);
         mp.put(myDragon.unique_name,myDragon);
         dragon_names.add(myDragon.unique_name);
         sum += edge;
+    }
+    private static void handleCommandLoot(List<String> list, String name, String damage){
+        if(list == null) return;
+        for (String cmd : list) {
+            if(cmd.equals("")) continue;
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),cmd.replaceAll("%player%",name).replaceAll("%damage%",damage));
+        }
     }
     public static void disable(){
         dragons.clear();
@@ -272,6 +335,30 @@ public class DragonManager {
         dragon_names.clear();
     }
 
+    /**
+     * 请勿修改MyDragon对象<p>
+     * 方法将在后续被删除
+     * @return MyDragon configuration
+     */
+    @Deprecated
+    public static MyDragon get_dragon_config(String unique_name){
+        return mp.get(unique_name);
+    }
+
+    /**
+     * 请勿修改得到的List
+     */
+    @Deprecated
+    public static List<MyDragon> get_dragons(){
+        return dragons;
+    }
+    @Nullable
+    public static MyDragon getFromInfo(DragonInfo info){
+        return mp.get(info.unique_name);
+    }
+    public static int getCount(){
+        return data.getInt("times");
+    }
     public static void setAttribute(final EnderDragon dragon,final Attribute attribute, double amount){
         AttributeInstance instance = dragon.getAttribute(attribute);
         assert instance != null;

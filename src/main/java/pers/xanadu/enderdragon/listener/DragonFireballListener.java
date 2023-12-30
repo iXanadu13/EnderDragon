@@ -1,24 +1,18 @@
 package pers.xanadu.enderdragon.listener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.entity.AreaEffectCloud;
-import org.bukkit.entity.DragonFireball;
 import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.projectiles.ProjectileSource;
-import pers.xanadu.enderdragon.util.MyDragon;
+import pers.xanadu.enderdragon.manager.DragonManager;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 
 import static pers.xanadu.enderdragon.manager.DragonManager.getSpecialKey;
-import static pers.xanadu.enderdragon.manager.DragonManager.mp;
 
 public class DragonFireballListener implements Listener {
 
@@ -49,7 +43,7 @@ public class DragonFireballListener implements Listener {
         EnderDragon dragon = (EnderDragon) effectCloud.getSource();
         String unique_name = getSpecialKey(dragon);
         if(unique_name == null) return;
-        MyDragon myDragon = mp.get(unique_name);
+        MyDragon myDragon = DragonManager.get_dragon_config(unique_name);
         if(myDragon == null) return;
         effectCloud.setRadius((float) myDragon.effect_cloud_original_radius);
         effectCloud.setRadiusPerTick((float) myDragon.effect_cloud_expand_speed/20f);
