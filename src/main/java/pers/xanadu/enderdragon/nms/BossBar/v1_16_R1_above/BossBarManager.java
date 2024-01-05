@@ -1,10 +1,7 @@
 package pers.xanadu.enderdragon.nms.BossBar.v1_16_R1_above;
 
 import org.bukkit.World;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.boss.DragonBattle;
+import org.bukkit.boss.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pers.xanadu.enderdragon.config.Lang;
@@ -21,14 +18,18 @@ public class BossBarManager implements I_BossBarManager {
     public void saveBossBarData(List<World> worlds){
         File file = new File(plugin.getDataFolder(),"world_data.yml");
         YamlConfiguration yml = new YamlConfiguration();
+        char split = yml.options().pathSeparator();
         worlds.forEach(world -> {
             DragonBattle battle = world.getEnderDragonBattle();
             if(battle == null) return;
             BossBar bossBar = battle.getBossBar();
-            String path = world.getName() + yml.options().pathSeparator();
+            String path = world.getName() + split;
             yml.set(path+"title",bossBar.getTitle());
             yml.set(path+"color",bossBar.getColor().name());
             yml.set(path+"style",bossBar.getStyle().name());
+            yml.set(path+"create_frog",bossBar.hasFlag(BarFlag.CREATE_FOG));
+            yml.set(path+"darken_sky",bossBar.hasFlag(BarFlag.DARKEN_SKY));
+            yml.set(path+"play_boss_music",bossBar.hasFlag(BarFlag.PLAY_BOSS_MUSIC));
         });
         try{
             yml.save(file);
@@ -42,6 +43,7 @@ public class BossBarManager implements I_BossBarManager {
         if(!file.exists()) return;
         Lang.info("Enabling BossBar fix...");
         YamlConfiguration yml = new YamlConfiguration();
+        char split = yml.options().pathSeparator();
         try{
             yml.load(file);
         }catch (InvalidConfigurationException | IOException e) {
@@ -52,10 +54,16 @@ public class BossBarManager implements I_BossBarManager {
             DragonBattle battle = world.getEnderDragonBattle();
             if(battle == null) return;
             BossBar bossBar = battle.getBossBar();
-            String path = world.getName() + yml.options().pathSeparator();
+            String path = world.getName() + split;
             bossBar.setTitle(yml.getString(path+"title"));
             bossBar.setColor(BarColor.valueOf(yml.getString(path+"color")));
             bossBar.setStyle(BarStyle.valueOf(yml.getString(path+"style")));
+            if(yml.getBoolean(path+"create_frog",true)) bossBar.addFlag(BarFlag.CREATE_FOG);
+            else bossBar.removeFlag(BarFlag.CREATE_FOG);
+            if(yml.getBoolean(path+"darken_sky",true)) bossBar.addFlag(BarFlag.DARKEN_SKY);
+            else bossBar.removeFlag(BarFlag.DARKEN_SKY);
+            if(yml.getBoolean(path+"play_boss_music",true)) bossBar.addFlag(BarFlag.PLAY_BOSS_MUSIC);
+            else bossBar.removeFlag(BarFlag.PLAY_BOSS_MUSIC);
         });
     }
     public void setBossBar(World world, final MyDragon myDragon){
