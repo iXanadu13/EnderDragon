@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_15_R1.util.CraftChatMessage;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.manager.DragonManager;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
 
 import java.io.File;
@@ -71,7 +72,7 @@ public class BossBarManager implements I_BossBarManager {
             }
         });
     }
-    public void setBossBar(World world,String title,String color,String style){
+    public void setBossBar(World world, final MyDragon myDragon){
     }
 
 }

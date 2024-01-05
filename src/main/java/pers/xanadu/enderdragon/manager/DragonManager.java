@@ -220,8 +220,11 @@ public class DragonManager {
         myDragon.death_broadcast_msg = f.getStringList("death_broadcast_msg");
         myDragon.msg_to_killer = f.getStringList("msg_to_killer");
         myDragon.glow_color = f.getString("glow_color","random");
-        myDragon.bossbar_color = f.getString("bossbar.color","WHITE");
-        myDragon.bossbar_style = f.getString("bossbar.style","SOLID");
+        myDragon.bossbar_color = f.getString("bossbar.color","WHITE").toUpperCase();
+        myDragon.bossbar_style = f.getString("bossbar.style","SOLID").toUpperCase();
+        myDragon.bossbar_create_frog = f.getBoolean("bossbar.create_frog",true);
+        myDragon.bossbar_darken_sky = f.getBoolean("bossbar.darken_sky",true);
+        myDragon.bossbar_play_boss_music = f.getBoolean("bossbar.play_boss_music",true);
         myDragon.effect_cloud_original_radius = f.getDouble("effect_cloud.original_radius",3);
         myDragon.effect_cloud_expand_speed = f.getDouble("effect_cloud.expand_speed",0.1333333);
         myDragon.effect_cloud_duration = f.getInt("effect_cloud.duration",60);

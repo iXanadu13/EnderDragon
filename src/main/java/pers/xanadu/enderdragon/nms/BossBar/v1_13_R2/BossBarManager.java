@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_13_R2.util.CraftChatMessage;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.manager.DragonManager;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
 
 import java.io.File;
@@ -71,15 +72,15 @@ public class BossBarManager implements I_BossBarManager {
             }
         });
     }
-    public void setBossBar(World world,String title,String color,String style){
+    public void setBossBar(World world, final MyDragon myDragon){
         BossBattleServer bbs = new BossBattleServer(
-                CraftChatMessage.fromString(title, true)[0],
-                convertColor(color),
-                convertStyle(style)
+                CraftChatMessage.fromString(myDragon.display_name, true)[0],
+                convertColor(myDragon.bossbar_color),
+                convertStyle(myDragon.bossbar_style)
         );
-        bbs.setCreateFog(true);
-        bbs.setDarkenSky(true);
-        bbs.setPlayMusic(true);
+        bbs.setCreateFog(myDragon.bossbar_create_frog);
+        bbs.setDarkenSky(myDragon.bossbar_darken_sky);
+        bbs.setPlayMusic(myDragon.bossbar_play_boss_music);
         try{
             Object edb = DragonManager.getEnderDragonBattle(world);
             assert edb != null;

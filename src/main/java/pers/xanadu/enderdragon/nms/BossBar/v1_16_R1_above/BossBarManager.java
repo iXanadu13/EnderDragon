@@ -8,6 +8,7 @@ import org.bukkit.boss.DragonBattle;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pers.xanadu.enderdragon.config.Lang;
+import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
 
 import java.io.File;
@@ -57,6 +58,6 @@ public class BossBarManager implements I_BossBarManager {
             bossBar.setStyle(BarStyle.valueOf(yml.getString(path+"style")));
         });
     }
-    public void setBossBar(World world,String title,String color,String style){
+    public void setBossBar(World world, final MyDragon myDragon){
     }
 }

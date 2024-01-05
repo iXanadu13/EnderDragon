@@ -1,5 +1,5 @@
 #文件版本，请勿修改
-version: 2.4.0
+version: 2.5.0
 
 #用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
 unique_name: 'special001'
@@ -116,6 +116,14 @@ bossbar:
 
   #SOLID:整条,SEGMENTED_6:将血条分为6个部分,SEGMENTED_10:将血条分为10个部分,SEGMENTED_12:将血条分为12个部分,SEGMENTED_20:将血条分为20个部分
   style: 'SEGMENTED_12'
+
+  # [true/false]
+  # 生成迷雾
+  create_frog: true
+  # 使天空阴暗
+  darken_sky: true
+  # 播放打末影龙时候的BGM
+  play_boss_music: true
 
 #末影龙火球命中后产生的效果云
 effect_cloud:

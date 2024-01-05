@@ -1,7 +1,7 @@
 ## Special thanks to Phaxius for the translation
 
 # File version, do not edit
-version: 2.4.0
+version: 2.5.0
 
 # Unique ID used by plugin to identify each type of dragon
 # unique_name needs to be different in each dragon settings file
@@ -139,6 +139,11 @@ bossbar:
   # Available options are: SOLID (Whole Bar), SEGMENTED_6 (6 Segments), SEGMENTED_10 (10 segments),
   # SEGMENTED_12 (12 Segments), SEGMENTED_20 (20 Segments)
   style: 'SEGMENTED_12'
+
+  # [true/false]
+  create_frog: true
+  darken_sky: true
+  play_boss_music: true
 
 #The effect cloud produced after the ender dragon fireball hits
 effect_cloud:
