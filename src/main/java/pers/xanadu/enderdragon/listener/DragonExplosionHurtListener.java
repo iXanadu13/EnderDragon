@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import pers.xanadu.enderdragon.event.DragonDamageByPlayerEvent;
 import pers.xanadu.enderdragon.event.PlayerExplodeDragonEvent;
+import pers.xanadu.enderdragon.manager.WorldManager;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -34,6 +35,7 @@ public class DragonExplosionHurtListener implements Listener {
         Entity victim = e.getEntity();
         Entity entity = e.getDamager();
         if(victim instanceof EnderDragon){
+            if(!WorldManager.enable_worlds.contains(victim.getWorld().getName())) return;
             EnderDragon dragon = (EnderDragon) victim;
             if(entity instanceof TNTPrimed){
                 TNTPrimed tnt = (TNTPrimed) entity;
@@ -56,6 +58,7 @@ public class DragonExplosionHurtListener implements Listener {
         if(e.getCause() != EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) return;
         Entity entity = e.getEntity();
         if(entity instanceof EnderDragon){
+            if(!WorldManager.enable_worlds.contains(entity.getWorld().getName())) return;
             EnderDragon dragon = (EnderDragon) entity;
             for(UUID uuid : mp.keySet()){
                 PlayerExplodeDragonEvent ped = mp.get(uuid);
@@ -72,7 +75,10 @@ public class DragonExplosionHurtListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void OnPlayerClickBed(final PlayerBedEnterEvent e){
         Player p = e.getPlayer();
+        // more precise judgement is needed.
+        // try World::isBedWorks()
         if(p.getWorld().getEnvironment() != World.Environment.THE_END) return;
+        if(!WorldManager.enable_worlds.contains(p.getWorld().getName())) return;
         long time = pers.xanadu.enderdragon.EnderDragon.getInstance().getWorldDataManager().getGameTime(e.getPlayer().getWorld());
         Location bed_loc = e.getBed().getLocation();
         Collection<EnderDragon> entities = getExplosionDragon(5f,bed_loc);

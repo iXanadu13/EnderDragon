@@ -11,6 +11,7 @@ import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.event.DragonDamageByPlayerEvent;
 import pers.xanadu.enderdragon.manager.DamageManager;
+import pers.xanadu.enderdragon.manager.WorldManager;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +23,7 @@ public class DragonDamageByPlayerListener implements Listener {
         if(e.isCancelled()) return;
         Player p = e.getDamager();
         EnderDragon dragon = e.getDragon();
+        if(!WorldManager.enable_worlds.contains(dragon.getWorld().getName())) return;
         double health = dragon.getHealth();
         double damage = Math.min(e.getFinalDamage(),health);
         if(damage > 0.0d){

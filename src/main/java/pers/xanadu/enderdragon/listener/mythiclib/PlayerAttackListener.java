@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import pers.xanadu.enderdragon.event.DragonDamageByPlayerEvent;
+import pers.xanadu.enderdragon.manager.WorldManager;
 
 import static pers.xanadu.enderdragon.EnderDragon.pm;
 
@@ -16,6 +17,7 @@ public class PlayerAttackListener implements Listener {
         if(e.isCancelled()) return;
         if(!(e.getEntity() instanceof org.bukkit.entity.EnderDragon)) return;
         EnderDragon dragon = (EnderDragon) e.getEntity();
+        if(!WorldManager.enable_worlds.contains(dragon.getWorld().getName())) return;
         DamageMetadata damage = e.getDamage();
         double final_damage = damage.getDamage();
         if(final_damage > 0.0d){

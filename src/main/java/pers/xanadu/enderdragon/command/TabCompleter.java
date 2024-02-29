@@ -34,7 +34,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 result.addAll(arguments_drop);
             }
             else if(args[0].equalsIgnoreCase("respawn")){
-                result.addAll(WorldManager.worlds);
+                result.addAll(WorldManager.all_worlds);
             }
             else if(args[0].equalsIgnoreCase("respawn_cd")){
                 result.addAll(arguments_respawn_cd);
@@ -60,11 +60,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             else if("respawn_cd".equals(args[0])){
                 String str = args[1].toLowerCase();
                 if("get".equals(str) || "remove".equals(str) || "removeAll".equals(str) || "set".equals(str) || "start".equals(str)){
-                    result.addAll(WorldManager.worlds);
+                    result.addAll(WorldManager.all_worlds);
                 }
             }
             else if("spawn".equals(args[0])){
-                result.addAll(WorldManager.worlds);
+                result.addAll(WorldManager.all_worlds);
             }
             else if("action".equals(args[0])){
                 result.addAll(arguments_action);

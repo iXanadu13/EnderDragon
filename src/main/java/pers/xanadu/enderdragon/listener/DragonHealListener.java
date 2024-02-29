@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import pers.xanadu.enderdragon.manager.DragonManager;
+import pers.xanadu.enderdragon.manager.WorldManager;
 import pers.xanadu.enderdragon.metadata.MyDragon;
 
 import static pers.xanadu.enderdragon.manager.DragonManager.getSpecialKey;
@@ -15,6 +16,7 @@ public class DragonHealListener implements Listener {
     public void OnDragonHeal(final EntityRegainHealthEvent e){
         if(!(e.getEntity() instanceof EnderDragon)) return;
         EnderDragon dragon = (EnderDragon) e.getEntity();
+        if(!WorldManager.enable_worlds.contains(dragon.getWorld().getName())) return;
         if(!e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.ENDER_CRYSTAL)) return;
         String unique_name = getSpecialKey(dragon);
         if(unique_name == null) return;

@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.potion.PotionEffect;
 import pers.xanadu.enderdragon.manager.DragonManager;
+import pers.xanadu.enderdragon.manager.WorldManager;
 import pers.xanadu.enderdragon.metadata.MyDragon;
 
 import static pers.xanadu.enderdragon.manager.DragonManager.getSpecialKey;
@@ -41,6 +42,7 @@ public class DragonFireballListener implements Listener {
         if(effectCloud.getSource() == null) return;
         if(!(effectCloud.getSource() instanceof EnderDragon)) return;
         EnderDragon dragon = (EnderDragon) effectCloud.getSource();
+        if(!WorldManager.enable_worlds.contains(dragon.getWorld().getName())) return;
         String unique_name = getSpecialKey(dragon);
         if(unique_name == null) return;
         MyDragon myDragon = DragonManager.get_dragon_config(unique_name);

@@ -5,29 +5,32 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
+import pers.xanadu.enderdragon.util.ConcurrentSet;
 import pers.xanadu.enderdragon.util.Version;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Math.sqrt;
 import static pers.xanadu.enderdragon.EnderDragon.getInstance;
 import static pers.xanadu.enderdragon.util.MathUtil.*;
 
 public class WorldManager {
-    public static final List<String> worlds = new ArrayList<>();
+    public static final List<String> all_worlds = new ArrayList<>();
+    public static final Set<String> enable_worlds = new ConcurrentSet<>();
     private Field dimension;
     private Field world_provider;
     private Method getDimensionID;
 
     public static void reload(){
-        worlds.clear();
-        Bukkit.getWorlds().forEach(world -> worlds.add(world.getName()));
+        all_worlds.clear();
+        Bukkit.getWorlds().forEach(world -> all_worlds.add(world.getName()));
+        enable_worlds.clear();
+        enable_worlds.addAll(all_worlds);
+        Config.blacklist_worlds.forEach(enable_worlds::remove);
     }
 
     public static Collection<EnderDragon> getExplosionDragon(float power, Location loc){
