@@ -11,6 +11,7 @@ import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.reward.Reward;
 import pers.xanadu.enderdragon.reward.Chance;
 import pers.xanadu.enderdragon.metadata.MyDragon;
+import pers.xanadu.enderdragon.util.Version;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,7 +31,6 @@ public class RewardManager {
             FileConfiguration data = loadConfiguration(file);
             String path = "list";
             List<String> list = data.getStringList(path);
-            // if list == null ?
             for(String str : list){
                 YamlConfiguration yml = new YamlConfiguration();
                 if(Config.advanced_setting_backslash_split_reward) yml.options().pathSeparator('\\');
@@ -42,6 +42,11 @@ public class RewardManager {
                     Lang.error(Lang.plugin_item_read_error + str);
                 }
             }
+        }
+        if (ItemManager.isLegacy()){
+            Lang.error("I'm sorry that data_type 'nbt' and 'advanced' probably will be disabled in 1.20.5+");
+            Lang.error("It is recommended to migrate item configuration to bukkit format for compatibility.");
+            Lang.error("You can use /ed migrate to generate new config.");
         }
     }
     public static void addItem(String key,Reward reward){
@@ -118,7 +123,7 @@ public class RewardManager {
             try{
                 YamlConfiguration yml = new YamlConfiguration();
                 if(Config.advanced_setting_backslash_split_reward) yml.options().pathSeparator('\\');
-                yml.set("version","2.1.0");
+                yml.set("version", Version.reward);
                 yml.set("list","");
                 yml.save(file);
             }catch (IOException e){

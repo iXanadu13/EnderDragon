@@ -1,5 +1,6 @@
 package pers.xanadu.enderdragon.manager;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.persistence.PersistentDataContainer;
 import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.config.Config;
+import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.reward.Reward;
 import pers.xanadu.enderdragon.reward.Chance;
 import pers.xanadu.enderdragon.util.Version;
@@ -20,6 +22,8 @@ import pers.xanadu.enderdragon.util.Version;
 import java.util.*;
 
 public class ItemManager {
+    @Getter
+    private static boolean legacy = false;
     public static String write(Reward reward){
         Chance chance = reward.getChance();
         return write(reward.getItem(),chance.getValue(),chance.getStr(),reward.getName());
@@ -40,12 +44,12 @@ public class ItemManager {
         }
         ConfigurationSection section = yaml.createSection(name);
         switch(Config.item_format_reward){
-            case "nbt" : {
+            case "_nbt" : {
                 section.set("data_type","nbt");
                 section.set("data",EnderDragon.getInstance().getNMSManager().getNBT(item));
                 break;
             }
-            case "advanced" : {
+            case "_advanced" : {
                 section.set("data_type","advanced");
                 ConfigurationSection section_data = section.createSection("data");
                 //type
@@ -145,13 +149,12 @@ public class ItemManager {
                     internal.set("data_type","nbt");
                     internal.set("data",new_cpd.toString());
                 }
-//                Map<String,Object> mp = EnderDragon.getInstance().getNMSManager().getUnhandledTags(meta);
-//                if(mp != null){
-//                    ConfigurationSection internal = section_data.createSection("internal");
-//                    saveUnhandledTags(internal,mp);
-//                }
-
                 break;
+            }
+            case "nbt":
+            case "advanced": {
+                Lang.warn("Data_type 'nbt' and 'advanced' has been disabled temporarily for compatibility with 1.20.5+");
+                //no break, go ahead to default block.
             }
             default : {
                 section.set("data_type","default");
@@ -171,9 +174,17 @@ public class ItemManager {
         String data_type = section0.getString("data_type");
         //data_type may be null
         ItemStack item;
-        if("nbt".equals(data_type)) item = readFromNBT(section0,"data");
-        else if("advanced".equals(data_type)) item = readFromAdvData(section0, "data");
-        else item = readFromBukkit(section0,"data");
+        if("nbt".equals(data_type)) {
+            legacy = true;
+            item = readFromNBT(section0,"data");
+        }
+        else if("advanced".equals(data_type)) {
+            legacy = true;
+            item = readFromAdvData(section0, "data");
+        }
+        else {
+            item = readFromBukkit(section0,"data");
+        }
         ConfigurationSection chance_section = section0.getConfigurationSection("drop_chance");
         if(chance_section == null) return null;
         double d0 = chance_section.getDouble("value");

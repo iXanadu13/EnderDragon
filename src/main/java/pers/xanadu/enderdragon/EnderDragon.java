@@ -21,11 +21,12 @@ import pers.xanadu.enderdragon.listener.*;
 import pers.xanadu.enderdragon.listener.mythiclib.PlayerAttackListener;
 import pers.xanadu.enderdragon.manager.*;
 import pers.xanadu.enderdragon.maven.DependencyManager;
+import pers.xanadu.enderdragon.metadata.DragonInfo;
 import pers.xanadu.enderdragon.metrics.Metrics;
-import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
-import pers.xanadu.enderdragon.nms.NMSItem.I_NMSItemManager;
-import pers.xanadu.enderdragon.nms.RespawnAnchor.I_RespawnAnchorManager;
-import pers.xanadu.enderdragon.nms.WorldData.I_WorldDataManager;
+import pers.xanadu.enderdragon.nms.BossBar.IBossBarManager;
+import pers.xanadu.enderdragon.nms.NMSItem.INMSItemManager;
+import pers.xanadu.enderdragon.nms.RespawnAnchor.IRespawnAnchorManager;
+import pers.xanadu.enderdragon.nms.WorldData.IWorldDataManager;
 import pers.xanadu.enderdragon.util.NMSUtil;
 import pers.xanadu.enderdragon.util.Version;
 
@@ -46,10 +47,10 @@ public final class EnderDragon extends JavaPlugin {
     public static FileConfiguration lang;
     private WorldManager worldManager;
     private NMSUtil nmsManager;
-    private I_BossBarManager i_bossBarManager;
-    private I_NMSItemManager i_nmsItemManager;
-    private I_WorldDataManager i_worldDataManager;
-    private I_RespawnAnchorManager i_respawnAnchorManager;
+    private IBossBarManager iBossBarManager;
+    private INMSItemManager iNmsItemManager;
+    private IWorldDataManager iWorldDataManager;
+    private IRespawnAnchorManager iRespawnAnchorManager;
     private static boolean finish = false;
     @Override
     public void onLoad(){
@@ -67,23 +68,24 @@ public final class EnderDragon extends JavaPlugin {
         worldManager = new WorldManager();
         nmsManager = new NMSUtil();
         nmsManager.init();
-        i_bossBarManager = Version.getBossBarManager();
-        i_nmsItemManager = Version.getNMSItemManager();
-        i_worldDataManager = Version.getWorldDataManager();
-        i_respawnAnchorManager = Version.getRespawnAnchorManager();
+        iBossBarManager = Version.getBossBarManager();
+        iNmsItemManager = Version.getNMSItemManager();
+        iWorldDataManager = Version.getWorldDataManager();
+        iRespawnAnchorManager = Version.getRespawnAnchorManager();
         if(Config.advanced_setting_world_env_fix) {
             getInstance().getWorldManager().fixWorldEnvironment();
             Lang.info(Lang.world_env_fix_enable);
-        }
-        if(Config.advanced_setting_save_bossbar){
-            fixWorldBossBar();
         }
         TimerManager.enable();
         registerEvents();
         registerCommands();
         HookManager.init();
         reloadAll();
+        if(Config.advanced_setting_save_bossbar){
+            fixWorldBossBar();
+        }
         if(Config.advanced_setting_save_respawn_status) setRespawnStatus();
+        scanExistingDragons();
 //        if(Config.advanced_setting_glowing_fix) fixGlowing();
         checkUpdate();
         new Metrics(this,14850);
@@ -135,7 +137,7 @@ public final class EnderDragon extends JavaPlugin {
         TimerManager.save();
         if(Config.advanced_setting_save_respawn_status){
             Bukkit.getWorlds().forEach(world -> {
-                if(!Config.blacklist_worlds.contains(world.getName())){
+                if(WorldManager.enable_worlds.contains(world.getName())){
                     char split = data.options().pathSeparator();
                     if(DragonManager.isRespawnRunning(world)){
                         data.set("respawn_fix"+split+world.getName(),true);
@@ -154,7 +156,7 @@ public final class EnderDragon extends JavaPlugin {
         if(Config.advanced_setting_save_bossbar){
             List<World> worlds = new ArrayList<>();
             Bukkit.getWorlds().forEach(world -> {
-                if(world.getEnvironment()==World.Environment.THE_END&&!Config.blacklist_worlds.contains(world.getName())){
+                if(world.getEnvironment()==World.Environment.THE_END&&WorldManager.enable_worlds.contains(world.getName())){
                     worlds.add(world);
                 }
             });
@@ -253,7 +255,7 @@ public final class EnderDragon extends JavaPlugin {
             public void run(){
                 List<World> worlds = new ArrayList<>();
                 Bukkit.getWorlds().forEach(world -> {
-                    if(world.getEnvironment()==World.Environment.THE_END&&!Config.blacklist_worlds.contains(world.getName())){
+                    if(world.getEnvironment()==World.Environment.THE_END&&WorldManager.enable_worlds.contains(world.getName())){
                         worlds.add(world);
                     }
                 });
@@ -297,6 +299,23 @@ public final class EnderDragon extends JavaPlugin {
             }
         }.runTaskLater(plugin,100L);
     }
+    private void scanExistingDragons(){
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                Bukkit.getWorlds().forEach(world -> {
+                    if(WorldManager.enable_worlds.contains(world.getName())){
+                        org.bukkit.entity.EnderDragon dragon = DragonManager.getEnderDragon(world);
+                        if(dragon != null){
+                            String unique_name = DragonManager.getSpecialKey(dragon);
+                            DragonManager.existing_dragon.put(dragon.getUniqueId(),new DragonInfo(dragon,unique_name));
+                            DragonManager.main_dragon.put(world.getName(),new DragonInfo(dragon,unique_name));
+                        }
+                    }
+                });
+            }
+        }.runTaskLater(plugin,80L);
+    }
 
     public WorldManager getWorldManager(){
         return worldManager;
@@ -304,17 +323,17 @@ public final class EnderDragon extends JavaPlugin {
     public NMSUtil getNMSManager(){
         return nmsManager;
     }
-    public I_BossBarManager getBossBarManager(){
-        return i_bossBarManager;
+    public IBossBarManager getBossBarManager(){
+        return iBossBarManager;
     }
-    public I_NMSItemManager getNMSItemManager(){
-        return i_nmsItemManager;
+    public INMSItemManager getNMSItemManager(){
+        return iNmsItemManager;
     }
-    public I_WorldDataManager getWorldDataManager(){
-        return i_worldDataManager;
+    public IWorldDataManager getWorldDataManager(){
+        return iWorldDataManager;
     }
-    public I_RespawnAnchorManager getRespawnAnchorManager(){
-        return i_respawnAnchorManager;
+    public IRespawnAnchorManager getRespawnAnchorManager(){
+        return iRespawnAnchorManager;
     }
 
 }

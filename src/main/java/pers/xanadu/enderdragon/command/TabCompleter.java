@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
-    private static final List<String> arguments_ed = Arrays.asList("action", "drop", "reload", "respawn", "respawn_cd", "spawn", "update");
+    private static final List<String> arguments_ed = Arrays.asList("action", "drop", "migrate", "reload", "respawn", "respawn_cd", "spawn", "update");
     private static final List<String> arguments_drop = Arrays.asList("add", "clear", "edit", "remove", "gui");
     private static final List<String> arguments_action = Arrays.asList("tell:","tell-colorless:","tell-raw:","groovy:");
     private static final List<String> arguments_respawn_cd = Arrays.asList("get","remove","removeAll","set","start");
