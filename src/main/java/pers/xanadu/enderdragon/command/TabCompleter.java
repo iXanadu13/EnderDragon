@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
-    private static final List<String> arguments_ed = Arrays.asList("action", "drop", "reload", "respawn", "respawn_cd", "spawn", "update");
+    private static final List<String> arguments_ed = Arrays.asList("action", "drop", "migrate", "reload", "respawn", "respawn_cd", "spawn", "update");
     private static final List<String> arguments_drop = Arrays.asList("add", "clear", "edit", "remove", "gui");
     private static final List<String> arguments_action = Arrays.asList("tell:","tell-colorless:","tell-raw:","groovy:");
     private static final List<String> arguments_respawn_cd = Arrays.asList("get","remove","removeAll","set","start");
@@ -34,7 +34,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 result.addAll(arguments_drop);
             }
             else if(args[0].equalsIgnoreCase("respawn")){
-                result.addAll(WorldManager.worlds);
+                result.addAll(WorldManager.all_worlds);
             }
             else if(args[0].equalsIgnoreCase("respawn_cd")){
                 result.addAll(arguments_respawn_cd);
@@ -60,11 +60,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             else if("respawn_cd".equals(args[0])){
                 String str = args[1].toLowerCase();
                 if("get".equals(str) || "remove".equals(str) || "removeAll".equals(str) || "set".equals(str) || "start".equals(str)){
-                    result.addAll(WorldManager.worlds);
+                    result.addAll(WorldManager.all_worlds);
                 }
             }
             else if("spawn".equals(args[0])){
-                result.addAll(WorldManager.worlds);
+                result.addAll(WorldManager.all_worlds);
             }
             else if("action".equals(args[0])){
                 result.addAll(arguments_action);

@@ -19,6 +19,7 @@ import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.manager.DamageManager;
 import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.TimerManager;
+import pers.xanadu.enderdragon.manager.WorldManager;
 import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.reward.SpecialLoot;
 import pers.xanadu.enderdragon.util.Pair;
@@ -37,6 +38,7 @@ public class DragonDeathListener implements Listener {
     public void OnDragonDeath(final EntityDeathEvent e){
         if(!(e.getEntity() instanceof EnderDragon)) return;
         EnderDragon dragon = (EnderDragon) e.getEntity();
+        if(!WorldManager.enable_worlds.contains(dragon.getWorld().getName())) return;
         String unique_name = DragonManager.getSpecialKey(dragon);
         if(unique_name == null) return;
         MyDragon myDragon = DragonManager.get_dragon_config(unique_name);

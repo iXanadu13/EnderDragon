@@ -47,6 +47,9 @@ public class MyDragon implements Comparable<MyDragon>{
     public String glow_color;
     public String bossbar_color;
     public String bossbar_style;
+    public boolean bossbar_create_frog;
+    public boolean bossbar_darken_sky;
+    public boolean bossbar_play_boss_music;
     public double effect_cloud_original_radius;
     public double effect_cloud_expand_speed;
     public int effect_cloud_duration;

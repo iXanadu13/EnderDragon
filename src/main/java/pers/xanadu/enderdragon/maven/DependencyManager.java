@@ -34,7 +34,7 @@ public class DependencyManager {
 //                "groovy","xanadu.groovy",
 //                "org.apache.groovy","xanadu.org.apache.groovy"
 //        );
-        Dependency groovy = new Dependency("org.apache.groovy","groovy","4.0.10","https://repo1.maven.org/maven2/", Dependency.AlgorithmType.SHA_256,rules);
+        Dependency groovy = new Dependency("org.apache.groovy","groovy","4.0.18","https://repo1.maven.org/maven2/", Dependency.AlgorithmType.SHA_256,rules);
         boolean f = groovy.load();
         if(f) dep_groovy = true;
         else err("Failed to load library: "+groovy.getName());

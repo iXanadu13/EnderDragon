@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import pers.xanadu.enderdragon.manager.DragonManager;
+import pers.xanadu.enderdragon.manager.WorldManager;
 import pers.xanadu.enderdragon.util.ExtraPotionEffect;
 import pers.xanadu.enderdragon.metadata.MyDragon;
 
@@ -17,6 +18,7 @@ public class DragonAttackListener implements Listener {
         Entity attack = e.getDamager();
         if(!(attack instanceof EnderDragon)) return;
         EnderDragon dragon = (EnderDragon) attack;
+        if(!WorldManager.enable_worlds.contains(dragon.getWorld().getName())) return;
         String unique_name = DragonManager.getSpecialKey(dragon);
         if(unique_name == null) return;
         MyDragon myDragon = DragonManager.get_dragon_config(unique_name);

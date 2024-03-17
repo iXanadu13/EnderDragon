@@ -30,32 +30,29 @@ public class MainCommand implements CommandExecutor {
             return false;
         }
         switch(args[0].toLowerCase()){
-//            case "parse" : {
-//                if(!sender.isOp()) return false;
-//                if(args.length == 2) GroovyManager.invoke("test.groovy", args[1]);
-//                else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],Bukkit.getPlayer(args[2]));
-////                List<Entity> entities = p.getNearbyEntities(50,50,50);
-////                entities.forEach(entity -> {
-////                    if(entity instanceof org.bukkit.entity.EnderDragon){
-////                        org.bukkit.entity.EnderDragon dragon = (org.bukkit.entity.EnderDragon) entity;
-////                        //dragon.setPhase(CHARGE_PLAYER);
-////                        //SkillManager.launchDragonFireball(dragon,p.getLocation());
-////                        SkillManager.callEnderManReinforce(p,3);
-////                    }
-////
-////
-////                    if(entity instanceof org.bukkit.entity.EnderDragon){
-////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
-////                    }
-////                    if(entity instanceof ComplexEntityPart){
-////                        Bukkit.broadcastMessage(entity.getName());//1 Special Ender Dragon
-////                    }
-////                    if(entity instanceof ComplexLivingEntity){
-////                        Bukkit.broadcastMessage(entity.getName());//8 EnderDragon
-////                    }
-////                });
+            case "parse" : {
+                if(!sender.isOp()) return false;
+                if(args.length == 2) GroovyManager.invoke("test.groovy", args[1]);
+                else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],args[2]);
+                return true;
+            }
+            case "migrate" : {
+                if (!sender.isOp()) return false;
+                FileUpdater.migrate();
+                return true;
+            }
+//            case "worlds" : {
+//                if(!sender.isOp()){
+//                    Lang.sendFeedback(sender,Lang.command_no_permission);
+//                    return false;
+//                }
+//                if(args.length < 2) break;
+//                switch (args[1].toLowerCase()){
+//                    case "list" : {
 //
-//                return true;
+//                    }
+//                }
+//                break;
 //            }
             case "action" : {
                 if(!sender.isOp()){
@@ -133,6 +130,8 @@ public class MainCommand implements CommandExecutor {
                     DragonManager.initiateRespawn(sender,builder.toString(),args[1]);
                     return true;
                 }
+                //unreachable
+                break;
             }
             case "respawn" : {//ed respawn (world_name)
                 if(!sender.hasPermission("ed.respawn")){
@@ -160,6 +159,7 @@ public class MainCommand implements CommandExecutor {
                     DragonManager.initiateRespawn(sender,builder.toString());
                     return true;
                 }
+                //unreachable
             }
             case "respawn_cd" : {
                 if(!sender.hasPermission("ed.respawn")){

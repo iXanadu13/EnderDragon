@@ -1,4 +1,4 @@
-version: 2.4.0
+version: 2.5.0
 
 #This is used for plugin internal identification.
 #Please make sure the value is unique among all the types of dragons
@@ -124,6 +124,11 @@ bossbar:
 
   #enable:SOLID,SEGMENTED_6,SEGMENTED_10,SEGMENTED_12,SEGMENTED_20
   style: 'SOLID'
+
+  # [true/false]
+  create_frog: true
+  darken_sky: true
+  play_boss_music: true
 
 effect_cloud:
   #enter a double that above 0

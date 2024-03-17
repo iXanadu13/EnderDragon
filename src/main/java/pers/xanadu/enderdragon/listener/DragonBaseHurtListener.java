@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import pers.xanadu.enderdragon.event.DragonDamageByPlayerEvent;
+import pers.xanadu.enderdragon.manager.WorldManager;
 
 import static pers.xanadu.enderdragon.EnderDragon.pm;
 
@@ -17,6 +18,7 @@ public class DragonBaseHurtListener implements Listener {
         Entity victim = e.getEntity();
         Entity entity = e.getDamager();
         if(victim instanceof EnderDragon){
+            if(!WorldManager.enable_worlds.contains(victim.getWorld().getName())) return;
             EnderDragon dragon = (EnderDragon) victim;
             if(entity instanceof Player){
                 Player player = (Player) entity;

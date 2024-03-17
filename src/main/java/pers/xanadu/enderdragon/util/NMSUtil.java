@@ -1,18 +1,14 @@
 package pers.xanadu.enderdragon.util;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.jetbrains.annotations.TestOnly;
 import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.config.Config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 
 public class NMSUtil {
@@ -26,18 +22,13 @@ public class NMSUtil {
      */
     private Method asCraftCopy;
     private Method NMSItemStack_save;
-    private Method NMSItemStack_setTag;
     private Method cpdToEi;
     private Method stringToCPD;
     private Method stringToNBTBase;
-    private Method serializeNBTBase;
-    private Method deserializeObject;
     private Method PDCtoCPD;
     private Method PersistentDataContainer_putAll;
     private Method NBTTagCompound_set;
     private Field unhandledTags;
-    private Field internalTag;
-    private Field MOJANGSON_PARSER;
     private Field world_c_environment;
     private Field NBTTagCompound_map;
     private Class<?> WorldClass;
@@ -51,7 +42,6 @@ public class NMSUtil {
     private Class<?> NBTTagCompoundClass;
     private Class<?> NBTBaseClass;
     private Class<?> MojangsonParserClass;
-    private Class<?> CraftNBTTagConfigSerializerClass;
     private Class<?> CraftPersistentDataContainerClass;
 
     public void init(){
@@ -70,8 +60,6 @@ public class NMSUtil {
             this.CraftMetaItemClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftMetaItem");
             this.unhandledTags = CraftMetaItemClass.getDeclaredField("unhandledTags");
             unhandledTags.setAccessible(true);
-            this.internalTag = CraftMetaItemClass.getDeclaredField("internalTag");
-            internalTag.setAccessible(true);
             this.NMSItemStackClass = CraftItemStackClass.getDeclaredField("handle").getType();
             this.CraftEntityClass = Class.forName("org.bukkit.craftbukkit."+version+".entity.CraftEntity");
             init_NBTTagCompoundClass();
@@ -84,7 +72,6 @@ public class NMSUtil {
             this.asCraftMirror = CraftItemStackClass.getMethod("asCraftMirror",NMSItemStackClass);
             this.asCraftCopy = CraftItemStackClass.getMethod("asCraftCopy",ItemStack.class);
             this.NMSItemStack_save = NMSItemStackClass.getMethod(getMethodName(ReflectiveMethod.NMSItemStack_save),NBTTagCompoundClass);
-            this.NMSItemStack_setTag = NMSItemStackClass.getMethod(getMethodName(ReflectiveMethod.NMSItemStack_setTag),NBTTagCompoundClass);
             if(Version.mcMainVersion>=13) this.cpdToEi = NMSItemStackClass.getMethod("a",NBTTagCompoundClass);
 
             if(Version.mcMainVersion<=16) this.MojangsonParserClass = Class.forName("net.minecraft.server."+version+".MojangsonParser");
@@ -93,13 +80,6 @@ public class NMSUtil {
             this.stringToNBTBase = MojangsonParserClass.getDeclaredMethod(getMethodName(ReflectiveMethod.MojangsonParser_parseLiteral),String.class);
             stringToNBTBase.setAccessible(true);
 
-            if(Version.mcMainVersion>13 || "v1_13_R2".equals(Version.getVersion())){
-                this.CraftNBTTagConfigSerializerClass = Class.forName("org.bukkit.craftbukkit." + version + ".util.CraftNBTTagConfigSerializer");
-                this.serializeNBTBase = CraftNBTTagConfigSerializerClass.getMethods()[0];
-                this.deserializeObject = CraftNBTTagConfigSerializerClass.getMethod("deserialize",Object.class);
-                this.MOJANGSON_PARSER = CraftNBTTagConfigSerializerClass.getDeclaredField("MOJANGSON_PARSER");
-                MOJANGSON_PARSER.setAccessible(true);
-            }
             if(Version.mcMainVersion>=14){
                 this.CraftPersistentDataContainerClass = Class.forName("org.bukkit.craftbukkit." + version + ".persistence.CraftPersistentDataContainer");
                 this.PDCtoCPD = CraftPersistentDataContainerClass.getDeclaredMethod("toTagCompound");
@@ -123,16 +103,6 @@ public class NMSUtil {
             e.printStackTrace();
         }
     }
-//    public Object getMetaCPD(ItemMeta meta){
-//        try{
-//            Object craft_meta = CraftMetaItemClass.cast(meta);
-//            Object internalTag = this.internalTag.get(craft_meta);
-//            return internalTag;
-//        }catch (ReflectiveOperationException e){
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 
     /**
      * 只保留物品type和amount
@@ -175,14 +145,6 @@ public class NMSUtil {
             return null;
         }
     }
-    public Object StringParseLiteral(final String str){
-        try{
-            return stringToNBTBase.invoke(MOJANGSON_PARSER.get(null),str);
-        }catch (ReflectiveOperationException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
     public void setPersistentDataContainer(final PersistentDataContainer dataContainer,final Object cpd){
         try{
             Object PDC = CraftPersistentDataContainerClass.cast(dataContainer);
@@ -201,55 +163,6 @@ public class NMSUtil {
         }
     }
 
-    public Object deserializeObject(final Object object){
-        try{
-            return deserializeObject.invoke(null,object);
-        }catch (ReflectiveOperationException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-    public Object serializeNBTBase(final Object nbt_base){
-        try{
-            return serializeNBTBase.invoke(null, nbt_base);
-        }catch (ReflectiveOperationException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-    @TestOnly
-    public void setUnhandledTags(final ItemMeta meta, Map<String,?> unhandledTags){
-        try{
-            Object craft_meta = CraftMetaItemClass.cast(meta);
-            this.unhandledTags.set(craft_meta, unhandledTags);
-        }catch (ReflectiveOperationException e){
-            e.printStackTrace();
-        }
-    }
-    /**
-     * @return meta中unhandledTags的引用
-     */
-    @TestOnly
-    public Map<String,Object> getUnhandledTags(final ItemMeta meta){
-        try{
-            Object craft_meta = CraftMetaItemClass.cast(meta);
-            Object unhandledTags = this.unhandledTags.get(craft_meta);
-            return (Map<String, Object>) unhandledTags;
-        }catch (ReflectiveOperationException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-    public ItemStack applyItemTag(final ItemStack item,final Object cpd){
-        try{
-            Object ei = asNMSCopy.invoke(null,item);
-            NMSItemStack_setTag.invoke(ei,cpd);
-            return (ItemStack) asBukkitCopy.invoke(null,ei);
-        }catch (ReflectiveOperationException e){
-            e.printStackTrace();
-            return new ItemStack(Material.AIR);
-        }
-    }
     public String getNBT(final ItemStack item){
         try{
             Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);//浅拷贝unhandledTags
