@@ -1,5 +1,6 @@
 package pers.xanadu.enderdragon.listener;
 
+import com.ericdebouwer.petdragon.api.PetDragonAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -15,8 +16,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.event.DragonRespawnPostEvent;
+import pers.xanadu.enderdragon.hook.HookManager;
 import pers.xanadu.enderdragon.manager.DamageManager;
-import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.WorldManager;
 import pers.xanadu.enderdragon.metadata.DragonInfo;
 import pers.xanadu.enderdragon.metadata.MyDragon;
@@ -33,6 +34,10 @@ public class DragonSpawnListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void OnDragonSpawn(final CreatureSpawnEvent e){
         if(!(e.getEntity() instanceof EnderDragon)) return;
+        //compatibility with plugin PetDragon
+        if (HookManager.isPetDragonInstalled()){
+            if (PetDragonAPI.getInstance().isPetDragon(e.getEntity())) return;
+        }
         if(!WorldManager.enable_worlds.contains(e.getEntity().getWorld().getName())) return;
         if(Config.blacklist_spawn_reason.contains(e.getSpawnReason().name())) return;
         EnderDragon dragon = (EnderDragon) e.getEntity();
