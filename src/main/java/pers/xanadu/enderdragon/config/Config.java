@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -21,6 +22,7 @@ public class Config {
     public static boolean advanced_setting_save_respawn_status;
     public static boolean advanced_setting_save_bossbar;
     public static boolean advanced_setting_glowing_fix;
+    //public static boolean advanced_setting_can_spawn_not_the_end;
     public static boolean advanced_setting_backslash_split_reward;
     public static String damage_visible_mode;
     public static int damage_statistics_limit;
@@ -98,10 +100,7 @@ public class Config {
             }
         } catch (IOException ignored) {}
     }
-    public static void copyFile(String source, String dest,boolean replace) {
-        if (source == null || source.equals("")) return;
-        source = source.replace('\\', '/');
-        File inFile = new File("plugins/EnderDragon", source);
+    public static void copyFile(File source, String dest, boolean replace) {
         File outFile = new File("plugins/EnderDragon", dest);
         int lastIndex = dest.lastIndexOf('/');
         File outDir = new File("plugins/EnderDragon", dest.substring(0, Math.max(lastIndex, 0)));
@@ -110,8 +109,8 @@ public class Config {
         }
         try {
             if (!outFile.exists() || replace) {
-                InputStream in = new FileInputStream(inFile);
-                OutputStream out = new FileOutputStream(outFile);
+                InputStream in = Files.newInputStream(source.toPath());
+                OutputStream out = Files.newOutputStream(outFile.toPath());
                 byte[] buf = new byte[1024];
                 int len;
                 while ((len = in.read(buf)) > 0) {
@@ -121,8 +120,14 @@ public class Config {
                 in.close();
             }
         } catch (IOException ignored) {
-            Lang.error("Failed to copy file: "+inFile.getPath()+" -> "+outFile.getPath());
+            Lang.error("Failed to copy file: "+source.getPath()+" -> "+outFile.getPath());
         }
+    }
+    public static void copyFile(String source, String dest,boolean replace) {
+        if (source == null || source.equals("")) return;
+        source = source.replace('\\', '/');
+        File inFile = new File("plugins/EnderDragon", source);
+        copyFile(inFile, dest, replace);
     }
     public static void saveDirectoryResource(String srcDirectory,boolean replace) {
         String destDirectory = new File(plugin.getDataFolder(),srcDirectory).getPath();

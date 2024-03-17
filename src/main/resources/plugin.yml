@@ -1,5 +1,5 @@
 name: EnderDragon
-version: 2.5.0-dev
+version: 2.5.0
 main: pers.xanadu.enderdragon.EnderDragon
 author: Xanadu13
 api-version: 1.13

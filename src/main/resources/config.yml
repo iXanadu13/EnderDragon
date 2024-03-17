@@ -96,5 +96,7 @@ advanced_setting:
   world_env_fix: false
   save_respawn_status: false
   save_bossbar: false
+  # to-do
+  # can_spawn_not_the_end: false
   backslash_split:
     reward: false

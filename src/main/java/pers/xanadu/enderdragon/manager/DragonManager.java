@@ -27,6 +27,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +38,8 @@ public class DragonManager {
     static final ArrayList<MyDragon> dragons = new ArrayList<>();
     static final Map<String, MyDragon> mp = new HashMap<>();
     public static List<String> dragon_names = new ArrayList<>();
+    public static final Map<UUID,DragonInfo> existing_dragon = new ConcurrentHashMap<>();
+    public static final Map<String,DragonInfo> main_dragon = new ConcurrentHashMap<>();
     private static int sum = 0;
     private static final int[][] nxt = {{3,0},{0,3},{-3,0},{0,-3}};
     private static final int[][] nxt_2 = {{2,0},{0,2},{-2,0},{0,-2}};
@@ -483,6 +486,39 @@ public class DragonManager {
             return true;
         } catch (ReflectiveOperationException e) {
             return false;
+        }
+    }
+
+    /**
+     * Only used to initialize. DON'T use this if speed is essential.
+     * @param world world
+     * @return The dragon found in this world.
+     */
+    public static EnderDragon getEnderDragon(final World world){
+        if(world.getEnvironment() != World.Environment.THE_END){
+            return world.getEntitiesByClass(EnderDragon.class).iterator().next();
+        }
+        if(Version.mcMainVersion >= 16){
+            DragonBattle battle = world.getEnderDragonBattle();
+            assert battle != null;
+            return battle.getEnderDragon();
+        }
+        try {
+            Object battle = getEnderDragonBattle(world);
+            assert battle != null;
+            Field k = EnderDragonBattleClass.getDeclaredField("k");
+            k.setAccessible(true);
+            Object dragonKilled = k.get(battle);
+            if((boolean) dragonKilled) return null;
+            Field m = EnderDragonBattleClass.getDeclaredField("m");
+            m.setAccessible(true);
+            Object uuid = m.get(battle);
+//            Field d = EnderDragonBattleClass.getDeclaredField("d");
+//            d.setAccessible(true);
+//            Object worldServer = d.get(battle);
+            return (EnderDragon) Bukkit.getEntity((UUID) uuid);
+        } catch (ReflectiveOperationException e) {
+            return null;
         }
     }
     public static Location getEndPortalLocation(final World world){

@@ -97,5 +97,7 @@ advanced_setting:
   world_env_fix: false
   save_respawn_status: false
   save_bossbar: false
+  # to do: 允许在非末地环境使用/ed spawn或respawn复活末影龙
+  # can_spawn_not_the_end: false
   backslash_split:
     reward: false
