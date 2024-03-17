@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.v1_13_R2.util.CraftChatMessage;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.metadata.MyDragon;
-import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
+import pers.xanadu.enderdragon.nms.BossBar.IBossBarManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static pers.xanadu.enderdragon.EnderDragon.plugin;
 
-public class BossBarManager implements I_BossBarManager {
+public class BossBarManager implements IBossBarManager {
     private Field BossBattleServer = null;
     public void saveBossBarData(List<World> worlds){
         File file = new File(plugin.getDataFolder(),"world_data.yml");
