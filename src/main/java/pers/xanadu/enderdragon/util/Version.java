@@ -1,10 +1,10 @@
 package pers.xanadu.enderdragon.util;
 
 import pers.xanadu.enderdragon.config.Lang;
-import pers.xanadu.enderdragon.nms.BossBar.I_BossBarManager;
-import pers.xanadu.enderdragon.nms.NMSItem.I_NMSItemManager;
-import pers.xanadu.enderdragon.nms.RespawnAnchor.I_RespawnAnchorManager;
-import pers.xanadu.enderdragon.nms.WorldData.I_WorldDataManager;
+import pers.xanadu.enderdragon.nms.BossBar.IBossBarManager;
+import pers.xanadu.enderdragon.nms.NMSItem.INMSItemManager;
+import pers.xanadu.enderdragon.nms.RespawnAnchor.IRespawnAnchorManager;
+import pers.xanadu.enderdragon.nms.WorldData.IWorldDataManager;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -13,6 +13,7 @@ public class Version {
     public static final String lang = "2.2.0";
     public static final String config = "2.3.0";
     public static final String data = "2.2.0";
+    public static final String reward = "2.5.0";
     public static int mcMainVersion;
     public static int mcPatchVersion;
     private static String version = "no version found";
@@ -35,14 +36,14 @@ public class Version {
         }catch(ReflectiveOperationException ignored){}
 
     }
-    public static I_NMSItemManager getNMSItemManager(){
+    public static INMSItemManager getNMSItemManager(){
         switch (version){
             case "v1_12_R1" : return new pers.xanadu.enderdragon.nms.NMSItem.v1_12_R1.NMSItemManager();
             case "v1_13_R1" : return new pers.xanadu.enderdragon.nms.NMSItem.v1_13_R1.NMSItemManager();
             default: return new pers.xanadu.enderdragon.nms.NMSItem.v1_13_R2_above.NMSItemManager();
         }
     }
-    public static I_BossBarManager getBossBarManager(){
+    public static IBossBarManager getBossBarManager(){
         switch(version){
             case "v1_12_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_12_R1.BossBarManager();
             case "v1_13_R1" : return new pers.xanadu.enderdragon.nms.BossBar.v1_13_R1.BossBarManager();
@@ -52,7 +53,7 @@ public class Version {
             default: return new pers.xanadu.enderdragon.nms.BossBar.v1_16_R1_above.BossBarManager();
         }
     }
-    public static I_WorldDataManager getWorldDataManager(){
+    public static IWorldDataManager getWorldDataManager(){
         switch (version){
             case "v1_12_R1" : return new pers.xanadu.enderdragon.nms.WorldData.v1_12_R1.WorldDataManager();
             case "v1_13_R1" : return new pers.xanadu.enderdragon.nms.WorldData.v1_13_R1.WorldDataManager();
@@ -65,7 +66,7 @@ public class Version {
             default : return new pers.xanadu.enderdragon.nms.WorldData.v1_17_above.WorldDataManager();
         }
     }
-    public static I_RespawnAnchorManager getRespawnAnchorManager(){
+    public static IRespawnAnchorManager getRespawnAnchorManager(){
         switch (version){
             case "v1_12_R1" :
             case "v1_13_R1" :
