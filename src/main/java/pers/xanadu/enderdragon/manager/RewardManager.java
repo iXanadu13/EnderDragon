@@ -43,11 +43,6 @@ public class RewardManager {
                 }
             }
         }
-        if (ItemManager.isLegacy()){
-            Lang.error("I'm sorry that data_type 'nbt' and 'advanced' probably will be disabled in 1.20.5+");
-            Lang.error("It is recommended to migrate item configuration to bukkit format for compatibility.");
-            Lang.error("You can use /ed migrate to generate new config.");
-        }
     }
     public static void addItem(String key,Reward reward){
         addItem(key,reward.getItem(),reward.getChance());
