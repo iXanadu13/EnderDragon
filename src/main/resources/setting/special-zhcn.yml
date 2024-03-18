@@ -1,5 +1,5 @@
 #文件版本，请勿修改
-version: 2.5.0
+version: 2.4.0
 
 #用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
 unique_name: 'special001'
