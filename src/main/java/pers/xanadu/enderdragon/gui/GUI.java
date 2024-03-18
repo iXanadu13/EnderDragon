@@ -50,7 +50,7 @@ public class GUI {
         this.page = a;
         for(int i=0;i<this.slots.size();i++){
             GUISlot slot = this.slots.get(i);
-            if (slot instanceof ItemSlot) {
+            if (slot instanceof ItemSlot || slot instanceof DragonSlot) {
                 this.inv.setItem(i, new ItemStack(Material.AIR));
             }
         }

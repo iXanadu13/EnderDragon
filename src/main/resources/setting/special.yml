@@ -1,7 +1,7 @@
 ## Special thanks to Phaxius for the translation
 
 # File version, do not edit
-version: 2.5.0
+version: 2.4.0
 
 # Unique ID used by plugin to identify each type of dragon
 # unique_name needs to be different in each dragon settings file

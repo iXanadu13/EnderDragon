@@ -38,6 +38,23 @@ public abstract class GUISlot {
         return new EmptySlot();
     }
     protected enum DataType{
-        DEFAULT,NBT,ADVANCED
+        DEFAULT,NBT,ADVANCED,SIMPLE;
+        public static DataType fromString(String data_type){
+            if (data_type == null) return DEFAULT;
+            switch (data_type){
+                case "nbt": {
+                    return NBT;
+                }
+                case "advanced": {
+                    return ADVANCED;
+                }
+                case "simple": {
+                    return SIMPLE;
+                }
+                default: {
+                    return DEFAULT;
+                }
+            }
+        }
     }
 }
