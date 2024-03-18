@@ -6,11 +6,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pers.xanadu.enderdragon.gui.GUISlot;
 import pers.xanadu.enderdragon.gui.GUISlotType;
+import pers.xanadu.enderdragon.manager.ItemManager;
 
 import static pers.xanadu.enderdragon.manager.ItemManager.*;
 
 public class TipSlot extends GUISlot {
-    private ItemStack item;
+    private final ItemStack item;
     protected boolean hasDisableMode;
     protected ItemStack itemOnDisable;
 
@@ -18,6 +19,7 @@ public class TipSlot extends GUISlot {
         super(slotType);
         this.item = new ItemStack(material);
         ItemMeta meta = this.item.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(str);
         this.item.setItemMeta(meta);
     }
@@ -28,22 +30,25 @@ public class TipSlot extends GUISlot {
             this.hasDisableMode = true;
         }
         else this.hasDisableMode = false;
-        if(hasDisableMode){
-            if(data_type == DataType.NBT) this.itemOnDisable = readFromNBT(section,"data_disable");
-            else this.itemOnDisable = readFromBukkit(section,"data_disable");
-        }
-        String data_type = section.getString("data_type");
-        if("nbt".equals(data_type)) {
-            this.data_type = DataType.NBT;
-            this.item = readFromNBT(section,"data");
-        }
-        else if("advanced".equals(data_type)){
-            this.data_type = DataType.ADVANCED;
-            this.item = readFromAdvData(section,"data");
-        }
-        else {
-            this.data_type = DataType.DEFAULT;
-            this.item = readFromBukkit(section,"data");
+        this.data_type = DataType.fromString(section.getString("data_type"));
+        switch (data_type) {
+            case NBT:
+                ItemManager.getLegacy().compareAndSet(false,true);
+                this.item = readFromNBT(section,"data");
+                if(hasDisableMode) this.itemOnDisable = readFromNBT(section,"data_disable");
+                break;
+            case ADVANCED:
+                ItemManager.getLegacy().compareAndSet(false,true);
+                this.item = readFromAdvData(section,"data");
+                if(hasDisableMode) this.itemOnDisable = readFromAdvData(section,"data_disable");
+                break;
+            case SIMPLE:
+                this.item = readFromSimple(section,"data");
+                if(hasDisableMode) this.itemOnDisable = readFromSimple(section,"data_disable");
+                break;
+            default:
+                this.item = readFromBukkit(section,"data");
+                if(hasDisableMode) this.itemOnDisable = readFromBukkit(section,"data_disable");
         }
     }
 
