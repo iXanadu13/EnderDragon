@@ -1,5 +1,6 @@
 package pers.xanadu.enderdragon.config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -130,45 +131,113 @@ public class FileUpdater {
 //        Lang.warn("Attention: Please confirm the accuracy before using new config!");
     }
     public static void migrate(){
-        File folder = new File(plugin.getDataFolder(),"reward");
-        if (folder.exists()){
-            File[] files = folder.listFiles(f -> f.getName().endsWith(".yml"));
-            if (files == null || files.length == 0) {
-                Lang.warn("No files need to be migrated!");
-                return;
-            }
-            for (File file : files){
-                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-                Config.copyFile(file,"new/reward/"+file.getName(),true);
-                File gen_file = new File(plugin.getDataFolder(),"new/reward/"+file.getName());
-                YamlConfiguration new_cfg = YamlConfiguration.loadConfiguration(gen_file);
-                if(Config.advanced_setting_backslash_split_reward) new_cfg.options().pathSeparator('\\');
-                List<String> gen = new ArrayList<>();
-                List<String> list = config.getStringList("list");
-                for(String str : list){
-                    YamlConfiguration yml = new YamlConfiguration();
-                    if(Config.advanced_setting_backslash_split_reward) yml.options().pathSeparator('\\');
-                    try{
-                        yml.loadFromString(str);
-                        Reward reward = ItemManager.readAsReward(yml);
-                        if (reward == null) continue;
-                        gen.add(saveReward(reward));
-                    }catch (InvalidConfigurationException e){
-                        Lang.error(Lang.plugin_item_read_error + str);
-                    }
-                }
-                new_cfg.set("list",gen);
-                try{
-                    new_cfg.save(gen_file);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-            Lang.info("New reward config files are generated in plugins/EnderDragon/migrate.");
-        }
+        boolean b1 = handleRewards();
+        boolean b2 = handleGuiItems();
+        if (b1 || b2) Lang.info("New reward configuration files are generated in plugins/EnderDragon/migrate.");
         else Lang.warn("No files need to be migrated!");
     }
-    public static String saveReward(Reward reward){
+    private static boolean handleGuiItems(){
+        File folder = new File(plugin.getDataFolder(),"gui");
+        if (!folder.exists()) return false;
+        File[] files = folder.listFiles(f -> f.getName().endsWith(".yml"));
+        if (files == null || files.length == 0) {
+            return false;
+        }
+        for (File file : files){
+            Config.copyFile(file,"new/gui/"+file.getName(),true);
+            File gen_file = new File(plugin.getDataFolder(),"new/gui/"+file.getName());
+            YamlConfiguration cfg = YamlConfiguration.loadConfiguration(gen_file);
+            cfg.getKeys(false).forEach(key->{
+                ConfigurationSection gui = cfg.getConfigurationSection(key);
+                if (gui == null) return;
+                ConfigurationSection Items = gui.getConfigurationSection("Items");
+                if (Items == null) return;
+                Items.getKeys(false).forEach(ch -> {
+                    ConfigurationSection slot = Items.getConfigurationSection(ch);
+                    if (slot == null) return;
+                    if (!slot.contains("data")) return;
+                    ItemStack itemStack = readItemStack(slot,"data");
+                    ItemManager.save2section_simple(itemStack,slot,"data");
+                    if (!slot.contains("data_disable")) return;
+                    itemStack = readItemStack(slot,"data_disable");
+                    ItemManager.save2section_simple(itemStack,slot,"data_disable");
+                });
+                Items.getKeys(false).forEach(ch -> {
+                    ConfigurationSection slot = Items.getConfigurationSection(ch);
+                    if (slot == null) return;
+                    if (slot.contains("data_type")){
+                        slot.set("data_type","simple");
+                    }
+                    else if (slot.contains("data") || slot.contains("data_disable")) {
+                        slot.set("data_type","simple");
+                    }
+                });
+            });
+            try{
+                cfg.save(gen_file);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+    private static ItemStack readItemStack(ConfigurationSection section,final String path){
+        ItemStack itemStack;
+        final String type = section.getString("data_type","");
+        switch (type){
+            case "nbt":
+                itemStack = ItemManager.readFromNBT(section,path);
+                ItemManager.getLegacy().compareAndSet(false,true);
+                break;
+            case "advanced":
+                itemStack = ItemManager.readFromAdvData(section,path);
+                ItemManager.getLegacy().compareAndSet(false,true);
+                break;
+            case "simple":
+                itemStack = ItemManager.readFromSimple(section,path);
+                break;
+            default:
+                itemStack = ItemManager.readFromBukkit(section,path);
+        }
+        return itemStack;
+    }
+    private static boolean handleRewards(){
+        File folder = new File(plugin.getDataFolder(),"reward");
+        if (!folder.exists()) return false;
+        File[] files = folder.listFiles(f -> f.getName().endsWith(".yml"));
+        if (files == null || files.length == 0) {
+            return false;
+        }
+        for (File file : files){
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            Config.copyFile(file,"new/reward/"+file.getName(),true);
+            File gen_file = new File(plugin.getDataFolder(),"new/reward/"+file.getName());
+            YamlConfiguration new_cfg = YamlConfiguration.loadConfiguration(gen_file);
+            if(Config.advanced_setting_backslash_split_reward) new_cfg.options().pathSeparator('\\');
+            List<String> gen = new ArrayList<>();
+            List<String> list = config.getStringList("list");
+            for(String str : list){
+                YamlConfiguration yml = new YamlConfiguration();
+                if(Config.advanced_setting_backslash_split_reward) yml.options().pathSeparator('\\');
+                try{
+                    yml.loadFromString(str);
+                    Reward reward = ItemManager.readAsReward(yml);
+                    if (reward == null) continue;
+                    gen.add(saveReward(reward));
+                }catch (InvalidConfigurationException e){
+                    Lang.error(Lang.plugin_item_read_error + str);
+                }
+            }
+            new_cfg.set("list",gen);
+            try{
+                new_cfg.save(gen_file);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+    private static String saveReward(Reward reward){
         Chance chance = reward.getChance();
         ItemStack item = reward.getItem();
         double value = chance.getValue();
