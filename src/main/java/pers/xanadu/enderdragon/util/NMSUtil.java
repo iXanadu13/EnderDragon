@@ -34,7 +34,6 @@ public class NMSUtil {
     private Class<?> WorldClass;
     private Class<?> CraftWorldClass;
     private Class<?> WorldProviderClass;
-    //private Class<?> WorldProviderTheEndClass;
     private Class<?> CraftItemStackClass;
     private Class<?> CraftMetaItemClass;
     private Class<?> NMSItemStackClass;
