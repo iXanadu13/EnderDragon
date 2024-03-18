@@ -54,56 +54,50 @@ public class DragonManager {
     private static final Pattern pattern_attacker_top = Pattern.compile("%attacker_top_(\\d+)%");
 
     public static void reload(){
-        new BukkitRunnable(){
-            @Override
-            public void run(){
-                dragons.clear();
-                mp.clear();
-                dragon_names.clear();
-                sum = 0;
-                if(Config.dragon_setting_file == null){
-                    Lang.error("\"dragon_setting_file\" in config.yml is empty!");
-                    Lang.warn("Plugin will use the default config...");
-                    Config.dragon_setting_file = new ArrayList<>();
-                    Config.dragon_setting_file.add("default:5");
-                    Config.dragon_setting_file.add("special:5");
-                }
-                for(String str : Config.dragon_setting_file){
-                    String[] s = str.split(":");
-                    if(s.length != 2){
-                        Lang.error("\"dragon_setting_file\" in config.yml error! Key: " + str);
-                        continue;
-                    }
-                    String path = "setting/" + s[0] + ".yml";
-                    int edge = -1;
-                    try {
-                        edge = Integer.parseInt(s[1]);
-                    } catch (NumberFormatException ignored){}
-                    if(edge < 0) {
-                        Lang.error("\"dragon_setting_file\" in config.yml error! Key: " + str);
-                        continue;
-                    }
-                    File file = new File(plugin.getDataFolder(),path);
-                    if(!file.exists()) {
-                        try{
-                            plugin.saveResource("setting/"+file.getName(),false);
-                            file = new File(plugin.getDataFolder(),path);
-                        }catch (Exception ignored){
-                            Lang.error("Not Found setting/" + s[0] + ".yml ,skipped it.");
-                            continue;
-                        }
-                    }
-                    FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
-                    if(!Version.setting_dragon.equals(fc.getString("version"))){
-                        Lang.warn(Lang.plugin_wrong_file_version.replace("{file_name}", file.getName()));
-                    }
-                    readSettingFile(fc,edge);
-                }
-                dragons.sort((o1, o2) -> o2.priority - o1.priority);
-                RewardManager.reload();
+        dragons.clear();
+        mp.clear();
+        dragon_names.clear();
+        sum = 0;
+        if(Config.dragon_setting_file == null){
+            Lang.error("\"dragon_setting_file\" in config.yml is empty!");
+            Lang.warn("Plugin will use the default config...");
+            Config.dragon_setting_file = new ArrayList<>();
+            Config.dragon_setting_file.add("default:5");
+            Config.dragon_setting_file.add("special:5");
+        }
+        for(String str : Config.dragon_setting_file){
+            String[] s = str.split(":");
+            if(s.length != 2){
+                Lang.error("\"dragon_setting_file\" in config.yml error! Key: " + str);
+                continue;
             }
-        }.runTaskAsynchronously(plugin);
-
+            String path = "setting/" + s[0] + ".yml";
+            int edge = -1;
+            try {
+                edge = Integer.parseInt(s[1]);
+            } catch (NumberFormatException ignored){}
+            if(edge < 0) {
+                Lang.error("\"dragon_setting_file\" in config.yml error! Key: " + str);
+                continue;
+            }
+            File file = new File(plugin.getDataFolder(),path);
+            if(!file.exists()) {
+                try{
+                    plugin.saveResource("setting/"+file.getName(),false);
+                    file = new File(plugin.getDataFolder(),path);
+                }catch (Exception ignored){
+                    Lang.error("Not Found setting/" + s[0] + ".yml ,skipped it.");
+                    continue;
+                }
+            }
+            FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
+            if(!Version.setting_dragon.equals(fc.getString("version"))){
+                Lang.warn(Lang.plugin_wrong_file_version.replace("{file_name}", file.getName()));
+            }
+            readSettingFile(fc,edge);
+        }
+        dragons.sort((o1, o2) -> o2.priority - o1.priority);
+        RewardManager.reload();
     }
     public static MyDragon judge(){
         if(Config.special_dragon_jude_mode.equalsIgnoreCase("weight")){

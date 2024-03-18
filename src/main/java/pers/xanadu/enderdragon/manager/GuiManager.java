@@ -17,27 +17,22 @@ import static pers.xanadu.enderdragon.EnderDragon.plugin;
 public class GuiManager {
     private static HashMap<String, GUIWrapper> f = new HashMap<>();
     public static void loadGui(){
-        new BukkitRunnable(){
-            @Override
-            public void run(){
-                File folder = new File(plugin.getDataFolder(),"gui");
-                if(!folder.exists()) return;
-                File[] files = folder.listFiles();
-                if(files == null) return;
-                for(File file : files){
-                    if(!file.getName().endsWith(".yml")) continue;
-                    Lang.info(Lang.plugin_read_file + file.getName());
-                    FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
-                    Iterator it = fileConfiguration.getKeys(false).iterator();
-                    while (it.hasNext()){
-                        String name = (String) it.next();
-                        ConfigurationSection section = fileConfiguration.getConfigurationSection(name);
-                        GUIWrapper guiWrapper = new GUIWrapper(section);
-                        f.put(name, guiWrapper);
-                    }
-                }
+        File folder = new File(plugin.getDataFolder(),"gui");
+        if(!folder.exists()) return;
+        File[] files = folder.listFiles();
+        if(files == null) return;
+        for(File file : files){
+            if(!file.getName().endsWith(".yml")) continue;
+            Lang.info(Lang.plugin_read_file + file.getName());
+            FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
+            Iterator it = fileConfiguration.getKeys(false).iterator();
+            while (it.hasNext()){
+                String name = (String) it.next();
+                ConfigurationSection section = fileConfiguration.getConfigurationSection(name);
+                GUIWrapper guiWrapper = new GUIWrapper(section);
+                f.put(name, guiWrapper);
             }
-        }.runTaskAsynchronously(plugin);
+        }
     }
     public static void disable(){
         f.clear();
