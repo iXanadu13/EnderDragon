@@ -9,11 +9,11 @@ import pers.xanadu.enderdragon.nms.WorldData.IWorldDataManager;
 import static org.bukkit.Bukkit.getServer;
 
 public class Version {
-    public static final String setting_dragon = "2.5.0";
+    public static final String setting_dragon = "2.4.0";
     public static final String lang = "2.2.0";
     public static final String config = "2.3.0";
     public static final String data = "2.2.0";
-    public static final String reward = "2.5.0";
+    public static final String reward = "2.1.0";
     public static int mcMainVersion;
     public static int mcPatchVersion;
     private static String version = "no version found";
