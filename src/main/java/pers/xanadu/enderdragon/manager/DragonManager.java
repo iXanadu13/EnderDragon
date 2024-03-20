@@ -490,7 +490,8 @@ public class DragonManager {
      */
     public static EnderDragon getEnderDragon(final World world){
         if(world.getEnvironment() != World.Environment.THE_END){
-            return world.getEntitiesByClass(EnderDragon.class).iterator().next();
+            Iterator<EnderDragon> iterator = world.getEntitiesByClass(EnderDragon.class).iterator();
+            return iterator.hasNext()?iterator.next():null;
         }
         if(Version.mcMainVersion >= 16){
             DragonBattle battle = world.getEnderDragonBattle();
