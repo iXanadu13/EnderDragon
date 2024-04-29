@@ -1,5 +1,6 @@
 package pers.xanadu.enderdragon.util;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
@@ -14,19 +15,20 @@ import java.util.Map;
 public class NMSUtil {
     private Method getNMSWord;
     private Method asNMSCopy;
-    private Method copyNMSStack;
     private Method asBukkitCopy;
-    private Method asCraftMirror;
     /**
      * 浅拷贝unhandledTags
      */
     private Method asCraftCopy;
+    @Deprecated
     private Method NMSItemStack_save;
+    @Deprecated
     private Method cpdToEi;
     private Method stringToCPD;
-    private Method stringToNBTBase;
     private Method PDCtoCPD;
+    @Deprecated
     private Method PersistentDataContainer_putAll;
+    @Deprecated
     private Method NBTTagCompound_set;
     private Field unhandledTags;
     private Field world_c_environment;
@@ -35,11 +37,14 @@ public class NMSUtil {
     private Class<?> CraftWorldClass;
     private Class<?> WorldProviderClass;
     private Class<?> CraftItemStackClass;
+    @Getter
     private Class<?> CraftMetaItemClass;
+    @Getter
     private Class<?> NMSItemStackClass;
     private Class<?> CraftEntityClass;
     private Class<?> NBTTagCompoundClass;
     private Class<?> NBTBaseClass;
+    @Getter
     private Class<?> MojangsonParserClass;
     private Class<?> CraftPersistentDataContainerClass;
 
@@ -63,26 +68,30 @@ public class NMSUtil {
             this.CraftEntityClass = Class.forName("org.bukkit.craftbukkit."+version+".entity.CraftEntity");
             init_NBTTagCompoundClass();
             init_NBTBaseClass();
-            init_NBTTagCompound_map();
-            this.NBTTagCompound_set = NBTTagCompoundClass.getMethod(getMethodName(ReflectiveMethod.NBTTagCompound_set),String.class,NBTBaseClass);
+            if (!Version.isNBT_UPDATE()){
+                init_NBTTagCompound_map();
+                this.NBTTagCompound_set = NBTTagCompoundClass.getMethod(getMethodName(ReflectiveMethod.NBTTagCompound_set),String.class,NBTBaseClass);
+            }
             this.asNMSCopy = CraftItemStackClass.getMethod("asNMSCopy",ItemStack.class);
-            this.copyNMSStack = CraftItemStackClass.getMethod("copyNMSStack",NMSItemStackClass,int.class);
             this.asBukkitCopy = CraftItemStackClass.getMethod("asBukkitCopy",NMSItemStackClass);
-            this.asCraftMirror = CraftItemStackClass.getMethod("asCraftMirror",NMSItemStackClass);
             this.asCraftCopy = CraftItemStackClass.getMethod("asCraftCopy",ItemStack.class);
-            this.NMSItemStack_save = NMSItemStackClass.getMethod(getMethodName(ReflectiveMethod.NMSItemStack_save),NBTTagCompoundClass);
-            if(Version.mcMainVersion>=13) this.cpdToEi = NMSItemStackClass.getMethod("a",NBTTagCompoundClass);
+
+            if (!Version.isNBT_UPDATE()){
+                this.NMSItemStack_save = NMSItemStackClass.getMethod(getMethodName(ReflectiveMethod.NMSItemStack_save),NBTTagCompoundClass);
+                if(Version.mcMainVersion>=13) this.cpdToEi = NMSItemStackClass.getMethod("a",NBTTagCompoundClass);
+            }
+
 
             if(Version.mcMainVersion<=16) this.MojangsonParserClass = Class.forName("net.minecraft.server."+version+".MojangsonParser");
             else this.MojangsonParserClass = Class.forName("net.minecraft.nbt.MojangsonParser");
             this.stringToCPD = MojangsonParserClass.getMethod(getMethodName(ReflectiveMethod.MojangsonParser_parse),String.class);
-            this.stringToNBTBase = MojangsonParserClass.getDeclaredMethod(getMethodName(ReflectiveMethod.MojangsonParser_parseLiteral),String.class);
-            stringToNBTBase.setAccessible(true);
 
             if(Version.mcMainVersion>=14){
                 this.CraftPersistentDataContainerClass = Class.forName("org.bukkit.craftbukkit." + version + ".persistence.CraftPersistentDataContainer");
                 this.PDCtoCPD = CraftPersistentDataContainerClass.getDeclaredMethod("toTagCompound");
-                this.PersistentDataContainer_putAll = CraftPersistentDataContainerClass.getDeclaredMethod("putAll",NBTTagCompoundClass);
+                if (!Version.isNBT_UPDATE()){
+                    this.PersistentDataContainer_putAll = CraftPersistentDataContainerClass.getDeclaredMethod("putAll",NBTTagCompoundClass);
+                }
             }
 
 
@@ -115,6 +124,7 @@ public class NMSUtil {
         Object new_cpd = getNBTTagCompound(self);
         return EnderDragon.getInstance().getNMSItemManager().cpdToItem(new_cpd);
     }
+    @SuppressWarnings("unchecked")
     public Map<String,Object> cpdToMap(final Object cpd){
         try{
             return (Map<String, Object>) NBTTagCompound_map.get(cpd);
@@ -123,6 +133,8 @@ public class NMSUtil {
             return null;
         }
     }
+    @SuppressWarnings({"unchecked"})
+    @Deprecated
     public Object getNBTTagCompound(final Map<String,Object> mp){
         try{
             Object cpd = NBTTagCompoundClass.newInstance();
@@ -144,6 +156,7 @@ public class NMSUtil {
             return null;
         }
     }
+    @Deprecated
     public void setPersistentDataContainer(final PersistentDataContainer dataContainer,final Object cpd){
         try{
             Object PDC = CraftPersistentDataContainerClass.cast(dataContainer);
@@ -162,6 +175,7 @@ public class NMSUtil {
         }
     }
 
+    @Deprecated
     public String getNBT(final ItemStack item){
         try{
             Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);//浅拷贝unhandledTags
@@ -173,6 +187,7 @@ public class NMSUtil {
             return "{id:\"minecraft:air\"}";
         }
     }
+    @Deprecated
     public Object getCPD(final ItemStack item){
         try{
             Object ci = CraftItemStackClass.isInstance(item)?CraftItemStackClass.cast(item):asCraftCopy.invoke(null,item);//浅拷贝unhandledTags
@@ -194,6 +209,7 @@ public class NMSUtil {
     /**
      *  仅1.13+可用
      */
+    @Deprecated
     public ItemStack getItemStack(final Object cpd){
         try{
             Object ei = cpdToEi.invoke(null,cpd);
@@ -207,6 +223,7 @@ public class NMSUtil {
     /**
      *  仅1.13+可用
      */
+    @Deprecated
     public ItemStack getItemStack(final String nbt){
         try{
             Object cpd = stringToCPD.invoke(null,nbt);
@@ -241,6 +258,7 @@ public class NMSUtil {
         if (this.CraftWorldClass.isInstance(ThisWorld)) return this.CraftWorldClass.cast(ThisWorld);
         return null;
     }
+    @SuppressWarnings("unused")
     public Object getWorld_e(final World world){
         try {
             Object world_c = getCraftWorld(world);
@@ -249,12 +267,6 @@ public class NMSUtil {
             e.printStackTrace();
         }
         return null;
-    }
-    public Class<?> getNBTBaseClass(){
-        return this.NBTBaseClass;
-    }
-    public Class<?> getNBTTagCompoundClass(){
-        return this.NBTTagCompoundClass;
     }
     public Class<?> getWorldClass(){
         return this.WorldClass;
@@ -320,7 +332,7 @@ public class NMSUtil {
             e.printStackTrace();
         }
     }
-    private static enum ReflectiveMethod {
+    private enum ReflectiveMethod {
         NMSItemStack_save,
         NMSItemStack_setTag,
         MojangsonParser_parse,

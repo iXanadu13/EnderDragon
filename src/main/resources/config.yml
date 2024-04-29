@@ -73,7 +73,7 @@ blacklist_worlds:
 # example: [COMMAND,CUSTOM]
 blacklist_spawn_reason: []
 
-#optional: [default/nbt/advanced]
+#optional: [default/nbt(<=1.20.4)/advanced(<=1.20.4)]
 item_format:
   reward: default
 

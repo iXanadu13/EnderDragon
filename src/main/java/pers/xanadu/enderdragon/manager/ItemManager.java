@@ -1,6 +1,5 @@
 package pers.xanadu.enderdragon.manager;
 
-import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -20,11 +19,8 @@ import pers.xanadu.enderdragon.reward.Chance;
 import pers.xanadu.enderdragon.util.Version;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ItemManager {
-    @Getter
-    private static final AtomicBoolean legacy = new AtomicBoolean(false);
     public static String write(Reward reward){
         Chance chance = reward.getChance();
         return write(reward.getItem(),chance.getValue(),chance.getStr(),reward.getName());
@@ -84,11 +80,9 @@ public class ItemManager {
         //data_type may be null
         ItemStack item;
         if("nbt".equals(data_type)) {
-            legacy.compareAndSet(false,true);
             item = readFromNBT(section0,"data");
         }
         else if("advanced".equals(data_type)) {
-            legacy.compareAndSet(false,true);
             item = readFromAdvData(section0, "data");
         }
         else {
@@ -101,6 +95,13 @@ public class ItemManager {
         return new Reward(item,new Chance(d0, str));
     }
     public static ItemStack readFromAdvData(ConfigurationSection section, String path){
+        if (Version.isNBT_UPDATE()){
+            throw new UnsupportedOperationException(
+                    "I'm sorry that data_type 'nbt' and 'advanced' have been temporarily disabled since 1.20.5.\n"+
+                    "You can migrate configurations through '/ed migrate' EnderDragon v2.5.1.\n"+
+                    "I will reconstruct this plugin add restore this function in the future."
+            );
+        }
         ConfigurationSection data = section.getConfigurationSection(path);
         if(data == null) return new ItemStack(Material.AIR);
         String type = data.getString("type");
@@ -221,6 +222,13 @@ public class ItemManager {
         return item;
     }
     public static ItemStack readFromNBT(ConfigurationSection section, String path){
+        if (Version.isNBT_UPDATE()){
+            throw new UnsupportedOperationException(
+                    "I'm sorry that data_type 'nbt' and 'advanced' have been temporarily disabled since 1.20.5.\n"+
+                    "You can migrate configurations through '/ed migrate' EnderDragon v2.5.1.\n"+
+                    "I will reconstruct this plugin add restore this function in the future."
+            );
+        }
         String nbt = section.getString(path);
         if (nbt == null) return new ItemStack(Material.AIR);
         return EnderDragon.getInstance().getNMSItemManager().readAsItem(nbt);

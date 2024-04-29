@@ -1,5 +1,6 @@
 package pers.xanadu.enderdragon.manager;
 
+import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -12,7 +13,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.config.Lang;
@@ -35,7 +35,11 @@ import java.util.regex.Pattern;
 import static pers.xanadu.enderdragon.EnderDragon.*;
 
 public class DragonManager {
-    static final ArrayList<MyDragon> dragons = new ArrayList<>();
+    /**
+     * 底层是unmodifiableList
+     */
+    @Getter
+    static List<MyDragon> dragons;
     static final Map<String, MyDragon> mp = new HashMap<>();
     public static List<String> dragon_names = new ArrayList<>();
     public static final Map<UUID,DragonInfo> existing_dragon = new ConcurrentHashMap<>();
@@ -54,7 +58,7 @@ public class DragonManager {
     private static final Pattern pattern_attacker_top = Pattern.compile("%attacker_top_(\\d+)%");
 
     public static void reload(){
-        dragons.clear();
+        final List<MyDragon> dragons = new ArrayList<>();
         mp.clear();
         dragon_names.clear();
         sum = 0;
@@ -94,9 +98,10 @@ public class DragonManager {
             if(!Version.setting_dragon.equals(fc.getString("version"))){
                 Lang.warn(Lang.plugin_wrong_file_version.replace("{file_name}", file.getName()));
             }
-            readSettingFile(fc,edge);
+            readSettingFile(fc,edge,dragons);
         }
         dragons.sort((o1, o2) -> o2.priority - o1.priority);
+        DragonManager.dragons = Collections.unmodifiableList(dragons);
         RewardManager.reload();
     }
     public static MyDragon judge(){
@@ -119,16 +124,11 @@ public class DragonManager {
             }
             return cur;
         }
-        else if(Config.special_dragon_jude_mode.equalsIgnoreCase("edge")){
-            int cnt = 0, random = ThreadLocalRandom.current().nextInt(0, sum);
-            for(MyDragon cur : dragons){
-                if(cnt <= random && cnt + cur.edge > random){
-                    return cur;
-                }
-                cnt += cur.edge;
-            }
-            Lang.error("\"edge\" in \"special_dragon_jude_mode\" of config.yml is deprecated!Please use \"weight\" instead.");
+        else{
+            Lang.error("Unknown 'special_dragon_jude_mode' of config.yml.");
+            Lang.error("Possible solutions: pc, weight(named 'edge' in old versions).");
         }
+        //unreachable
         return null;
     }
     public static void setSpecialKey(Entity e, String key){
@@ -140,7 +140,7 @@ public class DragonManager {
         }
         return null;
     }
-    public static void readSettingFile(FileConfiguration f,int edge){
+    public static void readSettingFile(FileConfiguration f,int edge,List<MyDragon> dragons){
         MyDragon myDragon = new MyDragon();
         myDragon.unique_name = f.getString("unique_name","default");
         if(mp.containsKey(myDragon.unique_name)){
@@ -330,7 +330,7 @@ public class DragonManager {
         }
     }
     public static void disable(){
-        dragons.clear();
+        dragons = null;
         mp.clear();
         dragon_names.clear();
     }
@@ -345,13 +345,6 @@ public class DragonManager {
         return mp.get(unique_name);
     }
 
-    /**
-     * 请勿修改得到的List
-     */
-    @Deprecated
-    public static List<MyDragon> get_dragons(){
-        return dragons;
-    }
     @Nullable
     public static MyDragon getFromInfo(DragonInfo info){
         return mp.get(info.unique_name);
@@ -486,7 +479,7 @@ public class DragonManager {
     /**
      * Only used to initialize. DON'T use this if speed is essential.
      * @param world world
-     * @return The dragon found in this world.
+     * @return The dragon found in this world, or null if not found.
      */
     public static EnderDragon getEnderDragon(final World world){
         if(world.getEnvironment() != World.Environment.THE_END){

@@ -6,6 +6,7 @@ import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.entity.Player;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
+import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.config.Config;
 import pers.xanadu.enderdragon.script.Events;
 import pers.xanadu.enderdragon.script.tool.ScriptCommand;
@@ -39,7 +40,7 @@ public class GroovyManager {
             importCustomizer.addImport("Command","pers.xanadu.enderdragon.script.tool.ScriptCommand");
             importCustomizer.addStaticImport("plugin","pers.xanadu.enderdragon.EnderDragon","plugin");
             compilerConfig.addCompilationCustomizers(importCustomizer);
-            GroovyClassLoader classLoader = new GroovyClassLoader(GroovyManager.class.getClassLoader(),compilerConfig);
+            GroovyClassLoader classLoader = new GroovyClassLoader(EnderDragon.class.getClassLoader(),compilerConfig);
             engine = new GroovyScriptEngine(new URL[]{baseDir.toURI().toURL()}, classLoader);
             InputStream inputStream = plugin.getResource("script/lib.groovy");
             lib = Config.convertInputStreamToString(inputStream);

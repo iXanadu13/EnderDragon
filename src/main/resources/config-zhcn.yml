@@ -74,7 +74,7 @@ blacklist_worlds:
 #写法示例: [COMMAND,CUSTOM]
 blacklist_spawn_reason: []
 
-#可选: [default/nbt/advanced]
+#可选: [default/nbt(<=1.20.4)/advanced(<=1.20.4)]
 item_format:
   reward: default
 

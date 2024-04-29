@@ -36,11 +36,6 @@ public class MainCommand implements CommandExecutor {
                 else if(args.length == 3) GroovyManager.invoke("test.groovy",args[1],args[2]);
                 return true;
             }
-            case "migrate" : {
-                if (!sender.isOp()) return false;
-                FileUpdater.migrate();
-                return true;
-            }
 //            case "worlds" : {
 //                if(!sender.isOp()){
 //                    Lang.sendFeedback(sender,Lang.command_no_permission);

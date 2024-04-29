@@ -118,7 +118,7 @@ public class GUI {
             resetPagedItem(key,cmd);
         }
         else if(type == 2){
-            for(MyDragon myDragon : DragonManager.get_dragons()){
+            for(MyDragon myDragon : DragonManager.getDragons()){
                 this.addDragon(myDragon.icon.clone(),myDragon.unique_name);
             }
         }

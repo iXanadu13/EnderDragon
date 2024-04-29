@@ -106,7 +106,6 @@ public final class EnderDragon extends JavaPlugin {
         finish = true;
     }
     public static void reloadAll(){
-        ItemManager.getLegacy().set(false);
         WorldManager.reload();
         GlowManager.reload();
         EnderDragon.getInstance().loadFiles();
@@ -129,11 +128,6 @@ public final class EnderDragon extends JavaPlugin {
                 this.cancel();
                 DragonManager.reload();
                 GuiManager.loadGui();
-                if (ItemManager.getLegacy().get()){
-                    Lang.error("I'm sorry that data_type 'nbt' and 'advanced' probably will be disabled in 1.20.5+");
-                    Lang.error("It is recommended to migrate item configuration to bukkit format for compatibility.");
-                    Lang.error("You can use /ed migrate to generate new config.");
-                }
 
                 runnable.runTaskTimer(plugin,0,1);
             }
