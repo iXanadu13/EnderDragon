@@ -14,6 +14,8 @@ import java.net.URLConnection;
 
 public final class UpdateChecker {
     public static void checkUpdate(){
+        // https://github.com/iXanadu13/EnderDragon/issues/17
+        if (EnderDragon.plugin.getConfig().getBoolean("skip_update_check")) return;
         Lang.info(Lang.plugin_checking_update);
         new BukkitRunnable(){
             @Override

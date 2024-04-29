@@ -98,7 +98,7 @@ public class ItemManager {
         if (Version.isNBT_UPDATE()){
             throw new UnsupportedOperationException(
                     "I'm sorry that data_type 'nbt' and 'advanced' have been temporarily disabled since 1.20.5.\n"+
-                    "You can migrate configurations through '/ed migrate' EnderDragon v2.5.1.\n"+
+                    "You can migrate configurations through '/ed migrate' in EnderDragon v2.5.1.\n"+
                     "I will reconstruct this plugin add restore this function in the future."
             );
         }
@@ -225,7 +225,7 @@ public class ItemManager {
         if (Version.isNBT_UPDATE()){
             throw new UnsupportedOperationException(
                     "I'm sorry that data_type 'nbt' and 'advanced' have been temporarily disabled since 1.20.5.\n"+
-                    "You can migrate configurations through '/ed migrate' EnderDragon v2.5.1.\n"+
+                    "You can migrate configurations through '/ed migrate' in EnderDragon v2.5.1.\n"+
                     "I will reconstruct this plugin add restore this function in the future."
             );
         }
