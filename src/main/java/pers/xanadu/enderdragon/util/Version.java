@@ -1,11 +1,15 @@
 package pers.xanadu.enderdragon.util;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import pers.xanadu.enderdragon.EnderDragon;
 import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.nms.BossBar.IBossBarManager;
 import pers.xanadu.enderdragon.nms.NMSItem.INMSItemManager;
 import pers.xanadu.enderdragon.nms.RespawnAnchor.IRespawnAnchorManager;
 import pers.xanadu.enderdragon.nms.WorldData.IWorldDataManager;
+
+import java.lang.reflect.Field;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -24,14 +28,22 @@ public class Version {
     public static void init(){
         try {
             version = getServer().getClass().getPackage().getName().split("\\.")[3];
-            String[] mc_version = getServer().getBukkitVersion().split("-")[0].split("\\.");
-            mcMainVersion = Integer.parseInt(mc_version[1]);
-            if(mc_version.length<=2) mcPatchVersion = 0;
-            else mcPatchVersion = Integer.parseInt(mc_version[2]);
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            Lang.warn("Failed to get nms-version!");
+            try{
+                //paper 1.20.6+
+                Class<?> clazz = Class.forName("io.papermc.paper.util.MappingEnvironment");
+                Field LEGACY_CB_VERSION = clazz.getField("LEGACY_CB_VERSION");
+                version = (String) LEGACY_CB_VERSION.get(null);
+            }catch (ReflectiveOperationException e){
+                throwable.printStackTrace();
+                Lang.warn("Failed to get nms-version!");
+                Bukkit.getServer().getPluginManager().disablePlugin(EnderDragon.plugin);
+            }
         }
+        String[] mc_version = getServer().getBukkitVersion().split("-")[0].split("\\.");
+        mcMainVersion = Integer.parseInt(mc_version[1]);
+        if(mc_version.length<=2) mcPatchVersion = 0;
+        else mcPatchVersion = Integer.parseInt(mc_version[2]);
         Lang.info("Found version: " + version);
         try{
             Class.forName("net.minecraftforge.server.ServerMain");
