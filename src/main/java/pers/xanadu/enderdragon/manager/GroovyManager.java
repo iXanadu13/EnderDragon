@@ -61,8 +61,10 @@ public class GroovyManager {
     public static Object eval(String expression, Player player){
         Binding binding = new Binding();
         binding.setVariable("player",player);
-        binding.setVariable("itemStack",player.getItemInHand());
-        binding.setVariable("world",player.getWorld());
+        if (player != null){
+            binding.setVariable("itemStack",player.getItemInHand());
+            binding.setVariable("world",player.getWorld());
+        }
         GroovyShell shell = new GroovyShell(GroovyManager.class.getClassLoader(),binding,compilerConfig);
         return shell.evaluate(lib+expression);
     }
