@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import static org.bukkit.Bukkit.getServer;
 
 public class Version {
-    public static final String setting_dragon = "2.4.0";
+    public static final String setting_dragon = "2.5.4";
     public static final String lang = "2.2.0";
     public static final String config = "2.3.0";
     public static final String data = "2.2.0";

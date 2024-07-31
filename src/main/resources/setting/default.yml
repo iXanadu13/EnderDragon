@@ -1,4 +1,4 @@
-version: 2.4.0
+version: 2.5.4
 
 #This is used for plugin internal identification.
 #Please make sure the value is unique among all the types of dragons
@@ -126,7 +126,7 @@ bossbar:
   style: 'SOLID'
 
   # [true/false]
-  create_frog: true
+  create_fog: true
   darken_sky: true
   play_boss_music: true
 

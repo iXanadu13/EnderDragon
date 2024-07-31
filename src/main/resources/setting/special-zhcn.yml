@@ -1,5 +1,5 @@
 #文件版本，请勿修改
-version: 2.4.0
+version: 2.5.4
 
 #用于插件内部识别，每一种末影龙的unique_name都需要设为不同值！
 unique_name: 'special001'
@@ -119,7 +119,7 @@ bossbar:
 
   # [true/false]
   # 生成迷雾
-  create_frog: true
+  create_fog: true
   # 使天空阴暗
   darken_sky: true
   # 播放打末影龙时候的BGM
