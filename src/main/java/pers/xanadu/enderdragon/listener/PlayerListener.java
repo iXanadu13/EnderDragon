@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import pers.xanadu.enderdragon.config.Config;
+import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.GlowManager;
 
 import java.util.Collection;
@@ -57,7 +58,7 @@ public class PlayerListener implements Listener {
             int amount = item.getAmount();
             e.getItem().setAmount(amount-1);
         }
-        EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen,EntityType.ENDER_CRYSTAL);
+        EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen, DragonManager.getENDER_CRYSTAL());
         crystal.setShowingBottom(false);
     }
 

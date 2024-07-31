@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import pers.xanadu.enderdragon.manager.DragonManager;
 import pers.xanadu.enderdragon.manager.WorldManager;
 import pers.xanadu.enderdragon.metadata.MyDragon;
+import pers.xanadu.enderdragon.util.Version;
 
 import static pers.xanadu.enderdragon.manager.DragonManager.getSpecialKey;
 
@@ -34,6 +35,7 @@ public class DragonFireballListener implements Listener {
 //        }
 //
 //    }
+    private static final Particle ILLEGAL_SPELL_MOB = Version.NBT_UPDATE?null:Particle.valueOf("SPELL_MOB");
 
     @EventHandler(priority = EventPriority.HIGH)
     public void OnEffectCloudSpawn(final EntitySpawnEvent e){
@@ -51,8 +53,14 @@ public class DragonFireballListener implements Listener {
         effectCloud.setRadiusPerTick((float) myDragon.effect_cloud_expand_speed/20f);
         effectCloud.setDuration(myDragon.effect_cloud_duration * 20);
         if(myDragon.effect_cloud_color_R != -1){
-            effectCloud.setParticle(Particle.SPELL_MOB);
-            effectCloud.setColor(Color.fromRGB(myDragon.effect_cloud_color_R,myDragon.effect_cloud_color_G,myDragon.effect_cloud_color_B));
+            Color color = Color.fromRGB(myDragon.effect_cloud_color_R,myDragon.effect_cloud_color_G,myDragon.effect_cloud_color_B);
+            if (Version.NBT_UPDATE){
+                effectCloud.setParticle(Particle.ENTITY_EFFECT, color);
+            }
+            else{
+                effectCloud.setParticle(ILLEGAL_SPELL_MOB);
+            }
+            effectCloud.setColor(color);
         }
         effectCloud.clearCustomEffects();
         for(PotionEffect effect : myDragon.effect_cloud_potion){
