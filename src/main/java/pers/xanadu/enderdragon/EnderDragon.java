@@ -34,6 +34,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static pers.xanadu.enderdragon.util.UpdateChecker.checkUpdate;
 
@@ -203,8 +204,11 @@ public final class EnderDragon extends JavaPlugin {
         Objects.requireNonNull(getCommand("enderdragon")).setTabCompleter(new TabCompleter());
     }
     private void unregisterCommands(){
-        Objects.requireNonNull(getCommand("enderdragon")).setExecutor(null);
-        Objects.requireNonNull(getCommand("enderdragon")).setTabCompleter(null);
+        Optional.ofNullable(getCommand("enderdragon"))
+                .ifPresent(command -> {
+                    command.setExecutor(null);
+                    command.setTabCompleter(null);
+                });
     }
     private void loadConfig(){
         saveDefaultConfig();

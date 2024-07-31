@@ -35,7 +35,7 @@ public class BossBarManager implements IBossBarManager {
                 yml.set(path+"title",bbs.title.getText());
                 yml.set(path+"color",bbs.color.name());
                 yml.set(path+"style",bbs.style.name());
-                yml.set(path+"create_frog",bbs.k());
+                yml.set(path+"create_fog",bbs.k());
                 yml.set(path+"darken_sky",bbs.i());
                 yml.set(path+"play_boss_music",bbs.j());
             }catch (ReflectiveOperationException e){
@@ -72,7 +72,7 @@ public class BossBarManager implements IBossBarManager {
                 bbs.title = CraftChatMessage.fromString(yml.getString(path+"title"), true)[0];
                 bbs.color = BossBattle.BarColor.valueOf(yml.getString(path+"color"));
                 bbs.style = BossBattle.BarStyle.valueOf(yml.getString(path+"style"));
-                bbs.setCreateFog(yml.getBoolean(path+"create_frog",true));
+                bbs.setCreateFog(yml.getBoolean(path+"create_fog",true));
                 bbs.setDarkenSky(yml.getBoolean(path+"darken_sky",true));
                 bbs.setPlayMusic(yml.getBoolean(path+"play_boss_music",true));
             }catch (ReflectiveOperationException e){
@@ -86,7 +86,7 @@ public class BossBarManager implements IBossBarManager {
                 convertColor(myDragon.bossbar_color),
                 convertStyle(myDragon.bossbar_style)
         );
-        bbs.setCreateFog(myDragon.bossbar_create_frog);
+        bbs.setCreateFog(myDragon.bossbar_create_fog);
         bbs.setDarkenSky(myDragon.bossbar_darken_sky);
         bbs.setPlayMusic(myDragon.bossbar_play_boss_music);
         try{

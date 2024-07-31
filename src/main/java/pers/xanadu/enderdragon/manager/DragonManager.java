@@ -56,6 +56,8 @@ public class DragonManager {
     private static Method getY;
     private static Method getZ;
     private static final Pattern pattern_attacker_top = Pattern.compile("%attacker_top_(\\d+)%");
+    @Getter
+    private static final EntityType ENDER_CRYSTAL = Version.NBT_UPDATE?EntityType.END_CRYSTAL:EntityType.valueOf("ENDER_CRYSTAL");
 
     public static void reload(){
         final List<MyDragon> dragons = new ArrayList<>();
@@ -219,7 +221,7 @@ public class DragonManager {
         myDragon.glow_color = f.getString("glow_color","random");
         myDragon.bossbar_color = f.getString("bossbar.color","WHITE").toUpperCase();
         myDragon.bossbar_style = f.getString("bossbar.style","SOLID").toUpperCase();
-        myDragon.bossbar_create_frog = f.getBoolean("bossbar.create_frog",true);
+        myDragon.bossbar_create_fog = f.getBoolean("bossbar.create_fog",true);
         myDragon.bossbar_darken_sky = f.getBoolean("bossbar.darken_sky",true);
         myDragon.bossbar_play_boss_music = f.getBoolean("bossbar.play_boss_music",true);
         myDragon.effect_cloud_original_radius = f.getDouble("effect_cloud.original_radius",3);
@@ -583,7 +585,7 @@ public class DragonManager {
         if(world == null) return;
         cen.add(0.5,1,0.5);
         for(int i = 0; i < 4; i++){
-            EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen.clone().add(nxt[i][0],0,nxt[i][1]), EntityType.ENDER_CRYSTAL);
+            EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen.clone().add(nxt[i][0],0,nxt[i][1]), ENDER_CRYSTAL);
             if(Config.crystal_invulnerable) crystal.setInvulnerable(true);
             crystal.setShowingBottom(false);
         }
@@ -599,7 +601,7 @@ public class DragonManager {
             });
         }
         for(int i = 0; i < 4; i++){
-            EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen.clone().add(nxt[i][0],0,nxt[i][1]), EntityType.ENDER_CRYSTAL);
+            EnderCrystal crystal = (EnderCrystal) world.spawnEntity(cen.clone().add(nxt[i][0],0,nxt[i][1]), ENDER_CRYSTAL);
             if(Config.crystal_invulnerable) crystal.setInvulnerable(true);
             crystal.setShowingBottom(false);
             crystal.addScoreboardTag("ed_spe_"+uniqueId);

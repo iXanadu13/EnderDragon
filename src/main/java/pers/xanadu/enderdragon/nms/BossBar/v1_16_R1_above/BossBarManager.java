@@ -27,7 +27,7 @@ public class BossBarManager implements IBossBarManager {
             yml.set(path+"title",bossBar.getTitle());
             yml.set(path+"color",bossBar.getColor().name());
             yml.set(path+"style",bossBar.getStyle().name());
-            yml.set(path+"create_frog",bossBar.hasFlag(BarFlag.CREATE_FOG));
+            yml.set(path+"create_fog",bossBar.hasFlag(BarFlag.CREATE_FOG));
             yml.set(path+"darken_sky",bossBar.hasFlag(BarFlag.DARKEN_SKY));
             yml.set(path+"play_boss_music",bossBar.hasFlag(BarFlag.PLAY_BOSS_MUSIC));
         });
@@ -58,7 +58,7 @@ public class BossBarManager implements IBossBarManager {
             bossBar.setTitle(yml.getString(path+"title"));
             bossBar.setColor(BarColor.valueOf(yml.getString(path+"color")));
             bossBar.setStyle(BarStyle.valueOf(yml.getString(path+"style")));
-            if(yml.getBoolean(path+"create_frog",true)) bossBar.addFlag(BarFlag.CREATE_FOG);
+            if(yml.getBoolean(path+"create_fog",true)) bossBar.addFlag(BarFlag.CREATE_FOG);
             else bossBar.removeFlag(BarFlag.CREATE_FOG);
             if(yml.getBoolean(path+"darken_sky",true)) bossBar.addFlag(BarFlag.DARKEN_SKY);
             else bossBar.removeFlag(BarFlag.DARKEN_SKY);

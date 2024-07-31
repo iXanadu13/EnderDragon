@@ -91,7 +91,7 @@ public class DragonSpawnListener implements Listener {
             if(bossBar != null){
                 bossBar.setColor(BarColor.valueOf(myDragon.bossbar_color));
                 bossBar.setStyle(BarStyle.valueOf(myDragon.bossbar_style));
-                if(myDragon.bossbar_create_frog) bossBar.addFlag(BarFlag.CREATE_FOG);
+                if(myDragon.bossbar_create_fog) bossBar.addFlag(BarFlag.CREATE_FOG);
                 else bossBar.removeFlag(BarFlag.CREATE_FOG);
                 if(myDragon.bossbar_darken_sky) bossBar.addFlag(BarFlag.DARKEN_SKY);
                 else bossBar.removeFlag(BarFlag.DARKEN_SKY);
