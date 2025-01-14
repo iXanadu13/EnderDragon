@@ -19,6 +19,7 @@ import pers.xanadu.enderdragon.config.Lang;
 import pers.xanadu.enderdragon.metadata.DragonInfo;
 import pers.xanadu.enderdragon.reward.RewardDist;
 import pers.xanadu.enderdragon.reward.SpecialLoot;
+import pers.xanadu.enderdragon.util.CollectionUtil;
 import pers.xanadu.enderdragon.util.ExtraPotionEffect;
 import pers.xanadu.enderdragon.metadata.MyDragon;
 import pers.xanadu.enderdragon.util.Version;
@@ -297,7 +298,7 @@ public class DragonManager {
                 if(target == null) continue;
                 if("%attacker%".equals(target)){
                     loot_mp.compute(0,(k,v)->{
-                        if(v==null) return Collections.singletonList(specialLoot);
+                        if(v==null) return CollectionUtil.vec(specialLoot);
                         v.add(specialLoot);
                         return v;
                     });
@@ -307,7 +308,7 @@ public class DragonManager {
                     if (matcher.find()) {
                         Integer rank = Integer.parseInt(matcher.group(1));
                         loot_mp.compute(rank,(k,v)->{
-                            if(v==null) return Collections.singletonList(specialLoot);
+                            if(v==null) return CollectionUtil.vec(specialLoot);
                             v.add(specialLoot);
                             return v;
                         });
