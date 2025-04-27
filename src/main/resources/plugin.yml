@@ -1,5 +1,5 @@
 name: EnderDragon
-version: 2.5.6
+version: ${project.version}
 main: pers.xanadu.enderdragon.EnderDragon
 author: Xanadu13
 api-version: 1.13
