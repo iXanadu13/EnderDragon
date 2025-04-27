@@ -25,7 +25,7 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Capture Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.6.0
       with:
         name: Artifacts
         path: target/
