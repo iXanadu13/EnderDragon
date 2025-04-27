@@ -29,3 +29,8 @@ Thank you all for your attention and support!
 
 > 感谢大家的关注和支持！
 
+## DMCA
+
+The JAR files in the `lib` directory have been processed, with their method bodies removed to mitigate infringement risks.
+
+> 已对 `lib` 目录下的 Jar 包进行处理，已移除方法体以避免侵权风险。
