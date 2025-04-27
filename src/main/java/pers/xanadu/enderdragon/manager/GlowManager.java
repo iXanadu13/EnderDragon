@@ -8,19 +8,20 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import pers.xanadu.enderdragon.util.Version;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GlowManager {
     public static Set<Scoreboard> handled = new HashSet<>();
+    private static final ChatColor[] colors;
     public static void reload(){
         handled.clear();
     }
     public static void setScoreBoard(Player p){
         Scoreboard board = p.getScoreboard();
         if(handled.contains(board)) return;
-        ChatColor[] colors = ChatColor.values();
         for(ChatColor color : colors){
             String name = "ed-"+color.name();
             if(board.getTeam(name)==null) board.registerNewTeam(name);
@@ -72,5 +73,7 @@ public class GlowManager {
         AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW,
         NONE,RANDOM
     }
-
+    static {
+         colors = Arrays.stream(ChatColor.values()).limit(16).toArray(ChatColor[]::new);
+    }
 }
