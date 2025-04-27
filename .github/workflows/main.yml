@@ -20,7 +20,10 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-      
+
+    - name: Install the dependency
+      run: mvn install:install-file -DgroupId=me.clip -DartifactId=placeholderapi -Dversion=2.11.2 -Dpackaging=jar -Dfile=lib/placeholderapi-2.11.2.jar
+    
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
