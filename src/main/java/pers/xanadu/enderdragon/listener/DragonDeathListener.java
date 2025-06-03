@@ -99,16 +99,12 @@ public class DragonDeathListener implements Listener {
     private static void handleSpecialLoot(final MyDragon myDragon, final EnderDragon dragon){
         List<Pair<String,Double>> list = DamageManager.getDamageList(dragon.getUniqueId());
         list.sort(DamageManager::sortByDamage);
-        Set<String> online_players = new HashSet<>();
-        Bukkit.getOnlinePlayers().forEach(player -> online_players.add(player.getName()));
         List<SpecialLoot> participants = myDragon.lootMap.get(0);
         boolean tag = participants != null;
         int size = list.size();
         for(int i=0;i<size;i++){
             Pair<String,Double> pair = list.get(i);
             String name = pair.first;
-            //玩家不在线
-            if(!online_players.contains(name)) continue;
             String damage = String.format("%.2f",pair.second);
             //所有参与者
             if(tag) participants.forEach(loot -> loot.accept(name,damage));
