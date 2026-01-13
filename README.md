@@ -34,3 +34,5 @@ Thank you all for your attention and support!
 The JAR files in the `lib` directory have been processed, with their method bodies removed to mitigate infringement risks.
 
 > 已对 `lib` 目录下的 Jar 包进行处理，已移除方法体以避免侵权风险。
+
+[How to obtain the original JAR?](https://www.spigotmc.org/wiki/buildtools/)
