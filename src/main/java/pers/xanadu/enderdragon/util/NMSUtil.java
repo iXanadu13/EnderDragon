@@ -51,7 +51,7 @@ public class NMSUtil {
     public void init(){
         String version = Version.getVersion();
         try{
-            this.CraftWorldClass = Class.forName("org.bukkit.craftbukkit." + version + ".CraftWorld");
+            this.CraftWorldClass = ClassResolver.obc("CraftWorld");
             this.getNMSWord = CraftWorldClass.getDeclaredMethod("getHandle");
             this.WorldClass = this.getNMSWord.getReturnType().getSuperclass();
             this.world_c_environment = CraftWorldClass.getDeclaredField("environment");
@@ -60,12 +60,12 @@ public class NMSUtil {
                 this.WorldProviderClass = Class.forName("net.minecraft.server."+version+".WorldProvider");
                 //this.WorldProviderTheEndClass = Class.forName("net.minecraft.server."+version+".WorldProviderTheEnd");
             }
-            this.CraftItemStackClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack");
-            this.CraftMetaItemClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftMetaItem");
+            this.CraftItemStackClass = ClassResolver.obc("inventory.CraftItemStack");
+            this.CraftMetaItemClass = ClassResolver.obc("inventory.CraftMetaItem");
             this.unhandledTags = CraftMetaItemClass.getDeclaredField("unhandledTags");
             unhandledTags.setAccessible(true);
             this.NMSItemStackClass = CraftItemStackClass.getDeclaredField("handle").getType();
-            this.CraftEntityClass = Class.forName("org.bukkit.craftbukkit."+version+".entity.CraftEntity");
+            this.CraftEntityClass = ClassResolver.obc("entity.CraftEntity");
             init_NBTTagCompoundClass();
             init_NBTBaseClass();
             if (!Version.isNBT_UPDATE()){
@@ -83,11 +83,17 @@ public class NMSUtil {
 
 
             if(Version.mcMainVersion<=16) this.MojangsonParserClass = Class.forName("net.minecraft.server."+version+".MojangsonParser");
-            else this.MojangsonParserClass = Class.forName("net.minecraft.nbt.MojangsonParser");
-            this.stringToCPD = MojangsonParserClass.getMethod(getMethodName(ReflectiveMethod.MojangsonParser_parse),String.class);
+            else if (Version.mcMainVersion < 26) this.MojangsonParserClass = Class.forName("net.minecraft.nbt.MojangsonParser");
+            else {
+                // TODO: 2026/5/3 16:21
+                this.MojangsonParserClass = null;
+            }
+            if (this.MojangsonParserClass != null) {
+                this.stringToCPD = MojangsonParserClass.getMethod(getMethodName(ReflectiveMethod.MojangsonParser_parse),String.class);
+            }
 
             if(Version.mcMainVersion>=14){
-                this.CraftPersistentDataContainerClass = Class.forName("org.bukkit.craftbukkit." + version + ".persistence.CraftPersistentDataContainer");
+                this.CraftPersistentDataContainerClass = ClassResolver.obc("persistence.CraftPersistentDataContainer");
                 this.PDCtoCPD = CraftPersistentDataContainerClass.getDeclaredMethod("toTagCompound");
                 if (!Version.isNBT_UPDATE()){
                     this.PersistentDataContainer_putAll = CraftPersistentDataContainerClass.getDeclaredMethod("putAll",NBTTagCompoundClass);
@@ -101,6 +107,44 @@ public class NMSUtil {
         }
         if(Config.debug) check();
     }
+
+    public static final class ClassResolver {
+
+        private static final String OBC_BASE = "org.bukkit.craftbukkit";
+        private static final String NMS_LEGACY_BASE = "net.minecraft.server";
+        private static final String NMS_MODERN_BASE = "net.minecraft";
+
+        private static final String VERSION = Version.getVersion();
+
+        private static boolean isModern() {
+            return Version.mcMainVersion >= 26;
+        }
+
+        public static Class<?> obc(String path) throws ClassNotFoundException {
+            String fullName;
+
+            if (isModern()) {
+                fullName = OBC_BASE + "." + path;
+            } else {
+                fullName = OBC_BASE + "." + VERSION + "." + path;
+            }
+
+            return Class.forName(fullName);
+        }
+
+        public static Class<?> nms(String path) throws ClassNotFoundException {
+            String fullName;
+
+            if (isModern()) {
+                fullName = NMS_MODERN_BASE + "." + path;
+            } else {
+                fullName = NMS_LEGACY_BASE + "." + VERSION + "." + path;
+            }
+
+            return Class.forName(fullName);
+        }
+    }
+
     public void check(){
         try{
             Field[] fields = NMSUtil.class.getDeclaredFields();
@@ -303,7 +347,7 @@ public class NMSUtil {
     }
     private void init_NBTTagCompoundClass(){
         try{
-            Class<?> CraftMetaBlockStateClass = Class.forName("org.bukkit.craftbukkit."+Version.getVersion()+".inventory.CraftMetaBlockState");
+            Class<?> CraftMetaBlockStateClass = ClassResolver.obc("inventory.CraftMetaBlockState");
             Field field = CraftMetaBlockStateClass.getDeclaredField("blockEntityTag");
             this.NBTTagCompoundClass = field.getType();
             return;

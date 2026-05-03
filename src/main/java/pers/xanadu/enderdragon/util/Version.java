@@ -35,15 +35,22 @@ public class Version {
                 Field LEGACY_CB_VERSION = clazz.getField("LEGACY_CB_VERSION");
                 version = (String) LEGACY_CB_VERSION.get(null);
             }catch (ReflectiveOperationException e){
-                throwable.printStackTrace();
-                Lang.warn("Failed to get nms-version!");
-                Bukkit.getServer().getPluginManager().disablePlugin(EnderDragon.plugin);
+                version = Bukkit.getVersion().split("-")[0];
             }
         }
         String[] mc_version = getServer().getBukkitVersion().split("-")[0].split("\\.");
-        mcMainVersion = Integer.parseInt(mc_version[1]);
-        if(mc_version.length<=2) mcPatchVersion = 0;
-        else mcPatchVersion = Integer.parseInt(mc_version[2]);
+
+        int first = Integer.parseInt(mc_version[0]);
+        // e.g. 26.1.2.build.53
+        if (first >= 26) {
+            mcMainVersion = first;
+            mcPatchVersion = Integer.parseInt(mc_version[1]);
+        } else {
+            mcMainVersion = Integer.parseInt(mc_version[1]);
+            if(mc_version.length<=2) mcPatchVersion = 0;
+            else mcPatchVersion = Integer.parseInt(mc_version[2]);
+        }
+
         Lang.info("Found version: " + version);
         try{
             Class.forName("net.minecraftforge.server.ServerMain");

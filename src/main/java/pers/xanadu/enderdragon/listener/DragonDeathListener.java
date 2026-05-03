@@ -100,6 +100,7 @@ public class DragonDeathListener implements Listener {
         List<Pair<String,Double>> list = DamageManager.getDamageList(dragon.getUniqueId());
         list.sort(DamageManager::sortByDamage);
         List<SpecialLoot> participants = myDragon.lootMap.get(0);
+        // 是否给所有参与者发奖励
         boolean tag = participants != null;
         int size = list.size();
         for(int i=0;i<size;i++){
